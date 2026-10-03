@@ -1,0 +1,48 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+**/google-services.json
+**/GoogleService-Info.plist
+*.jks
+*.keystore
+key.properties
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.g.dart.tmp
+coverage/
+
+# Android
+**/android/.gradle/
+**/android/local.properties
+**/android/captures/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+*.iml
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+supabase/functions/**/.env
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
