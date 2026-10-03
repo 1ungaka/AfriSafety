@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Monochrome layer for Android 13+ themed icons (the system tints it).
+     Generated from design/brand/icon-circle.svg (240-unit grid scaled into the
+     66dp safe zone of a 108dp adaptive icon). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:pathData="M25.4,54.0 a28.6,28.6 0 1,0 57.2,0 a28.6,28.6 0 1,0 -57.2,0" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.67" android:fillColor="#00000000"/>
+    <path android:pathData="M34.93,54.0 a19.07,19.07 0 1,0 38.14,0 a19.07,19.07 0 1,0 -38.14,0" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.67" android:fillColor="#00000000"/>
+    <path android:pathData="M49.6,25.4 a4.4,4.4 0 1,0 8.8,0 a4.4,4.4 0 1,0 -8.8,0" android:fillColor="#FFFFFFFF"/>
+    <path android:pathData="M74.53,68.3 a4.4,4.4 0 1,0 8.8,0 a4.4,4.4 0 1,0 -8.8,0" android:fillColor="#FFFFFFFF"/>
+    <path android:pathData="M24.67,68.3 a4.4,4.4 0 1,0 8.8,0 a4.4,4.4 0 1,0 -8.8,0" android:fillColor="#FFFFFFFF"/>
+    <path android:pathData="M46.67,54.0 a7.33,7.33 0 1,0 14.66,0 a7.33,7.33 0 1,0 -14.66,0" android:fillColor="#FFFFFFFF"/>
+</vector>

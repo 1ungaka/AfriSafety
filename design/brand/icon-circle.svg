@@ -1,0 +1,11 @@
+<!-- AfriSafety app icon: concept B "The Circle" (chosen 2026-10-04).
+     You at the centre, your people around you. 240x240 design grid. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <rect width="240" height="240" rx="54" fill="#0F1E1C"/>
+  <circle cx="120" cy="120" r="78" fill="none" stroke="#0E6B5C" stroke-width="10"/>
+  <circle cx="120" cy="120" r="52" fill="none" stroke="#E0A43A" stroke-width="10"/>
+  <circle cx="120" cy="42" r="12" fill="#E0A43A"/>
+  <circle cx="188" cy="159" r="12" fill="#F3F5F4"/>
+  <circle cx="52" cy="159" r="12" fill="#F3F5F4"/>
+  <circle cx="120" cy="120" r="20" fill="#F3F5F4"/>
+</svg>
