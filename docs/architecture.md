@@ -1,6 +1,6 @@
 # AfriSafety: Architecture Overview
 
-> Status: **DRAFT for approval.** No application code has been written yet.
+> Status: **Approved.** Phase 0 implemented. Decisions D1–D6 use the recommended options.
 > Package identifier: `za.co.afrisafety.app`
 
 AfriSafety is a privacy-first personal safety and location-sharing app for South
@@ -37,7 +37,7 @@ flowchart LR
     UI[UI: Riverpod + go_router]
     LOC[Location service<br/>geolocator + foreground service]
     GEO[Geofence evaluator<br/>on-device]
-    CRY[Crypto core<br/>libsodium via sodium_libs]
+    CRY[Crypto core<br/>libsodium via sodium]
     KS[(Secure storage<br/>Android Keystore)]
     Q[(Offline queue<br/>SQLite / drift<br/>ciphertext only)]
     SMSI[SMS intent fallback<br/>no SEND_SMS permission]
@@ -72,12 +72,12 @@ flowchart LR
 
 | Concern | Choice | Notes |
 |---|---|---|
-| State | `flutter_riverpod` (+ `riverpod_annotation` codegen) | Testable, no `BuildContext` coupling |
+| State | `flutter_riverpod` 3 (plain providers, no codegen) | Testable, no `BuildContext` coupling |
 | Navigation | `go_router` | Deep links for invite links |
 | Backend SDK | `supabase_flutter` | Auth, PostgREST, Realtime |
 | Location | `geolocator` with Android foreground service | See §5 for justification |
 | Maps | `flutter_map` + `latlong2`, OSM-based tiles | Tile caching; follow the provider's usage policy |
-| Crypto | `sodium_libs` (libsodium) | X25519, XChaCha20-Poly1305, Ed25519 |
+| Crypto | `sodium` (libsodium, built from source by build hooks) | X25519, XChaCha20-Poly1305, Ed25519 |
 | Key storage | `flutter_secure_storage` | Android Keystore-backed |
 | Local DB | `drift` (SQLite) | Offline queue and cache. Stores **ciphertext only** |
 | Push | `firebase_messaging` + `flutter_local_notifications` | Data-only pushes, decrypted on device |

@@ -1,6 +1,6 @@
 # AfriSafety: Security
 
-> Status: **DRAFT threat model for approval.** Phase 3 updates this file with
+> Status: **Threat model v1 (approved).** Phase 3 updates this file with
 > implemented mitigations, test evidence and known limitations.
 
 ## Reporting a vulnerability

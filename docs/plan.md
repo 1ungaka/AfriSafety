@@ -1,11 +1,11 @@
 # AfriSafety: Build Plan
 
-> Status: **DRAFT for approval.** Each phase ends with tests passing, a summary,
+> Status: **Phase 0 complete.** Each phase ends with tests passing, a summary,
 > a list of manual setup steps, and a pause for your go-ahead.
 
-## Decisions needed before Phase 0
+## Decisions
 
-These change what gets built. Recommended options are marked ✅.
+The recommended options (✅) were adopted on 2026-10-03 when the owner gave the go-ahead to start building. Any of them can still be revisited before the phase that depends on it.
 
 | # | Question | Options | Why it matters |
 |---|---|---|---|
@@ -97,18 +97,20 @@ AfriSafety/
 Goal: an empty but correctly wired project with CI, crypto core and the security
 scaffolding every later phase depends on.
 
-- [ ] Monorepo scaffold, `.gitignore`, `.env.example`, `README.md`
-- [ ] `flutter create --org za.co.afrisafety --project-name afrisafety app` (Android + iOS), strict `analysis_options.yaml`
-- [ ] Riverpod, go_router, theme (high contrast, ≥48 dp targets), l10n scaffold with `app_en.arb`
-- [ ] Typed config from `--dart-define-from-file`. Fail fast if missing
-- [ ] `SafeLogger` + lint rule banning `print`/`debugPrint` in `lib/`
-- [ ] `core/crypto`: libsodium init, device keypair generation, Keystore-backed storage, AEAD encrypt/decrypt with AAD, sealed-box envelopes, binary location codec
-- [ ] **Tests:** crypto round-trip, wrong-AAD rejection, tamper rejection, codec round-trip and size bound (≤ 64 bytes ciphertext)
-- [ ] Supabase local project (`supabase init`), base migration: `private` schema, RLS-on-by-default convention
-- [ ] GitHub Actions: `flutter analyze`, `flutter test`, `supabase db start` + pgTAP
-- [ ] Android: `allowBackup=false`, data extraction rules, `minSdk 26` (Android 8)
+- [x] Monorepo scaffold, `.gitignore`, `.env.example`, `README.md`
+- [x] Flutter app in `app/` (Android + iOS), id `za.co.afrisafety.app`, strict `analysis_options.yaml`
+- [x] Riverpod, go_router, theme (high contrast, ≥48 dp targets), l10n scaffold with `app_en.arb`, 10111/112 quick-dial bar
+- [x] Typed config from `--dart-define-from-file`. Fail fast if missing
+- [x] `SafeLogger` with coordinate redaction; `avoid_print` as an error plus an architecture test banning `print`/`debugPrint` in `lib/`
+- [x] `core/crypto`: libsodium init, device keypair generation, Keystore-backed storage, AEAD encrypt/decrypt with AAD, sealed-box envelopes, binary location codec
+- [x] **Tests:** crypto round-trip, wrong-AAD rejection, tamper rejection, codec round-trip and size bound (≤ 64 bytes ciphertext)
+- [x] Supabase local project (`supabase init`, tightened OTP settings), base migration: `private` schema, deny-by-default grants, plus pgTAP guards that fail if *any* table lacks RLS or any `SECURITY DEFINER` function lacks a pinned `search_path`
+- [x] GitHub Actions: format check, `flutter analyze`, `flutter test`; `supabase db start` + `db lint` + pgTAP
+- [x] Android: `allowBackup=false`, data extraction rules, HTTPS-only network config (debug build allows the local stack), `minSdk 26` (Android 8)
 
-**You configure:** install Flutter SDK, Docker, Supabase CLI. Nothing cloud-side yet.
+**You configure:** install Flutter SDK, Android Studio, Docker, Supabase CLI (see README). Nothing cloud-side yet.
+
+**Result:** 55 Flutter tests and 6 pgTAP tests passing.
 
 ## Phase 1: MVP
 

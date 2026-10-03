@@ -1,0 +1,25 @@
+name: Supabase
+
+on:
+  push:
+    paths: ['supabase/**', '.github/workflows/supabase.yml']
+  pull_request:
+    paths: ['supabase/**', '.github/workflows/supabase.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  db-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start database and apply migrations
+        run: supabase db start
+      - name: Lint schema
+        run: supabase db lint --level error
+      - name: RLS and security tests (pgTAP)
+        run: supabase test db
