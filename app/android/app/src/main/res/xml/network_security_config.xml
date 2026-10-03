@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Release config: HTTPS only, system CAs only (user-installed CAs are not
+     trusted, which blocks most MITM proxies). Certificate pinning (pin-set)
+     is added in Phase 3 once the production Supabase host is known. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
