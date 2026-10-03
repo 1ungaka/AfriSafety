@@ -43,15 +43,18 @@ design/     brand (icon, colours, type) and screen designs
 
 ## Setup on a fresh machine
 
+> **On Windows?** Follow the step-by-step guide in [docs/setup-windows.md](docs/setup-windows.md).
+> Windows needs a few extra tools (Git Bash and `make`) to compile libsodium.
+
 ### 1. Install tools
 
 | Tool | Version | Notes |
 |---|---|---|
 | [Flutter](https://docs.flutter.dev/get-started/install) | 3.47.x stable | Includes Dart 3.13 |
 | Android Studio | latest | Android SDK + an emulator (or a real phone; recommended) |
-| C compiler (`gcc`/`clang`) + `make` | any | The `sodium` package builds libsodium from source for host tests |
+| C compiler (`gcc`/`clang`) + `make` | any | The `sodium` package builds libsodium from source (Windows: Git Bash + `make`, see the Windows guide) |
 | [Docker](https://docs.docker.com/get-docker/) | latest | For the local Supabase stack |
-| [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) | 2.x | `npm i -g supabase` or `brew install supabase/tap/supabase` |
+| [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) | 2.x | macOS/Linux: `brew install supabase/tap/supabase`. Windows: Scoop (see guide). Global `npm -g` installs are not supported |
 
 Run `flutter doctor` and fix anything it reports for Android.
 
