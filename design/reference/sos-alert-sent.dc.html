@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AfriSafety SOS alert sent</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F3F5F4}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 28px 20px 24px; background: #0F1E1C; color: #F3F5F4; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px">
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 12px">
+    <div style="width: 200px; height: 200px; border-radius: 100px; background: rgba(194, 65, 12, 0.18); display: flex; align-items: center; justify-content: center">
+      <div style="width: 152px; height: 152px; border-radius: 76px; background: rgba(194, 65, 12, 0.35); display: flex; align-items: center; justify-content: center">
+        <div style="width: 108px; height: 108px; border-radius: 54px; background: #C2410C; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 30px; font-weight: 700; color: #FFFFFF">SOS</div>
+      </div>
+    </div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 30px; font-weight: 700; text-align: center">Alert sent</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; text-align: center; color: #C9D3D0">Your live location is being shared with your Family circle until you mark yourself safe.</p>
+  </div>
+
+  <div style="background: #1B2E2B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #E0A43A">Delivery</span>
+    <div style="display: flex; justify-content: space-between; font-size: 15px"><span>Mama</span><span style="color: #8FD3BF; font-weight: 700">Seen</span></div>
+    <div style="display: flex; justify-content: space-between; font-size: 15px"><span>Thabo</span><span style="color: #8FD3BF; font-weight: 700">Delivered</span></div>
+    <div style="display: flex; justify-content: space-between; font-size: 15px"><span>Lindiwe (SMS fallback)</span><span style="color: #E0A43A; font-weight: 700">Sending</span></div>
+  </div>
+
+  <div style="background: #1B2E2B; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E0A43A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+    <span style="font-size: 15px">[CURRENT ADDRESS]</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: auto">
+    <a href="tel:10111" style="min-height: 56px; border-radius: 14px; background: #F3F5F4; color: #0F1E1C; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; font-size: 16px">Call SAPS 10111</a>
+    <a href="tel:112" style="min-height: 56px; border-radius: 14px; background: #F3F5F4; color: #0F1E1C; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; font-size: 16px">Call 112</a>
+  </div>
+  <a href="Home.dc.html" style="min-height: 56px; border-radius: 14px; border: 2px solid #8FD3BF; color: #F3F5F4; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; font-size: 16px">I am safe, end alert</a>
+  <p style="margin: 0; font-size: 13px; line-height: 1.4; text-align: center; color: #A9B7B3">AfriSafety does not replace emergency services.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

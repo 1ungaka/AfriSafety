@@ -1,6 +1,6 @@
-import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sodium/sodium.dart';
 
@@ -15,6 +15,7 @@ const _log = SafeLogger('bootstrap');
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   _installErrorHandlers();
+  _registerFontLicences();
 
   final config = AppConfig.fromEnvironment();
   try {
@@ -38,6 +39,21 @@ Future<void> bootstrap() async {
       child: const AfriSafetyApp(),
     ),
   );
+}
+
+/// The bundled fonts are SIL OFL, which requires shipping the licence.
+/// Registering it makes it appear on Flutter's licence page.
+void _registerFontLicences() {
+  LicenseRegistry.addLicense(() async* {
+    for (final (package, file) in [
+      ('DM Sans', 'assets/fonts/OFL-DMSans.txt'),
+      ('Bricolage Grotesque', 'assets/fonts/OFL-BricolageGrotesque.txt'),
+    ]) {
+      yield LicenseEntryWithLineBreaks([
+        package,
+      ], await rootBundle.loadString(file));
+    }
+  });
 }
 
 /// Route uncaught errors through [SafeLogger] so nothing bypasses the

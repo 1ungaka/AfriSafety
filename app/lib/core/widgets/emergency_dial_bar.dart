@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../emergency/dialer.dart';
 import '../emergency/emergency_numbers.dart';
+import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
 /// Quick-dial bar for SAPS (10111) and 112, plus the "does not replace
@@ -15,8 +16,8 @@ class EmergencyDialBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return Material(
-      elevation: 8,
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      color: AppColors.surface,
+      shape: const Border(top: BorderSide(color: AppColors.mapGround)),
       child: SafeArea(
         top: false,
         child: Padding(
@@ -27,7 +28,8 @@ class EmergencyDialBar extends ConsumerWidget {
             children: [
               Text(
                 l10n.emergencyNotice,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: AppColors.textMuted),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
@@ -77,8 +79,11 @@ class _DialButton extends ConsumerWidget {
       excludeSemantics: true,
       child: FilledButton.icon(
         style: FilledButton.styleFrom(
-          backgroundColor: AppTheme.emergency,
-          foregroundColor: AppTheme.onEmergency,
+          backgroundColor: AppColors.sos,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppTheme.radiusButton),
+          ),
           minimumSize: const Size.fromHeight(56),
         ),
         icon: const Icon(Icons.phone),

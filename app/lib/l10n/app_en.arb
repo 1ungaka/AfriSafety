@@ -1,33 +1,61 @@
 {
   "@@locale": "en",
   "appTitle": "AfriSafety",
-  "@appTitle": {"description": "App name. Do not translate."},
-
+  "@appTitle": {
+    "description": "App name. Do not translate."
+  },
   "emergencyNotice": "AfriSafety does not replace emergency services. In danger, call 10111 (SAPS) or 112.",
-  "@emergencyNotice": {"description": "Shown on every emergency-related screen."},
+  "@emergencyNotice": {
+    "description": "Shown on every emergency-related screen."
+  },
   "callSaps": "SAPS 10111",
-  "@callSaps": {"description": "Button label to phone the South African Police Service."},
+  "@callSaps": {
+    "description": "Button label to phone the South African Police Service."
+  },
   "callSapsSemantic": "Call the South African Police Service on 10111",
-  "@callSapsSemantic": {"description": "Screen reader label for the SAPS call button."},
+  "@callSapsSemantic": {
+    "description": "Screen reader label for the SAPS call button."
+  },
   "callEmergency": "Emergency 112",
-  "@callEmergency": {"description": "Button label to phone the 112 emergency number."},
+  "@callEmergency": {
+    "description": "Button label to phone the 112 emergency number."
+  },
   "callEmergencySemantic": "Call the emergency number 112",
-  "@callEmergencySemantic": {"description": "Screen reader label for the 112 call button."},
+  "@callEmergencySemantic": {
+    "description": "Screen reader label for the 112 call button."
+  },
   "callFailed": "Couldn't open the phone dialler. Please dial {number} yourself.",
   "@callFailed": {
     "description": "Shown when the dialler can't be opened.",
-    "placeholders": {"number": {"type": "String", "example": "10111"}}
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "10111"
+      }
+    }
   },
-
   "homeWelcomeTitle": "Welcome to AfriSafety",
-  "@homeWelcomeTitle": {"description": "Home screen heading."},
-  "homeWelcomeBody": "Safety for you and the people you trust. Your location is end-to-end encrypted, and you can pause sharing or leave a Circle at any time.",
-  "@homeWelcomeBody": {"description": "Home screen introduction."},
+  "@homeWelcomeTitle": {
+    "description": "Home screen heading."
+  },
+  "homeWelcomeBody": "Safety for you and the people you trust. You can pause sharing or leave a Circle at any time, and nobody can stop you.",
+  "@homeWelcomeBody": {
+    "description": "Home screen introduction."
+  },
+  "homePrivacyBanner": "Your location is end-to-end encrypted. Only the people in your Circle can see it. Not even AfriSafety can.",
+  "@homePrivacyBanner": {
+    "description": "Dark banner explaining end-to-end encryption, wording from the design's 'Who can see me' screen."
+  },
   "homeComingSoon": "Circles, the live map and the panic button are coming in the next update.",
-  "@homeComingSoon": {"description": "Temporary note while features are being built."},
-
+  "@homeComingSoon": {
+    "description": "Temporary note while features are being built."
+  },
   "configErrorTitle": "AfriSafety isn't set up correctly",
-  "@configErrorTitle": {"description": "Developer-facing screen when build configuration is missing."},
+  "@configErrorTitle": {
+    "description": "Developer-facing screen when build configuration is missing."
+  },
   "configErrorBody": "This build is missing configuration. Rebuild with --dart-define-from-file=.env (see app/.env.example).",
-  "@configErrorBody": {"description": "Explains how to fix a misconfigured build."}
+  "@configErrorBody": {
+    "description": "Explains how to fix a misconfigured build."
+  }
 }

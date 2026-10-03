@@ -145,8 +145,14 @@ abstract class AppLocalizations {
   /// Home screen introduction.
   ///
   /// In en, this message translates to:
-  /// **'Safety for you and the people you trust. Your location is end-to-end encrypted, and you can pause sharing or leave a Circle at any time.'**
+  /// **'Safety for you and the people you trust. You can pause sharing or leave a Circle at any time, and nobody can stop you.'**
   String get homeWelcomeBody;
+
+  /// Dark banner explaining end-to-end encryption, wording from the design's 'Who can see me' screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location is end-to-end encrypted. Only the people in your Circle can see it. Not even AfriSafety can.'**
+  String get homePrivacyBanner;
 
   /// Temporary note while features are being built.
   ///

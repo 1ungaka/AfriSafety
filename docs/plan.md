@@ -15,6 +15,7 @@ The recommended options (✅) were adopted on 2026-10-03 when the owner gave the
 | D4 | **Minimum age** | ✅ 18+ for MVP / support minors now with guardian consent | POPIA s34–35. A guardian-consent flow is real extra work |
 | D5 | **Joining a Circle** | ✅ Invitee accepts; the inviter's device hands over keys automatically, and all members are notified / additionally require owner approval | Approval is safer but slower in an emergency setup |
 | D6 | **Repo layout** | ✅ Monorepo: `app/` (Flutter) + `supabase/` / Flutter at repo root | Clean separation, separate CI jobs |
+| D7 | **Key model (raised by the design's per-member "SOS alerts only" toggle)** (*open: decide before Phase 1*) | ✅ Per-sender keys: each member encrypts their own location with their own key and gives it only to the members they choose / One shared Circle key (no per-member levels, simpler) | With one Circle key, anyone who holds it can read everyone's location, so per-member levels are impossible. Per-sender keys allow them and make rotation cheaper. Cost: each member's device manages one envelope per recipient. See `design/README.md` |
 
 ## Folder structure
 
@@ -122,8 +123,10 @@ scaffolding every later phase depends on.
 - [ ] Device registration: upload public keys and FCM token. `security_events` on new device
 - [ ] Circles: create (generates Circle key v1), invite code/link (hashed, expiring, rate-limited), accept/decline screen, automatic key handoff, join notifications, **one-tap Leave**
 - [ ] Sharing: foreground service with persistent notification, basic adaptive interval, encrypt per Circle, offline queue (drift), upload with backoff
+- [ ] App shell from the design: bottom nav Map · Journey · SOS · Circle · Safety (`design/reference/home-map.dc.html`)
 - [ ] Live map: `flutter_map`, decrypt member locations from Realtime, "last updated" + staleness styling, data-saver list view, tile caching
-- [ ] Panic button: 3 s cancellable countdown, idempotent alert insert with retries, `dispatch-alert` Edge Function (data-only FCM), on-device decrypt + local notification, delivery and seen receipts on sender's screen, SMS-intent fallback when offline, 10111/112 quick-dial
+- [ ] "Who can see me" screen: member list, Pause all, Leave (`design/reference/who-can-see-me.dc.html`)
+- [ ] Panic button (design: `sos-alert-sent.dc.html`): 3 s cancellable countdown, idempotent alert insert with retries, `dispatch-alert` Edge Function (data-only FCM), on-device decrypt + local notification, delivery and seen receipts on sender's screen, SMS-intent fallback when offline, 10111/112 quick-dial
 - [ ] Privacy policy draft (`docs/privacy-policy.md`)
 - [ ] **Tests:** unit (crypto, codec, queue, adaptive policy, invite code), widget (onboarding consent, panic countdown/cancel, leave), RLS (above)
 

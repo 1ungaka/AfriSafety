@@ -39,7 +39,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeWelcomeBody =>
-      'Safety for you and the people you trust. Your location is end-to-end encrypted, and you can pause sharing or leave a Circle at any time.';
+      'Safety for you and the people you trust. You can pause sharing or leave a Circle at any time, and nobody can stop you.';
+
+  @override
+  String get homePrivacyBanner =>
+      'Your location is end-to-end encrypted. Only the people in your Circle can see it. Not even AfriSafety can.';
 
   @override
   String get homeComingSoon =>

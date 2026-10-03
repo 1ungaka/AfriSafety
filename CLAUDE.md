@@ -57,6 +57,18 @@ doing anything:
 9. `SECURITY DEFINER` functions go in the `private` schema with a pinned `search_path`.
 10. No third-party analytics or crash-reporting SDKs without approval.
 
+## Design
+
+- Reference: `design/README.md` (tokens, type, icon, screen → phase map) and
+  `design/reference/*.dc.html` (the owner's Claude Design screens). Build
+  screens to match these layouts.
+- Colours only via `AppColors` (`app/lib/core/theme/app_colors.dart`). No raw hex in
+  widgets. Amber is never used for text on light backgrounds.
+- Fonts: Bricolage Grotesque (headings) and DM Sans (body), bundled in
+  `app/assets/fonts`. Never use `google_fonts` or any runtime font fetching.
+- App icon: concept B "The Circle". Source SVGs in `design/brand/`. The in-app mark
+  is `AfriSafetyLogo`.
+
 ## Conventions
 
 - Feature-first layout: `app/lib/features/<feature>/{data,domain,presentation}`,
@@ -106,3 +118,5 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-03 | D6: monorepo `app/` + `supabase/` | Decided |
 | 2026-10-03 | Riverpod without codegen; `sodium` instead of deprecated `sodium_libs` | Decided |
 | 2026-10-03 | Device keys stored as 32-byte seeds; key pairs re-derived on load | Decided |
+| 2026-10-04 | Visual design from the owner's Claude Design canvas; icon B "The Circle" | Decided |
+| 2026-10-04 | D7: per-sender keys vs one Circle key (needed for per-member sharing levels) | **Open: decide before Phase 1** |

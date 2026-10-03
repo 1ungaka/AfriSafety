@@ -38,6 +38,7 @@ Functions) · Firebase Cloud Messaging · flutter_map (OpenStreetMap) · libsodi
 app/        Flutter app (package za.co.afrisafety.app)
 supabase/   migrations, edge functions, pgTAP security tests
 docs/       architecture, plan, privacy policy
+design/     brand (icon, colours, type) and screen designs
 ```
 
 ## Setup on a fresh machine

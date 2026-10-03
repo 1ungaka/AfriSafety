@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AfriSafety home map</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0E6B5C}a:hover{color:#0A4F44}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F5F4; font-family: 'DM Sans', system-ui, sans-serif; color: #0F1E1C; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="32" height="32" viewBox="0 0 240 240" aria-hidden="true">
+        <rect width="240" height="240" rx="54" fill="#0F1E1C"></rect>
+        <circle cx="120" cy="120" r="66" fill="none" stroke="#E0A43A" stroke-width="18"></circle>
+        <circle cx="120" cy="120" r="24" fill="#F3F5F4"></circle>
+      </svg>
+      <button style="display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid #C9D3D0; border-radius: 22px; background: #FFFFFF; font: 700 16px 'DM Sans', sans-serif; color: #0F1E1C">Family
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F1E1C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
+    </div>
+    <button aria-label="Settings" style="width: 44px; height: 44px; border: none; border-radius: 22px; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0F1E1C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>
+    </button>
+  </div>
+
+  <div style="margin: 0 20px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 6px 14px; background: #DCEDE8; border-radius: 26px">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500">
+      <span style="width: 10px; height: 10px; border-radius: 5px; background: #0E6B5C; display: inline-block"></span>
+      Sharing your location with 3 people
+    </div>
+    <button style="min-height: 36px; padding: 0 14px; border: none; border-radius: 18px; background: #0F1E1C; color: #FFFFFF; font: 700 14px 'DM Sans', sans-serif">Pause</button>
+  </div>
+
+  <div style="position: relative; height: 300px; flex-shrink: 0; background: #E3EAE7; overflow: hidden">
+    <svg width="390" height="300" viewBox="0 0 390 300" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <path d="M-10 230 C80 200 140 250 220 210 S340 170 400 190" fill="none" stroke="#B9D7DE" stroke-width="18"></path>
+      <path d="M0 80 H390 M0 160 H390 M90 0 V300 M250 0 V300" stroke="#FFFFFF" stroke-width="12"></path>
+      <path d="M0 40 L390 120 M170 0 L130 300 M320 0 L360 300" stroke="#FFFFFF" stroke-width="6"></path>
+      <circle cx="120" cy="120" r="56" fill="#0E6B5C" fill-opacity="0.12" stroke="#0E6B5C" stroke-width="2" stroke-dasharray="6 6"></circle>
+    </svg>
+    <div style="position: absolute; left: 96px; top: 50px; padding: 4px 10px; background: #FFFFFF; border-radius: 10px; font-size: 12px; font-weight: 700; color: #0E6B5C">Home</div>
+    <div style="position: absolute; left: 100px; top: 100px; width: 40px; height: 40px; border-radius: 20px; background: #E0A43A; border: 3px solid #FFFFFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">M</div>
+    <div style="position: absolute; left: 270px; top: 70px; width: 40px; height: 40px; border-radius: 20px; background: #0F1E1C; color: #FFFFFF; border: 3px solid #FFFFFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">T</div>
+    <div style="position: absolute; left: 196px; top: 180px; width: 56px; height: 56px; border-radius: 28px; background: #0E6B5C; opacity: 0.18"></div>
+    <div style="position: absolute; left: 204px; top: 188px; width: 40px; height: 40px; border-radius: 20px; background: #0E6B5C; color: #FFFFFF; border: 3px solid #FFFFFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px">You</div>
+    <div style="position: absolute; left: 40px; top: 230px; width: 40px; height: 40px; border-radius: 20px; background: #FFFFFF; border: 3px solid #E0A43A; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">L</div>
+  </div>
+
+  <div style="flex: 1; margin-top: -16px; position: relative; background: #FFFFFF; border-radius: 20px 20px 0 0; padding: 12px 20px 0; display: flex; flex-direction: column; gap: 4px">
+    <div style="width: 40px; height: 4px; border-radius: 2px; background: #C9D3D0; align-self: center; margin-bottom: 8px"></div>
+    <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 22px; font-weight: 700">Your circle</h2>
+
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 56px">
+      <div style="width: 40px; height: 40px; border-radius: 20px; background: #E0A43A; display: flex; align-items: center; justify-content: center; font-weight: 700">M</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-weight: 700; font-size: 16px">Mama</span>
+        <span style="font-size: 14px; color: #3F4F4C">At Home · since 17:40</span>
+      </div>
+      <span style="font-size: 13px; color: #3F4F4C">Now</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 56px">
+      <div style="width: 40px; height: 40px; border-radius: 20px; background: #0F1E1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700">T</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-weight: 700; font-size: 16px">Thabo</span>
+        <span style="font-size: 14px; color: #3F4F4C">On a journey · ETA 12 min</span>
+      </div>
+      <span style="font-size: 13px; color: #3F4F4C">1 min</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 56px">
+      <div style="width: 40px; height: 40px; border-radius: 20px; background: #FFFFFF; border: 3px solid #E0A43A; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700">L</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-weight: 700; font-size: 16px">Lindiwe</span>
+        <span style="font-size: 14px; color: #3F4F4C">Offline · last seen via SMS</span>
+      </div>
+      <span style="font-size: 13px; color: #3F4F4C">25 min</span>
+    </div>
+  </div>
+
+  <div style="background: #FFFFFF; border-top: 1px solid #E3EAE7; padding: 10px 16px 18px; display: flex; align-items: center; justify-content: space-between">
+    <a href="#" style="min-width: 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #0E6B5C; font-size: 12px; font-weight: 700">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Journey.dc.html" style="min-width: 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3F4F4C; font-size: 12px; font-weight: 500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"></circle><circle cx="18" cy="5" r="2"></circle><path d="M8 19h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"></path></svg>Journey</a>
+    <a href="SOS.dc.html" aria-label="Send SOS alert" style="width: 72px; height: 72px; margin-top: -36px; border-radius: 36px; background: #C2410C; color: #FFFFFF; border: 4px solid #FFFFFF; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 20px; font-weight: 700">SOS</a>
+    <a href="Privacy.dc.html" style="min-width: 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3F4F4C; font-size: 12px; font-weight: 500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 20c0-2.5 1-4 3-4.5"></path></svg>Circle</a>
+    <a href="#" style="min-width: 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3F4F4C; font-size: 12px; font-weight: 500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6l8-3z"></path></svg>Safety</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
