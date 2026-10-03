@@ -54,8 +54,11 @@ foreach ($d in "C:\Program Files\Git\bin", "C:\dev\flutter\bin") { if ($p -notli
 Reopen PowerShell, then check:
 ```powershell
 git --version
-bash --version     # should say "GNU bash", not mention WSL
+where.exe bash     # one line must be C:\Program Files\Git\bin\bash.exe
 ```
+Typing `bash` on its own may start WSL's bash (`C:\Windows\System32\bash.exe`)
+and print a WSL message. That's fine: the libsodium build skips WSL's bash and
+uses Git's, as long as Git's appears in the `where.exe` list.
 
 ## 3. Scoop, make and the Supabase CLI
 
@@ -118,6 +121,16 @@ You want green ticks for **Flutter** and **Android toolchain**. You can ignore
 "Visual Studio – develop Windows apps" (only needed for step 10) and "Chrome".
 
 ## 6. Docker Desktop (runs Supabase locally)
+
+Docker needs **virtualisation enabled in your firmware** (step 0). If WSL says
+`virtualisation is not enabled` or `HCS_E_HYPERV_NOT_INSTALLED`: open Settings →
+System → Recovery → Advanced startup → **Restart now** → Troubleshoot → Advanced
+options → **UEFI Firmware Settings**, enable **Intel Virtualization Technology
+(VT-x)** or **AMD SVM Mode**, then save and exit (usually F10).
+
+Can't enable it (e.g. a locked work laptop)? Skip steps 6 and 8 and use a free
+hosted Supabase project at supabase.com instead. A real phone doesn't need
+virtualisation.
 
 **(Admin)** PowerShell:
 ```powershell
@@ -232,6 +245,7 @@ flutter test
 | `make: command not found` / `make` not recognised | `scoop install main/make`, then reopen PowerShell |
 | Path too long, or `cannot open source file` during the libsodium build | Move the project to `C:\dev\AfriSafety` |
 | `Building with plugins requires symlink support` | Turn on Developer Mode (step 1) |
+| `bash` prints a WSL / virtualisation error | Harmless for the build if `where.exe bash` lists Git's bash. Virtualisation is still needed for Docker (step 6) |
 | `supabase start` says Docker isn't running | Open Docker Desktop and wait for "Engine running". If WSL errors appear, run `wsl --update` |
 | Port 54321 already in use | `supabase stop`, then `supabase start` again |
 | Phone missing from `flutter devices` | Use a data cable (not charge-only), accept the USB debugging prompt, install the OEM driver |
