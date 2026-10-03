@@ -5,6 +5,10 @@ waiting for downloads (about 15 GB in total). Use **PowerShell** for every
 command (Start menu → type "PowerShell"). Steps marked **(Admin)** need
 "Run as administrator".
 
+> **PowerShell, not Command Prompt.** The prompt must start with `PS`, e.g.
+> `PS C:\Users\you>`. Command Prompt (`C:\Users\you>` with no `PS`) can't run
+> these commands. Paste only the commands from the grey boxes, never error output.
+
 After each step that changes your PATH, **close and reopen PowerShell**,
 otherwise new commands won't be found.
 
@@ -38,10 +42,13 @@ library (libsodium) for Android.
 winget install --id Git.Git -e --source winget
 ```
 
-Add Git's `bin` folder to your PATH. It must end in `\bin`; just `\Git` won't work.
+Add Git's `bin` folder (and Flutter's, for step 4) to your PATH. It must end in
+`\bin`; just `\Git` won't work. This block is safe to run more than once:
 
 ```powershell
-[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Program Files\Git\bin", "User")
+$p = [Environment]::GetEnvironmentVariable("Path", "User")
+foreach ($d in "C:\Program Files\Git\bin", "C:\dev\flutter\bin") { if ($p -notlike "*$d*") { $p += ";$d" } }
+[Environment]::SetEnvironmentVariable("Path", $p, "User")
 ```
 
 Reopen PowerShell, then check:
@@ -53,7 +60,8 @@ bash --version     # should say "GNU bash", not mention WSL
 ## 3. Scoop, make and the Supabase CLI
 
 Scoop is a small package manager. It installs `make` (needed for the libsodium
-build) and the Supabase CLI.
+build) and the Supabase CLI. Use a **normal** (not administrator) PowerShell:
+Scoop refuses to install from an admin window.
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -78,8 +86,8 @@ build.
 ```powershell
 mkdir C:\dev
 git clone https://github.com/flutter/flutter.git -b stable C:\dev\flutter
-[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\dev\flutter\bin", "User")
 ```
+(`C:\dev\flutter\bin` was already added to PATH in step 2.)
 
 Reopen PowerShell:
 ```powershell
