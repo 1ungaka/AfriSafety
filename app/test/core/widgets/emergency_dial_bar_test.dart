@@ -1,6 +1,6 @@
 import 'package:afrisafety/core/emergency/dialer.dart';
 import 'package:afrisafety/core/theme/app_theme.dart';
-import 'package:afrisafety/features/home/presentation/home_screen.dart';
+import 'package:afrisafety/core/widgets/emergency_dial_bar.dart';
 import 'package:afrisafety/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,16 +21,14 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const HomeScreen(),
+          home: const Scaffold(bottomNavigationBar: EmergencyDialBar()),
         ),
       ),
     );
     return dialer;
   }
 
-  testWidgets('home shows the emergency notice and both numbers', (
-    tester,
-  ) async {
+  testWidgets('shows the emergency notice and both numbers', (tester) async {
     await pumpHome(tester);
     expect(
       find.textContaining('does not replace emergency services'),

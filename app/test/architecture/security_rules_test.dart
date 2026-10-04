@@ -33,6 +33,14 @@ void main() {
       expect(manifest, isNot(contains('android.permission.CALL_PHONE')));
     });
 
+    test('declares location as a foreground service (never silent)', () {
+      expect(
+        manifest,
+        contains('android.permission.FOREGROUND_SERVICE_LOCATION'),
+      );
+      expect(manifest, contains('android.permission.INTERNET'));
+    });
+
     test('disables backups and cleartext traffic', () {
       expect(manifest, contains('android:allowBackup="false"'));
       expect(

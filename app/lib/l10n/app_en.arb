@@ -46,10 +46,6 @@
   "@homePrivacyBanner": {
     "description": "Dark banner explaining end-to-end encryption, wording from the design's 'Who can see me' screen."
   },
-  "homeComingSoon": "Circles, the live map and the panic button are coming in the next update.",
-  "@homeComingSoon": {
-    "description": "Temporary note while features are being built."
-  },
   "configErrorTitle": "AfriSafety isn't set up correctly",
   "@configErrorTitle": {
     "description": "Developer-facing screen when build configuration is missing."
@@ -57,5 +53,742 @@
   "configErrorBody": "This build is missing configuration. Rebuild with --dart-define-from-file=.env (see app/.env.example).",
   "@configErrorBody": {
     "description": "Explains how to fix a misconfigured build."
+  },
+  "actionContinue": "Continue",
+  "@actionContinue": {
+    "description": "Generic continue button."
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Generic cancel button."
+  },
+  "actionRetry": "Try again",
+  "@actionRetry": {
+    "description": "Generic retry button."
+  },
+  "actionNotNow": "Not now",
+  "@actionNotNow": {
+    "description": "Skip an optional step."
+  },
+  "actionCopy": "Copy",
+  "@actionCopy": {
+    "description": "Copy to clipboard."
+  },
+  "actionShare": "Share",
+  "@actionShare": {
+    "description": "Open the share sheet."
+  },
+  "actionDone": "Done",
+  "@actionDone": {
+    "description": "Finish a flow."
+  },
+  "errorGeneric": "Something went wrong. Check your connection and try again.",
+  "@errorGeneric": {
+    "description": "Generic error."
+  },
+  "errorRateLimited": "Too many attempts. Please wait a while and try again.",
+  "@errorRateLimited": {
+    "description": "Shown when the server rate limit is hit."
+  },
+  "copied": "Copied",
+  "@copied": {
+    "description": "Snackbar after copying."
+  },
+  "loading": "Loading…",
+  "@loading": {
+    "description": "Loading indicator label."
+  },
+  "signInTitle": "Sign in",
+  "@signInTitle": {
+    "description": "Sign-in screen title."
+  },
+  "signInIntro": "We'll email you a 6-digit code. No password needed.",
+  "@signInIntro": {
+    "description": "Sign-in explanation."
+  },
+  "signInEmailLabel": "Email address",
+  "@signInEmailLabel": {
+    "description": "Email field label."
+  },
+  "signInEmailInvalid": "Enter a valid email address.",
+  "@signInEmailInvalid": {
+    "description": "Email validation error."
+  },
+  "signInSendCode": "Send code",
+  "@signInSendCode": {
+    "description": "Button to request an email code."
+  },
+  "signInCodeLabel": "6-digit code",
+  "@signInCodeLabel": {
+    "description": "Code field label."
+  },
+  "signInCodeSent": "We sent a code to {email}. It expires in 10 minutes.",
+  "@signInCodeSent": {
+    "description": "Shown after sending the code.",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "thandi@example.com"
+      }
+    }
+  },
+  "signInVerify": "Sign in",
+  "@signInVerify": {
+    "description": "Button to verify the code."
+  },
+  "signInWrongCode": "That code didn't work. Check it, or ask for a new one.",
+  "@signInWrongCode": {
+    "description": "Invalid or expired code."
+  },
+  "signInUseDifferentEmail": "Use a different email",
+  "@signInUseDifferentEmail": {
+    "description": "Go back to the email step."
+  },
+  "signInResend": "Send a new code",
+  "@signInResend": {
+    "description": "Resend the code."
+  },
+  "onboardingConsentTitle": "Before you start",
+  "@onboardingConsentTitle": {
+    "description": "Consent step title."
+  },
+  "onboardingWhoTitle": "Only people you choose",
+  "@onboardingWhoTitle": {
+    "description": "Consent card heading."
+  },
+  "onboardingWhoBody": "Your location is shared only with people in Circles you join. Nobody can add you without your OK.",
+  "@onboardingWhoBody": {
+    "description": "Consent card body."
+  },
+  "onboardingWhatTitle": "Never secretly",
+  "@onboardingWhatTitle": {
+    "description": "Consent card heading."
+  },
+  "onboardingWhatBody": "While AfriSafety shares your location, a notification is always visible. There is no hidden mode.",
+  "@onboardingWhatBody": {
+    "description": "Consent card body."
+  },
+  "onboardingControlTitle": "You're in control",
+  "@onboardingControlTitle": {
+    "description": "Consent card heading."
+  },
+  "onboardingControlBody": "Pause sharing or leave a Circle at any time with one tap. Nobody can stop you.",
+  "@onboardingControlBody": {
+    "description": "Consent card body."
+  },
+  "onboardingEncryptedTitle": "End-to-end encrypted",
+  "@onboardingEncryptedTitle": {
+    "description": "Consent card heading."
+  },
+  "onboardingEncryptedBody": "Your location is encrypted on your phone. Our servers can't read it.",
+  "@onboardingEncryptedBody": {
+    "description": "Consent card body."
+  },
+  "onboardingAge": "I am 18 or older",
+  "@onboardingAge": {
+    "description": "Age confirmation checkbox (POPIA: minors need guardian consent)."
+  },
+  "onboardingLocationConsent": "I agree to share my location with Circles I join, as described above",
+  "@onboardingLocationConsent": {
+    "description": "Location-sharing consent checkbox."
+  },
+  "onboardingPrivacyConsent": "I have read the privacy summary and accept it",
+  "@onboardingPrivacyConsent": {
+    "description": "Privacy policy checkbox."
+  },
+  "onboardingReadPrivacy": "Read the privacy summary",
+  "@onboardingReadPrivacy": {
+    "description": "Link to the privacy summary."
+  },
+  "onboardingNameTitle": "What should your Circle call you?",
+  "@onboardingNameTitle": {
+    "description": "Display-name step title."
+  },
+  "onboardingNameHint": "This is the only detail about you that members see.",
+  "@onboardingNameHint": {
+    "description": "Display-name explanation."
+  },
+  "onboardingNameLabel": "Your name",
+  "@onboardingNameLabel": {
+    "description": "Display-name field label."
+  },
+  "onboardingNameInvalid": "Enter a name (up to 40 characters).",
+  "@onboardingNameInvalid": {
+    "description": "Display-name validation error."
+  },
+  "onboardingLocationTitle": "Location access",
+  "@onboardingLocationTitle": {
+    "description": "Permission step title."
+  },
+  "onboardingLocationBody": "AfriSafety uses your location to show it to people in your Circles and to include it in SOS alerts. It is collected only while sharing is on, and a notification is always shown.",
+  "@onboardingLocationBody": {
+    "description": "Prominent disclosure for location (Play policy)."
+  },
+  "onboardingLocationAllow": "Allow location",
+  "@onboardingLocationAllow": {
+    "description": "Button to request location permission."
+  },
+  "onboardingBackgroundTitle": "Keep sharing when the screen is off",
+  "@onboardingBackgroundTitle": {
+    "description": "Background location step title."
+  },
+  "onboardingBackgroundBody": "To keep your Circle updated while your phone is in your pocket, choose \"Allow all the time\" on the next screen. You can change this later in Settings.",
+  "@onboardingBackgroundBody": {
+    "description": "Prominent disclosure for background location (Play policy)."
+  },
+  "onboardingBackgroundAllow": "Choose \"Allow all the time\"",
+  "@onboardingBackgroundAllow": {
+    "description": "Button to request background location."
+  },
+  "onboardingNotificationsTitle": "Alerts from your Circle",
+  "@onboardingNotificationsTitle": {
+    "description": "Notification permission step title."
+  },
+  "onboardingNotificationsBody": "Allow notifications so you hear about SOS alerts, and so the sharing indicator can be shown.",
+  "@onboardingNotificationsBody": {
+    "description": "Notification permission explanation."
+  },
+  "onboardingNotificationsAllow": "Allow notifications",
+  "@onboardingNotificationsAllow": {
+    "description": "Button to request notification permission."
+  },
+  "privacyTitle": "Privacy summary",
+  "@privacyTitle": {
+    "description": "Privacy summary screen title."
+  },
+  "privacyBody": "• We collect your email, the name you choose and, only while sharing is on, your location.\n• Your location, alerts and places are end-to-end encrypted. Only the members you share with can read them, not AfriSafety.\n• We never sell or share your data with advertisers or data brokers.\n• You can pause, leave a Circle, or sign out at any time. Signing out removes this phone's keys.\n• Data is stored with our hosting provider (Supabase), which may be outside South Africa. See the full policy for details.\n• Questions or requests under POPIA: contact the AfriSafety Information Officer listed in the full policy.",
+  "@privacyBody": {
+    "description": "Plain-language privacy summary."
+  },
+  "navMap": "Map",
+  "@navMap": {
+    "description": "Bottom nav label."
+  },
+  "navJourney": "Journey",
+  "@navJourney": {
+    "description": "Bottom nav label."
+  },
+  "navSos": "SOS",
+  "@navSos": {
+    "description": "Bottom nav SOS label."
+  },
+  "navSosSemantic": "Send an SOS alert",
+  "@navSosSemantic": {
+    "description": "Screen reader label for the SOS button."
+  },
+  "navCircle": "Circle",
+  "@navCircle": {
+    "description": "Bottom nav label."
+  },
+  "navSafety": "Safety",
+  "@navSafety": {
+    "description": "Bottom nav label."
+  },
+  "mapSharingWith": "{count, plural, =0{Sharing your location with nobody yet} =1{Sharing your location with 1 person} other{Sharing your location with {count} people}}",
+  "@mapSharingWith": {
+    "description": "Status pill while sharing.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapSharingPaused": "Location sharing is paused",
+  "@mapSharingPaused": {
+    "description": "Status pill while paused."
+  },
+  "mapNeedsPermission": "Location access is off",
+  "@mapNeedsPermission": {
+    "description": "Status pill when permission is missing."
+  },
+  "mapPause": "Pause",
+  "@mapPause": {
+    "description": "Pause sharing button."
+  },
+  "mapResume": "Resume",
+  "@mapResume": {
+    "description": "Resume sharing button."
+  },
+  "mapAllow": "Allow",
+  "@mapAllow": {
+    "description": "Grant permission button."
+  },
+  "mapYourCircle": "Your circle",
+  "@mapYourCircle": {
+    "description": "Bottom sheet heading."
+  },
+  "mapListView": "Show as list (saves data)",
+  "@mapListView": {
+    "description": "Toggle to list view."
+  },
+  "mapMapView": "Show map",
+  "@mapMapView": {
+    "description": "Toggle back to map."
+  },
+  "mapYou": "You",
+  "@mapYou": {
+    "description": "Label for the user's own marker."
+  },
+  "mapNoCircleTitle": "Create or join a Circle",
+  "@mapNoCircleTitle": {
+    "description": "Empty state heading."
+  },
+  "mapNoCircleBody": "A Circle is a small group, like your family, who can see each other and get your SOS alerts.",
+  "@mapNoCircleBody": {
+    "description": "Empty state body."
+  },
+  "circleCreate": "Create a Circle",
+  "@circleCreate": {
+    "description": "Create button."
+  },
+  "circleJoin": "Join with a code",
+  "@circleJoin": {
+    "description": "Join button."
+  },
+  "statusLive": "Updated {time}",
+  "@statusLive": {
+    "description": "Member status: live location.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "statusPaused": "Paused sharing",
+  "@statusPaused": {
+    "description": "Member status: paused."
+  },
+  "statusSosOnly": "Shares SOS alerts only with you",
+  "@statusSosOnly": {
+    "description": "Member status: limited you."
+  },
+  "statusWaitingKeys": "Waiting for keys from their phone",
+  "@statusWaitingKeys": {
+    "description": "Member status: key not yet received."
+  },
+  "statusNoLocation": "No location shared yet",
+  "@statusNoLocation": {
+    "description": "Member status: nothing uploaded."
+  },
+  "statusUnverifiable": "Location couldn't be verified",
+  "@statusUnverifiable": {
+    "description": "Member status: failed authentication."
+  },
+  "statusMeSharing": "Sharing now",
+  "@statusMeSharing": {
+    "description": "Own status while sharing."
+  },
+  "timeJustNow": "just now",
+  "@timeJustNow": {
+    "description": "Relative time."
+  },
+  "timeMinutesAgo": "{minutes, plural, =1{1 min ago} other{{minutes} min ago}}",
+  "@timeMinutesAgo": {
+    "description": "Relative time.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeHoursAgo": "{hours, plural, =1{1 hour ago} other{{hours} hours ago}}",
+  "@timeHoursAgo": {
+    "description": "Relative time.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeDaysAgo": "{days, plural, =1{1 day ago} other{{days} days ago}}",
+  "@timeDaysAgo": {
+    "description": "Relative time.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "mapAttribution": "© OpenStreetMap contributors",
+  "@mapAttribution": {
+    "description": "Map data attribution (required by ODbL)."
+  },
+  "circleWhoCanSeeMe": "Who can see me",
+  "@circleWhoCanSeeMe": {
+    "description": "Circle tab title."
+  },
+  "circleE2eeBanner": "Your location is end-to-end encrypted. Only the people below can see it. Not even AfriSafety can.",
+  "@circleE2eeBanner": {
+    "description": "E2EE banner."
+  },
+  "circleLevelLive": "Live location",
+  "@circleLevelLive": {
+    "description": "Share level label."
+  },
+  "circleLevelSosOnly": "SOS alerts only",
+  "@circleLevelSosOnly": {
+    "description": "Share level label."
+  },
+  "circleOwnerTag": "Owner",
+  "@circleOwnerTag": {
+    "description": "Owner tag."
+  },
+  "circleToggleSemantic": "Share live location with {name}",
+  "@circleToggleSemantic": {
+    "description": "Screen reader label for share toggle.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "circleInvite": "Invite someone",
+  "@circleInvite": {
+    "description": "Invite button."
+  },
+  "circlePauseAll": "Pause all sharing",
+  "@circlePauseAll": {
+    "description": "Pause all button."
+  },
+  "circleResumeAll": "Resume sharing",
+  "@circleResumeAll": {
+    "description": "Resume button."
+  },
+  "circleLeave": "Leave {name}",
+  "@circleLeave": {
+    "description": "Leave button.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "circleLeaveConfirmTitle": "Leave {name}?",
+  "@circleLeaveConfirmTitle": {
+    "description": "Leave confirmation title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "circleLeaveConfirmBody": "Your location and alerts will be removed from this Circle straight away. You can rejoin with a new invite.",
+  "@circleLeaveConfirmBody": {
+    "description": "Leave confirmation body."
+  },
+  "circleLeaveConfirm": "Leave",
+  "@circleLeaveConfirm": {
+    "description": "Confirm leave."
+  },
+  "circleNoOthers": "Nobody else is here yet. Invite someone you trust.",
+  "@circleNoOthers": {
+    "description": "Circle with only the user."
+  },
+  "circleSwitch": "Switch Circle",
+  "@circleSwitch": {
+    "description": "Circle switcher tooltip."
+  },
+  "createTitle": "Create a Circle",
+  "@createTitle": {
+    "description": "Create screen title."
+  },
+  "createNameLabel": "Circle name",
+  "@createNameLabel": {
+    "description": "Circle name field."
+  },
+  "createNameHint": "For example: Family. Members of the Circle will see this name.",
+  "@createNameHint": {
+    "description": "Circle name hint."
+  },
+  "inviteTitle": "Invite to {name}",
+  "@inviteTitle": {
+    "description": "Invite sheet title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBody": "Share this code with someone you trust. It works for 48 hours and up to 5 people.",
+  "@inviteBody": {
+    "description": "Invite explanation."
+  },
+  "inviteShareText": "Join my AfriSafety Circle \"{name}\". Open AfriSafety, tap \"Join with a code\" and enter: {code} (valid for 48 hours).",
+  "@inviteShareText": {
+    "description": "Text shared with the invite.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "joinTitle": "Join a Circle",
+  "@joinTitle": {
+    "description": "Join screen title."
+  },
+  "joinCodeLabel": "Invite code",
+  "@joinCodeLabel": {
+    "description": "Code field label."
+  },
+  "joinCodeHint": "10 characters, like K7Q2M-9XW4P",
+  "@joinCodeHint": {
+    "description": "Code field hint."
+  },
+  "joinCheck": "Check code",
+  "@joinCheck": {
+    "description": "Button to preview an invite."
+  },
+  "joinInvalid": "That code isn't valid or has expired. Ask for a new one.",
+  "@joinInvalid": {
+    "description": "Invalid code error."
+  },
+  "joinPreviewTitle": "Join {name}?",
+  "@joinPreviewTitle": {
+    "description": "Preview title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinPreviewBody": "{inviter} invited you. {count, plural, =1{1 person is} other{{count} people are}} in this Circle. They will see your live location and get your SOS alerts. You can pause or leave at any time.",
+  "@joinPreviewBody": {
+    "description": "Preview body.",
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinAccept": "Join",
+  "@joinAccept": {
+    "description": "Accept invite."
+  },
+  "joinDecline": "No thanks",
+  "@joinDecline": {
+    "description": "Decline invite."
+  },
+  "safetyTitle": "Safety",
+  "@safetyTitle": {
+    "description": "Safety tab title."
+  },
+  "safetyEmergencyHeading": "Emergency numbers",
+  "@safetyEmergencyHeading": {
+    "description": "Section heading."
+  },
+  "safetyAccountHeading": "Account",
+  "@safetyAccountHeading": {
+    "description": "Section heading."
+  },
+  "safetySignedInAs": "Signed in as {name}",
+  "@safetySignedInAs": {
+    "description": "Account row.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safetySignOut": "Sign out",
+  "@safetySignOut": {
+    "description": "Sign-out button."
+  },
+  "safetySignOutConfirmTitle": "Sign out?",
+  "@safetySignOutConfirmTitle": {
+    "description": "Sign-out confirmation title."
+  },
+  "safetySignOutConfirmBody": "This phone's encryption keys will be erased and it will stop receiving locations and alerts. You can sign in again later.",
+  "@safetySignOutConfirmBody": {
+    "description": "Sign-out confirmation body."
+  },
+  "safetyPrivacy": "Privacy summary",
+  "@safetyPrivacy": {
+    "description": "Link to privacy summary."
+  },
+  "journeyComingSoon": "Walk me home: share your trip until you arrive. Coming in the next update.",
+  "@journeyComingSoon": {
+    "description": "Journey placeholder."
+  },
+  "sosCountdownTitle": "Sending SOS",
+  "@sosCountdownTitle": {
+    "description": "Countdown heading."
+  },
+  "sosCountdownBody": "Your Circle will get your location. Tap Cancel if this was a mistake.",
+  "@sosCountdownBody": {
+    "description": "Countdown explanation."
+  },
+  "sosCountdownSemantic": "Sending SOS in {seconds} seconds",
+  "@sosCountdownSemantic": {
+    "description": "Screen reader countdown.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "sosSendNow": "Send now",
+  "@sosSendNow": {
+    "description": "Skip countdown."
+  },
+  "sosAlertSent": "Alert sent",
+  "@sosAlertSent": {
+    "description": "Active heading when stored."
+  },
+  "sosSending": "Sending alert…",
+  "@sosSending": {
+    "description": "Active heading while sending."
+  },
+  "sosActiveBody": "Your live location is being shared with your Circles until you mark yourself safe.",
+  "@sosActiveBody": {
+    "description": "Active explanation."
+  },
+  "sosNoCircleBody": "You're not in a Circle yet, so nobody in AfriSafety can be alerted. Send an SMS or call for help.",
+  "@sosNoCircleBody": {
+    "description": "No-circle explanation."
+  },
+  "sosDelivery": "Delivery",
+  "@sosDelivery": {
+    "description": "Delivery card heading."
+  },
+  "sosStatusSending": "Sending",
+  "@sosStatusSending": {
+    "description": "Delivery status."
+  },
+  "sosStatusSent": "Sent",
+  "@sosStatusSent": {
+    "description": "Delivery status."
+  },
+  "sosStatusDelivered": "Delivered",
+  "@sosStatusDelivered": {
+    "description": "Delivery status."
+  },
+  "sosStatusSeen": "Seen",
+  "@sosStatusSeen": {
+    "description": "Delivery status."
+  },
+  "sosLocation": "{lat}, {lon} (±{accuracy} m)",
+  "@sosLocation": {
+    "description": "Location line.",
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lon": {
+        "type": "String"
+      },
+      "accuracy": {
+        "type": "String"
+      }
+    }
+  },
+  "sosNoLocation": "Location not available yet",
+  "@sosNoLocation": {
+    "description": "No fix."
+  },
+  "sosSms": "Send SMS with my location",
+  "@sosSms": {
+    "description": "SMS fallback button."
+  },
+  "sosSmsHint": "No data? This opens your SMS app with your location filled in.",
+  "@sosSmsHint": {
+    "description": "SMS fallback explanation."
+  },
+  "sosSmsBody": "AfriSafety SOS: I need help. My location: {lat}, {lon} (±{accuracy} m) {link}",
+  "@sosSmsBody": {
+    "description": "SMS text.",
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lon": {
+        "type": "String"
+      },
+      "accuracy": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "sosSmsBodyNoLocation": "AfriSafety SOS: I need help. My location isn't available. Please call me.",
+  "@sosSmsBodyNoLocation": {
+    "description": "SMS text without location."
+  },
+  "sosCallSaps": "Call SAPS 10111",
+  "@sosCallSaps": {
+    "description": "Dial SAPS."
+  },
+  "sosCall112": "Call 112",
+  "@sosCall112": {
+    "description": "Dial 112."
+  },
+  "sosImSafe": "I am safe, end alert",
+  "@sosImSafe": {
+    "description": "Resolve alert."
+  },
+  "sosDisclaimer": "AfriSafety does not replace emergency services.",
+  "@sosDisclaimer": {
+    "description": "Disclaimer."
+  },
+  "alertNeedsHelp": "{name} needs help",
+  "@alertNeedsHelp": {
+    "description": "Incoming alert heading.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertSomeoneNeedsHelp": "Someone in your Circle needs help",
+  "@alertSomeoneNeedsHelp": {
+    "description": "Fallback heading."
+  },
+  "alertSentAt": "{circle} · {time}",
+  "@alertSentAt": {
+    "description": "Alert subtitle.",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "alertNoDetails": "Details are still arriving. Keep this screen open or call them.",
+  "@alertNoDetails": {
+    "description": "Undecryptable alert."
+  },
+  "alertOpenMaps": "Open in maps",
+  "@alertOpenMaps": {
+    "description": "Open external maps app."
+  },
+  "alertSeen": "I've seen this",
+  "@alertSeen": {
+    "description": "Acknowledge and close."
+  },
+  "alertResolved": "{name} marked themselves safe",
+  "@alertResolved": {
+    "description": "Shown when resolved.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationSharingTitle": "AfriSafety is sharing your location",
+  "@notificationSharingTitle": {
+    "description": "Foreground service notification title."
+  },
+  "notificationSharingBody": "Open the app to pause, or to see who can see you.",
+  "@notificationSharingBody": {
+    "description": "Foreground service notification body."
   }
 }
