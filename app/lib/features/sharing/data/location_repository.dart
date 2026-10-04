@@ -93,19 +93,22 @@ class SupabaseLocationRepository implements LocationRepository {
         await controller.close();
       },
     );
-    channel = _db.channel('locations-$circleId')
-      ..onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        schema: 'public',
-        table: 'location_latest',
-        filter: PostgresChangeFilter(
-          type: PostgresChangeFilterType.eq,
-          column: 'circle_id',
-          value: circleId,
-        ),
-        callback: (_) => controller.add(null),
-      )
-      ..subscribe();
+    channel =
+        _db.channel(
+            'locations-$circleId-${DateTime.now().microsecondsSinceEpoch}',
+          )
+          ..onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'location_latest',
+            filter: PostgresChangeFilter(
+              type: PostgresChangeFilterType.eq,
+              column: 'circle_id',
+              value: circleId,
+            ),
+            callback: (_) => controller.add(null),
+          )
+          ..subscribe();
     return controller.stream;
   }
 }

@@ -98,7 +98,11 @@ class _StatusPill extends ConsumerWidget {
             () => ref
                 .read(locationSourceProvider)
                 .requestWhileInUse()
-                .then((_) => ref.invalidate(sharingControllerProvider)),
+                .then(
+                  (_) => ref
+                      .read(sharingControllerProvider.notifier)
+                      .refreshPermission(),
+                ),
           )
         : paused
         ? (

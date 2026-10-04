@@ -215,26 +215,29 @@ class SupabaseCirclesRepository implements CirclesRepository {
       },
     );
     void emit(PostgresChangePayload _) => controller.add(null);
-    channel = _db.channel('circle-changes-$_uid')
-      ..onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        schema: 'public',
-        table: 'circle_members',
-        callback: emit,
-      )
-      ..onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        schema: 'public',
-        table: 'share_levels',
-        callback: emit,
-      )
-      ..onPostgresChanges(
-        event: PostgresChangeEvent.insert,
-        schema: 'public',
-        table: 'sender_key_envelopes',
-        callback: emit,
-      )
-      ..subscribe();
+    channel =
+        _db.channel(
+            'circle-changes-$_uid-${DateTime.now().microsecondsSinceEpoch}',
+          )
+          ..onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'circle_members',
+            callback: emit,
+          )
+          ..onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'share_levels',
+            callback: emit,
+          )
+          ..onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'sender_key_envelopes',
+            callback: emit,
+          )
+          ..subscribe();
     return controller.stream;
   }
 }

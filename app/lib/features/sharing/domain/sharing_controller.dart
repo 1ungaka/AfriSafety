@@ -109,6 +109,13 @@ class SharingController extends Notifier<SharingState> {
     state = state.copyWith(permission: permission);
   }
 
+  /// Re-reads the permission (e.g. after the user changed it in Settings)
+  /// and starts or stops sharing accordingly.
+  Future<void> refreshPermission() async {
+    await _refreshPermission();
+    await _reconcileRunning();
+  }
+
   /// Emergency mode (during a panic): fastest, most accurate tracking.
   Future<void> setEmergency(bool on) async {
     if (_emergency == on) return;
@@ -224,13 +231,13 @@ class SharingController extends Notifier<SharingState> {
         _pending.remove(circleId); // paused or left meanwhile
         continue;
       }
-      var sealed = keys.encryptLocation(circleId, entry.value);
-      if (sealed == null) {
-        await keys.syncCircle(circleId);
-        sealed = keys.encryptLocation(circleId, entry.value);
-      }
-      if (sealed == null) continue;
       try {
+        var sealed = keys.encryptLocation(circleId, entry.value);
+        if (sealed == null) {
+          await keys.syncCircle(circleId);
+          sealed = keys.encryptLocation(circleId, entry.value);
+        }
+        if (sealed == null) continue;
         await repo.upload(
           circleId: circleId,
           deviceId: identity.deviceId,

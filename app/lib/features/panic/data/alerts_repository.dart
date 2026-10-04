@@ -174,14 +174,17 @@ class SupabaseAlertsRepository implements AlertsRepository {
         await controller.close();
       },
     );
-    channel = _db.channel('$name-${_db.auth.currentUser!.id}')
-      ..onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        schema: 'public',
-        table: table,
-        callback: (_) => controller.add(null),
-      )
-      ..subscribe();
+    channel =
+        _db.channel(
+            '$name-${_db.auth.currentUser!.id}-${DateTime.now().microsecondsSinceEpoch}',
+          )
+          ..onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: table,
+            callback: (_) => controller.add(null),
+          )
+          ..subscribe();
     return controller.stream;
   }
 

@@ -7,6 +7,7 @@ import '../../circles/domain/circles_controller.dart';
 import '../../circles/domain/models.dart';
 import '../../keys/domain/key_sync_service.dart';
 import '../../session/domain/session_controller.dart';
+import '../data/location_repository.dart';
 import 'sharing_controller.dart';
 
 enum MemberLocationStatus {
@@ -54,37 +55,44 @@ final memberLocationsProvider =
 /// live over Realtime. The server only ever sends ciphertext.
 class MemberLocationsController extends AsyncNotifier<List<MemberLocation>> {
   Timer? _debounce;
+  List<EncryptedLocation> _rows = const [];
 
   @override
   Future<List<MemberLocation>> build() async {
     final view = ref.watch(circlesControllerProvider).value?.selected;
-    // Re-render my own marker from the local fix as it changes.
-    ref.watch(sharingControllerProvider.select((s) => s.lastFix));
     if (view == null) return const [];
 
+    // My own marker comes from the local fix: no server round trip (and no
+    // data cost) for every GPS update.
+    ref.listen(sharingControllerProvider.select((s) => s.lastFix), (_, _) {
+      if (state.hasValue) state = AsyncData(_compose(view));
+    });
     final sub = ref
         .read(locationRepositoryProvider)
         .changes(view.circle.id)
         .listen((_) {
           _debounce?.cancel();
           _debounce = Timer(const Duration(milliseconds: 300), () async {
-            state = AsyncData(await _load(view));
+            await _fetch(view);
+            state = AsyncData(_compose(view));
           });
         });
     ref.onDispose(() {
       sub.cancel();
       _debounce?.cancel();
     });
-    return _load(view);
+    await _fetch(view);
+    return _compose(view);
   }
 
-  Future<List<MemberLocation>> _load(CircleView view) async {
+  Future<void> _fetch(CircleView view) async {
+    _rows = await ref.read(locationRepositoryProvider).fetch(view.circle.id);
+  }
+
+  List<MemberLocation> _compose(CircleView view) {
     final keys = ref.read(keySyncServiceProvider);
     final myFix = ref.read(sharingControllerProvider).lastFix;
-    final rows = await ref
-        .read(locationRepositoryProvider)
-        .fetch(view.circle.id);
-    final byUser = {for (final r in rows) r.userId: r};
+    final byUser = {for (final r in _rows) r.userId: r};
 
     return [
       for (final m in view.members)

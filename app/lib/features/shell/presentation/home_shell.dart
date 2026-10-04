@@ -8,6 +8,7 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../circles/domain/circles_controller.dart';
 import '../../circles/presentation/circle_tab.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
 import '../../push/push_service.dart';
@@ -29,6 +30,29 @@ class HomeShell extends ConsumerStatefulWidget {
 class _HomeShellState extends ConsumerState<HomeShell> {
   int _tab = 0;
   final Set<String> _shownAlerts = {};
+  AppLifecycleListener? _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle = AppLifecycleListener(
+      // Back from Settings or the background: pick up permission changes
+      // and anything Realtime may have missed while suspended.
+      onResume: () {
+        unawaited(
+          ref.read(sharingControllerProvider.notifier).refreshPermission(),
+        );
+        unawaited(ref.read(circlesControllerProvider.notifier).reload());
+        unawaited(ref.read(incomingAlertsProvider.notifier).refresh());
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycle?.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
