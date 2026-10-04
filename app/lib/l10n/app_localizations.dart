@@ -220,6 +220,24 @@ abstract class AppLocalizations {
   /// **'Too many attempts. Please wait a while and try again.'**
   String get errorRateLimited;
 
+  /// Shown when the phone can't reach the server.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach AfriSafety. Check your internet connection and try again.'**
+  String get errorNetwork;
+
+  /// Shown when the server fails to send the sign-in email.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t send the code email. Please try again in a few minutes.'**
+  String get errorEmailNotSent;
+
+  /// Shown for server errors and app configuration problems.
+  ///
+  /// In en, this message translates to:
+  /// **'AfriSafety\'s server isn\'t responding properly. Please try again later.'**
+  String get errorServerUnavailable;
+
   /// Snackbar after copying.
   ///
   /// In en, this message translates to:

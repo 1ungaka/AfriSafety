@@ -82,6 +82,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many attempts. Please wait a while and try again.';
 
   @override
+  String get errorNetwork =>
+      'Can\'t reach AfriSafety. Check your internet connection and try again.';
+
+  @override
+  String get errorEmailNotSent =>
+      'We couldn\'t send the code email. Please try again in a few minutes.';
+
+  @override
+  String get errorServerUnavailable =>
+      'AfriSafety\'s server isn\'t responding properly. Please try again later.';
+
+  @override
   String get copied => 'Copied';
 
   @override

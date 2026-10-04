@@ -186,6 +186,9 @@ already git-ignored, but there's no need to keep it.
 | Problem | Fix |
 |---|---|
 | No email arrives | Check spam. Check the SMTP settings and app password (1.3), and **Authentication → Logs** |
+| App says "We couldn't send the code email" | Supabase couldn't send through your SMTP. Usually a wrong Gmail app password (create a new one, paste it without spaces) or a wrong host/port. **Authentication → Logs** shows the exact error, e.g. `535 Username and Password not accepted` |
+| App says "AfriSafety's server isn't responding properly" | Check `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in `app\.env` (no quotes or spaces), then rerun `flutter run --dart-define-from-file=.env`. The `flutter run` window logs `Auth failed: misconfigured` in that case |
+| App says "Can't reach AfriSafety" | The phone is offline, or `SUPABASE_URL` has a typo in the host name |
 | Templates can't be edited | Set up custom SMTP first (1.3) |
 | Email has a link but no code | Edit both templates to include `{{ .Token }}` (1.3) |
 | "That code didn't work" | Codes expire after 10 minutes and work once. Request a new one |

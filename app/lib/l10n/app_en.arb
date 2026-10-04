@@ -90,6 +90,18 @@
   "@errorRateLimited": {
     "description": "Shown when the server rate limit is hit."
   },
+  "errorNetwork": "Can't reach AfriSafety. Check your internet connection and try again.",
+  "@errorNetwork": {
+    "description": "Shown when the phone can't reach the server."
+  },
+  "errorEmailNotSent": "We couldn't send the code email. Please try again in a few minutes.",
+  "@errorEmailNotSent": {
+    "description": "Shown when the server fails to send the sign-in email."
+  },
+  "errorServerUnavailable": "AfriSafety's server isn't responding properly. Please try again later.",
+  "@errorServerUnavailable": {
+    "description": "Shown for server errors and app configuration problems."
+  },
   "copied": "Copied",
   "@copied": {
     "description": "Snackbar after copying."

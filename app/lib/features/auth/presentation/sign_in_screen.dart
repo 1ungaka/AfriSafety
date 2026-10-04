@@ -8,6 +8,7 @@ import '../../../core/supabase/supabase_providers.dart';
 import '../../../core/widgets/afrisafety_logo.dart';
 import '../../../core/widgets/emergency_dial_bar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/auth_failure.dart';
 
 const _log = SafeLogger('auth');
 
@@ -93,16 +94,28 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     });
     try {
       await action();
-    } on AuthException catch (e) {
-      _log.warning('Auth failed (${e.statusCode})');
-      setState(
-        () => _error = e.statusCode == '429'
-            ? l10n.errorRateLimited
-            : (onAuthError ?? l10n.errorGeneric),
-      );
     } on Object catch (e) {
-      _log.warning('Auth request failed', e);
-      setState(() => _error = l10n.errorGeneric);
+      final failure = classifyAuthError(e);
+      // Log the HTTP status and Supabase error code only: auth messages can
+      // echo the email address, which doesn't belong in logs.
+      final code = e is AuthException
+          ? '${e.statusCode}/${e.code}'
+          : '${e.runtimeType}';
+      _log.warning('Auth failed: ${failure.name} ($code)');
+      if (failure == AuthFailure.misconfigured) {
+        _log.error('Check SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY in .env');
+      }
+      setState(
+        () => _error = switch (failure) {
+          AuthFailure.network => l10n.errorNetwork,
+          AuthFailure.rateLimited => l10n.errorRateLimited,
+          AuthFailure.emailNotSent => l10n.errorEmailNotSent,
+          AuthFailure.misconfigured ||
+          AuthFailure.server => l10n.errorServerUnavailable,
+          AuthFailure.rejected => onAuthError ?? l10n.errorGeneric,
+          AuthFailure.unknown => l10n.errorGeneric,
+        },
+      );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
