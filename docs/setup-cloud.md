@@ -92,8 +92,14 @@ Never put the **secret / service_role** key in the app.
 
 ## 2. Map tiles (about 5 minutes)
 
-The OpenStreetMap Foundation's own tile servers don't allow app traffic,
-so use a provider with a free tier. **MapTiler** is one:
+**Just testing on a few phones?** Skip the sign-up and use OpenStreetMap's
+own tiles:
+```
+TILE_URL_TEMPLATE=https://tile.openstreetmap.org/{z}/{x}/{y}.png
+```
+That's fine for light use (the app identifies itself and shows the
+attribution), but the OpenStreetMap Foundation forbids heavy app traffic, so a
+release must use a tile provider. **MapTiler** has a free tier:
 
 1. Sign up at **maptiler.com** and go to **Account → API keys**.
 2. Your tile URL is:
