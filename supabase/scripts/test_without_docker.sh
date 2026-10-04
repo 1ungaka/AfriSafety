@@ -68,6 +68,9 @@ grant usage on schema public to anon, authenticated, service_role;
 alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
 alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
 alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+
+-- Supabase Realtime streams changes from this publication.
+create publication supabase_realtime;
 SQL
 
 for migration in "$SUPABASE_DIR"/migrations/*.sql; do
