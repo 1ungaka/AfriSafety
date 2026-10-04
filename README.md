@@ -9,9 +9,12 @@ expensive data, patchy signal and load shedding.
 
 ## Status
 
-**Phase 0 (foundations) complete.** The project scaffold, encryption core,
-security guards and CI are in place. Phase 1 (MVP: sign-in, Circles, live map,
-panic button) is next. See the [build plan](docs/plan.md).
+**Phase 1 (MVP) complete:** sign-in, consent, Circles with invite codes,
+end-to-end encrypted live map with per-member "SOS alerts only", and the panic
+button with delivery receipts and an SMS fallback. Phase 2 (walk me home,
+check-in timer, places, SMS contacts) is next. See the [build plan](docs/plan.md).
+
+To run it against a cloud backend: [docs/setup-cloud.md](docs/setup-cloud.md).
 
 - [Architecture](docs/architecture.md)
 - [Security & threat model](SECURITY.md)

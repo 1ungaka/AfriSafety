@@ -5,11 +5,12 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**Phase 0 (foundations) is complete. Phase 1 (MVP) is next.** Read these before
-doing anything:
+**Phases 0 and 1 are complete. Phase 2 (safety features) is next.** Read these
+before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
-- `docs/plan.md`: phased task list and decisions (D1–D6)
+- `docs/plan.md`: phased task list and decisions (D1–D7)
+- `docs/setup-cloud.md`, `docs/setup-windows.md`: how the owner runs it (Windows)
 
 ## Working agreement
 
@@ -28,13 +29,15 @@ doing anything:
   readable without build_runner), go_router
 - **Backend:** Supabase (Postgres + RLS, Auth, Realtime, Edge Functions in Deno/TS,
   pg_cron; PostGIS for community features only), in `supabase/`
-- **Push:** Firebase Cloud Messaging (data-only messages)
+- **Push:** Firebase Cloud Messaging, optional, configured from dart-defines (no
+  google-services.json). Pushes carry generic text plus an opaque id, never personal data
 - **Maps:** flutter_map + OSM-based tiles (respect provider tile usage policy)
 - **Location:** geolocator + Android foreground service, behind `LocationSource`
 - **Crypto:** libsodium via the `sodium` package (v4 builds libsodium from source
   through build hooks; `sodium_libs` is deprecated, don't add it). Keys in
   `flutter_secure_storage`. All primitives live in `app/lib/core/crypto/`
-- **Local DB:** drift (SQLite), ciphertext only
+- **Offline:** in-memory retry of the latest fix per Circle (no drift/codegen yet; an
+  on-disk queue comes with location history in Phase 2)
 - **SMS:** Edge Function → Clickatell/Twilio. On-device `sms:` intent fallback
 
 ## Security rules (non-negotiable)
@@ -46,7 +49,8 @@ doing anything:
 3. **Location, places, alerts and journeys are E2EE.** The server must only ever see
    ciphertext for these. Any new plaintext location path needs explicit approval and
    must be documented in `docs/architecture.md` §4.5 and `SECURITY.md`.
-4. **AEAD AAD must bind** `circle_id ‖ user_id ‖ key_version` for Circle data.
+4. **AEAD AAD must bind** `context ‖ circle_id ‖ user_id ‖ key_version` for Circle
+   data (`CircleAad`).
 5. **RLS on every table, deny by default.** Every new table ships with pgTAP tests
    proving non-members get zero rows.
 6. **No silent tracking.** Location collection only happens inside the foreground
@@ -56,6 +60,8 @@ doing anything:
 8. **No `SEND_SMS` permission.** Use the `sms:` intent.
 9. `SECURITY DEFINER` functions go in the `private` schema with a pinned `search_path`.
 10. No third-party analytics or crash-reporting SDKs without approval.
+11. **Per-sender keys (D7).** Never reintroduce a shared Circle key. Who may hold a
+   key is decided only in `planKeySync`; rotation must follow any loss of access.
 
 ## Design
 
@@ -101,6 +107,7 @@ supabase db reset              # apply migrations + seed
 supabase test db               # pgTAP RLS tests
 supabase functions serve       # edge functions locally
 supabase/scripts/test_without_docker.sh   # pgTAP tests without Docker (run as non-root)
+deno check supabase/functions/dispatch-alert/index.ts && deno test supabase/functions/tests/
 ```
 
 Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
@@ -119,4 +126,7 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-03 | Riverpod without codegen; `sodium` instead of deprecated `sodium_libs` | Decided |
 | 2026-10-03 | Device keys stored as 32-byte seeds; key pairs re-derived on load | Decided |
 | 2026-10-04 | Visual design from the owner's Claude Design canvas; icon B "The Circle" | Decided |
-| 2026-10-04 | D7: per-sender keys vs one Circle key (needed for per-member sharing levels) | **Open: decide before Phase 1** |
+| 2026-10-04 | D7: per-sender keys (location + alert channel per device per Circle) | Decided (owner: "D7 yes") |
+| 2026-10-04 | Backend: cloud Supabase project instead of local Docker (owner: "(b)") | Decided |
+| 2026-10-04 | Push optional; generic notification text, details decrypted in-app | Decided |
+| 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

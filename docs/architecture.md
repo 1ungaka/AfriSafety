@@ -1,6 +1,6 @@
 # AfriSafety: Architecture Overview
 
-> Status: **Approved.** Phase 0 implemented. Decisions D1–D6 use the recommended options.
+> Status: **Phase 1 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft.
 > Package identifier: `za.co.afrisafety.app`
 
 AfriSafety is a privacy-first personal safety and location-sharing app for South
@@ -39,7 +39,7 @@ flowchart LR
     GEO[Geofence evaluator<br/>on-device]
     CRY[Crypto core<br/>libsodium via sodium]
     KS[(Secure storage<br/>Android Keystore)]
-    Q[(Offline queue<br/>SQLite / drift<br/>ciphertext only)]
+    Q[(Retry buffer<br/>in memory<br/>ciphertext only)]
     SMSI[SMS intent fallback<br/>no SEND_SMS permission]
   end
 
@@ -79,8 +79,8 @@ flowchart LR
 | Maps | `flutter_map` + `latlong2`, OSM-based tiles | Tile caching; follow the provider's usage policy |
 | Crypto | `sodium` (libsodium, built from source by build hooks) | X25519, XChaCha20-Poly1305, Ed25519 |
 | Key storage | `flutter_secure_storage` | Android Keystore-backed |
-| Local DB | `drift` (SQLite) | Offline queue and cache. Stores **ciphertext only** |
-| Push | `firebase_messaging` + `flutter_local_notifications` | Data-only pushes, decrypted on device |
+| Offline | In-memory | Latest unsent fix per Circle and pending alerts are retried; older fixes are superseded. (drift/SQLite deferred: no codegen, and stale locations have no value) |
+| Push | `firebase_messaging` (optional, configured from dart-defines) | Generic notification with an opaque incident id; details fetched and decrypted in the app |
 | Connectivity, battery | `connectivity_plus`, `battery_plus` | Adaptive tracking |
 | Sensors | `sensors_plus` | Shake trigger (Phase 3) |
 | App lock | `local_auth` + PIN fallback | Phase 3 |
@@ -98,11 +98,12 @@ with shared infrastructure in `lib/core/`. See [`plan.md`](plan.md#folder-struct
   Membership checks go through one `SECURITY DEFINER` helper,
   `private.is_circle_member(circle_id)`, with a fixed `search_path`. This avoids
   recursive policies and keeps the logic in one auditable place.
-- **Realtime:** Postgres Changes on `location_latest` and `alerts`. Realtime enforces
-  RLS, so subscribers only receive rows for Circles they belong to.
+- **Realtime:** Postgres Changes on `circle_members`, `share_levels`,
+  `sender_key_envelopes`, `location_latest`, `alerts` and `alert_receipts`. Realtime
+  enforces RLS, so subscribers only receive rows for Circles they belong to.
 - **Edge Functions (Deno/TypeScript):**
-  - `dispatch-alert`: fans out data-only FCM pushes to recipients' devices and
-    retries with backoff.
+  - `dispatch-alert` (Phase 1): pushes a generic, data-free FCM notification to
+    every member device, at most once per alert (§4.6).
   - `send-sms`: sends SMS to opted-in emergency contacts through the gateway.
     This is the only place plaintext location reaches our infrastructure (§4.5).
   - `checkin-watchdog`: run by `pg_cron`. It fires alerts when a check-in deadline
@@ -134,13 +135,15 @@ delete. Everything location-related is ciphertext.
 |---|---|---|---|
 | `profiles` | `id` (= `auth.uid()`), `display_name`, `avatar_path` | yes (minimal) | 1 |
 | `consents` | `user_id`, `consent_type`, `policy_version`, `granted_at`, `revoked_at` | yes (POPIA record) | 1 |
-| `devices` | `user_id`, `box_public_key`, `sign_public_key`, `fcm_token`, `revoked_at` | public keys only | 1 |
-| `circles` | `id`, `name`, `owner_id`, `current_key_version`, `membership_epoch` | name is plaintext (warned in UI) | 1 |
+| `devices` | `user_id`, `box_public_key`, `sign_public_key`, `revoked_at` | public keys only (co-members can read) | 1 |
+| `device_push_tokens` | `device_id`, `token` | owner and service role only | 1 |
+| `circles` | `id`, `name`, `owner_id` | name is plaintext (warned in UI) | 1 |
 | `circle_members` | `circle_id`, `user_id`, `role`, `joined_at`, `sharing_paused` | yes | 1 |
 | `circle_invites` | `circle_id`, `code_hash`, `expires_at`, `max_uses`, `uses` | code is **hashed** | 1 |
-| `circle_key_envelopes` | `circle_id`, `key_version`, `device_id`, `sealed_key` | sealed box | 1 |
-| `location_latest` | PK(`circle_id`,`user_id`), `key_version`, `ciphertext`, `updated_at` | ciphertext | 1 |
-| `alerts` | `id` (client UUID = idempotency key), `circle_id`, `sender_id`, `kind`, `ciphertext`, `created_at`, `resolved_at` | ciphertext | 1 |
+| `share_levels` | `circle_id`, `sharer_id`, `viewer_id`, `level` (`sos_only`; no row = live) | yes, readable by sharer and viewer only | 1 |
+| `sender_key_envelopes` | `circle_id`, `sender_device_id`, `channel` (`location`/`alert`), `key_version`, `recipient_device_id`, `sealed_key`, `signature` | sealed box + Ed25519 signature | 1 |
+| `location_latest` | PK(`circle_id`,`user_id`), `sender_device_id`, `key_version`, `ciphertext`, `updated_at` | ciphertext | 1 |
+| `alerts` | `id` (client UUID = idempotency key), `incident_id`, `circle_id`, `sender_id`, `sender_device_id`, `kind`, `key_version`, `ciphertext`, `created_at`, `resolved_at`, `dispatched_at` | ciphertext | 1 |
 | `alert_receipts` | `alert_id`, `recipient_id`, `delivered_at`, `seen_at` | yes | 1 |
 | `security_events` | `user_id`, `kind` (new device, member joined, key changed), `created_at` | yes (user-visible log) | 1 |
 | `places` | `circle_id`, `key_version`, `ciphertext` (name, centre, radius) | ciphertext | 2 |
@@ -148,7 +151,7 @@ delete. Everything location-related is ciphertext.
 | `journeys` | `owner_id`, `key_version`, `ciphertext`, `expires_at`, `ended_at` | ciphertext | 2 |
 | `checkins` | `user_id`, `due_at`, `status`, `sms_escrow_ciphertext` | see §4.5 | 2 |
 | `emergency_contacts` | `user_id`, `name`, `phone_e164`, `sms_consent_at` | yes (needed to send SMS) | 2 |
-| `rate_limits` | `bucket`, `subject`, `window_start`, `count` | yes | 1 |
+| `private.rate_limits` | `bucket`, `subject`, `window_start`, `hits` | yes (not exposed by the API) | 1 |
 | `incident_reports` | `category`, `grid_cell` (PostGIS, about 1 km), `occurred_at_bucket` | blurred | 4 |
 
 ---
@@ -159,13 +162,19 @@ delete. Everything location-related is ciphertext.
 
 | Key | Algorithm | Lives | Purpose |
 |---|---|---|---|
-| Device box keypair | X25519 (`crypto_box`) | private: Keystore-backed secure storage; public: `devices` | Receive sealed Circle keys |
-| Device signing keypair | Ed25519 (`crypto_sign`) | same | Sign key envelopes and rotations so recipients know which member device created them |
-| Circle key (per version) | 256-bit, XChaCha20-Poly1305 (`crypto_aead_xchacha20poly1305_ietf`) | memory and secure storage, never on the server in plaintext | Encrypt locations, places, alerts |
+| Device box keypair | X25519 (`crypto_box`) | 32-byte seed in Keystore-backed secure storage; public half in `devices` | Receive sealed sender keys |
+| Device signing keypair | Ed25519 (`crypto_sign`) | same | Sign key envelopes so recipients know which member device created them |
+| Sender key (per device × Circle × channel × version) | 256-bit, XChaCha20-Poly1305 (`crypto_aead_xchacha20poly1305_ietf`) | memory only; re-opened from envelopes on start (including the one a device seals to itself) | `location` channel: live location (and places later). `alert` channel: SOS alerts |
 | Journey key | 256-bit, same AEAD | sharer's device, recipients via sealed box or URL fragment | Ephemeral "Walk me home" sharing |
 
 Keys are **per device**, not per account, so a lost phone can be revoked without
 re-keying the user's other devices.
+
+**Why per-sender keys (D7):** with one shared Circle key, anyone holding it can
+read everyone's location, so "SOS alerts only" for one member is impossible. With
+sender keys, each person decides who receives their `location` key. Everyone
+always receives their `alert` key, so SOS alerts always get through. Rotation is
+also local: a sharer only re-keys their own stream.
 
 ### 4.2 Location update (hot path)
 
@@ -181,54 +190,62 @@ sequenceDiagram
   L->>L: New fix (adaptive interval)
   L->>C: Encode binary payload (~22 bytes)
   loop for each Circle where sharing is not paused
-    C->>C: AEAD encrypt with Circle key v(n)<br/>AAD = circle_id ‖ user_id ‖ key_version
+    C->>C: AEAD encrypt with my location key v(n)<br/>AAD = context ‖ circle_id ‖ user_id ‖ key_version
     C->>Q: enqueue ciphertext
   end
   Q->>S: upsert when online (batched on poor links)
   S->>R: change event (RLS-filtered)
   R->>M: ciphertext
-  M->>M: decrypt with Circle key v(n), render on map
+  M->>M: decrypt with sender's key v(n), render on map
 ```
 
 **Payload format (v1):** `version:u8 | lat:i32 (1e-6°) | lon:i32 | accuracy_m:u16 |
 recorded_at:u32 (unix s) | speed_dm_s:u16 | battery_pct:u8 | flags:u8`. That is 19
 bytes, plus a 24-byte nonce and a 16-byte tag, so about 60 bytes. Base64 brings it
-to about 80 bytes on the wire. The AAD binds the ciphertext to its Circle, sender
-and key version, so the server cannot replay one member's location as another's
-or move it between Circles.
+to about 80 bytes on the wire. The AAD binds the ciphertext to its purpose
+(location vs alert), Circle, sender and key version, so the server cannot replay one
+member's location as another's, move it between Circles, or pass a location off as
+an alert.
 
 ### 4.3 Joining a Circle and key distribution
 
-1. Inviter creates an invite. The server stores `sha256(code)`, an expiry (48 h) and
-   a use count. The code is 10 characters of Crockford base32 (about 50 bits), so it
-   can be shared verbally.
-2. Invitee enters the code or opens the link, sees the Circle name and who is in it,
-   plus a plain-language consent screen, then **accepts or declines**.
-3. On accept, the server adds the membership, increments `membership_epoch` and
-   writes a `security_events` row for **every** member ("Thandi joined Family").
-4. The inviter's device (or any online member device, as a fallback) sees the
-   pending member, fetches their device public keys, records their fingerprints
-   (trust on first use, with a warning if a known member's key ever changes), and
-   writes a signed `crypto_box_seal` envelope of the current Circle key for each new
-   device. In Phase 3, members can verify each other's fingerprints in person by
-   scanning a QR code, which defeats a server that injects its own key.
-5. Until step 4 completes (usually seconds), the new member sees "Waiting for a
-   Circle member to come online to share keys."
+1. A member creates an invite. The server stores `sha256(code)`, an expiry (48 h)
+   and a use limit (5). The code is 10 Crockford base32 characters (about 50 bits),
+   shown as `XXXXX-XXXXX` so it can be read out over the phone. Redeeming is rate
+   limited to 10 attempts an hour, and wrong codes count.
+2. The invitee enters the code, sees the Circle name, who invited them and the
+   member count, then **accepts or declines**. Joining requires recorded
+   location-sharing and 18+ consent.
+3. On accept, the server adds the membership and writes a `security_events` row for
+   **every** member ("Thandi joined Family").
+4. Key sync runs on every device after any membership change (Realtime event,
+   app start, resume). Each device plans, per Circle and channel
+   (`planKeySync`), which devices are allowed its key. It then seals its current
+   key to every allowed device that lacks it, and signs each envelope.
+5. Until the other members' phones have been online, the new member sees "Waiting
+   for keys from their phone" for them. A phone that is sharing location is online,
+   so this is usually seconds.
 
-### 4.4 Leaving, removal, device revocation and key rotation
+Envelope signatures are verified against the sender device's public key from
+`devices`. That is **trust on first use**: a malicious server could still register
+a fake device. In-person QR fingerprint verification (Phase 3) closes that gap.
 
-- **Leave** is a single RPC that deletes the member's row, their `location_latest`
-  rows and their envelopes. It can't be blocked and needs no approval. The client
-  also wipes the local Circle key.
-- The server then sets `circles.rotation_required = true`. The **first remaining
-  member device** to come online generates key `v(n+1)`, seals it for all remaining
-  devices, signs the rotation, and inserts it. A unique constraint on
-  `(circle_id, key_version)` makes concurrent rotations safe: one wins and the
-  others fetch it.
-- Clients refuse to encrypt with a stale version once a newer one exists.
-- **Defence in depth:** even before rotation completes, RLS already stops the
-  departed member from reading anything new. Rotation is what protects against a
-  departed member who later obtains a database dump.
+### 4.4 Leaving, device revocation, downgrades and rotation
+
+A device **rotates** (new key version, sealed only to allowed devices) whenever a
+device holding its current key is no longer allowed it:
+
+| Event | What happens |
+|---|---|
+| Member leaves | `leave_circle` deletes their membership, location, alerts and the envelopes *they* sent. Envelopes sealed *to* them stay but become unreadable to them (RLS requires membership). Remaining devices see them and rotate both channels |
+| Device revoked (sign-out, lost phone) | Members rotate away from it. The new phone receives fresh envelopes |
+| Viewer set to "SOS alerts only" | The sharer rotates only the `location` key. The viewer keeps getting alerts |
+
+After rotating, the sharer immediately re-uploads their location under the new key,
+and deletes envelopes addressed to devices that are no longer allowed
+(housekeeping). Rotations are serialised per device, and version numbers never
+repeat. **Defence in depth:** RLS cuts a leaver off straight away. Rotation is what
+protects against someone who kept old keys or later obtains a database dump.
 
 ### 4.5 Where plaintext is unavoidable (documented trade-offs)
 
@@ -245,10 +262,15 @@ needs the sender to have *some* connectivity.
 
 ### 4.6 Push notifications
 
-FCM messages are **data-only and contain only an opaque alert ID**. The app's
-background handler fetches the encrypted alert, decrypts it, and shows a local
-notification ("Emergency: Lwazi needs help, tap for location"). If decryption or
-fetch fails, it falls back to a generic "AfriSafety emergency alert. Open the app."
+Phase 1: the `dispatch-alert` Edge Function sends an FCM notification with
+**fixed, generic text** ("AfriSafety emergency alert. Someone in your Circle needs
+help. Open AfriSafety.") and an opaque incident id. It never includes names,
+Circles or locations. Tapping it opens the app, which fetches and decrypts the
+alert. Each alert is pushed at most once (`dispatched_at`), only by its sender,
+within 10 minutes of being raised.
+
+Later: decrypt in a background isolate and show "Lwazi needs help" without opening
+the app.
 
 ---
 
@@ -302,7 +324,7 @@ sequenceDiagram
       U->>S: insert alerts(id=UUID, ciphertext)
     end
     S->>F: DB webhook / trigger
-    F->>P: data-only push to every member device (retries)
+    F->>P: generic push (no personal data) to every member device
     P->>R: alert_id
     R->>S: fetch + decrypt, mark delivered
     R->>S: mark seen when opened
@@ -320,9 +342,11 @@ In danger, call 10111 (SAPS) or 112."*
 
 ## 7. Offline, data and low-end device strategy
 
-- **Offline queue:** ciphertext in SQLite. Only the latest fix per Circle is kept
-  for `location_latest`. History points are batched (Phase 2). Alerts are never
-  dropped.
+- **Offline (Phase 1):** the newest unsent fix per Circle is kept in memory and
+  retried every 20 s; older fixes are superseded, because a stale location has no
+  value and costs data. Panic alerts retry with backoff until stored, and the SMS
+  fallback appears after 10 s without confirmation. A persistent on-disk queue
+  arrives with location history (Phase 2).
 - **Batching:** on 2G/EDGE or when the last request took > 3 s, coalesce uploads.
 - **Map data:** tile caching, a "Data saver" mode that shows a list view (name,
   distance, last updated) with no tiles, and tile loading only on demand. Production
