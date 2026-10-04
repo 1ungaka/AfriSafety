@@ -6,20 +6,39 @@ import 'package:sodium/sodium.dart';
 import 'payload_cipher.dart';
 import 'uuid_bytes.dart';
 
-/// A Circle key, sealed to one recipient device and signed by the sender.
+/// Which of a sender's keys an envelope carries (D7, per-sender keys).
 ///
-/// This is how Circle keys travel through the server without the server
-/// being able to read them:
+/// * [location]: given only to members allowed to see live location.
+/// * [alert]: given to every member, so SOS alerts always get through.
+enum KeyChannel {
+  location(0),
+  alert(1);
+
+  const KeyChannel(this.wireId);
+
+  /// Byte used in signed envelope bytes.
+  final int wireId;
+
+  static KeyChannel fromName(String name) =>
+      values.firstWhere((c) => c.name == name);
+}
+
+/// A sender key, sealed to one recipient device and signed by the sender.
+///
+/// This is how keys travel through the server without the server being
+/// able to read them:
 ///
 /// 1. `crypto_box_seal` encrypts the key to the recipient device's X25519
 ///    public key. Only that device can open it.
 /// 2. Sealed boxes are anonymous, so the sending device also signs the
-///    envelope (Ed25519). The signed bytes include the Circle, key version,
-///    recipient and sender, so the server cannot replay an envelope into a
-///    different Circle or key version, or claim it came from someone else.
+///    envelope (Ed25519). The signed bytes include the Circle, channel, key
+///    version, recipient and sender, so the server cannot replay an envelope
+///    into a different Circle, relabel a location key as an alert key, or
+///    claim it came from someone else.
 class KeyEnvelope {
   const KeyEnvelope({
     required this.circleId,
+    required this.channel,
     required this.keyVersion,
     required this.recipientDeviceId,
     required this.senderDeviceId,
@@ -28,6 +47,7 @@ class KeyEnvelope {
   });
 
   final String circleId;
+  final KeyChannel channel;
   final int keyVersion;
   final String recipientDeviceId;
   final String senderDeviceId;
@@ -45,6 +65,7 @@ class KeyEnvelopeService {
   KeyEnvelope seal({
     required SecureKey circleKey,
     required String circleId,
+    required KeyChannel channel,
     required int keyVersion,
     required String recipientDeviceId,
     required Uint8List recipientBoxPublicKey,
@@ -64,6 +85,7 @@ class KeyEnvelopeService {
     final signature = _sodium.crypto.sign.detached(
       message: _signedBytes(
         circleId: circleId,
+        channel: channel,
         keyVersion: keyVersion,
         recipientDeviceId: recipientDeviceId,
         senderDeviceId: senderDeviceId,
@@ -73,6 +95,7 @@ class KeyEnvelopeService {
     );
     return KeyEnvelope(
       circleId: circleId,
+      channel: channel,
       keyVersion: keyVersion,
       recipientDeviceId: recipientDeviceId,
       senderDeviceId: senderDeviceId,
@@ -91,6 +114,7 @@ class KeyEnvelopeService {
     final valid = _sodium.crypto.sign.verifyDetached(
       message: _signedBytes(
         circleId: envelope.circleId,
+        channel: envelope.channel,
         keyVersion: envelope.keyVersion,
         recipientDeviceId: envelope.recipientDeviceId,
         senderDeviceId: envelope.senderDeviceId,
@@ -120,6 +144,7 @@ class KeyEnvelopeService {
 
   Uint8List _signedBytes({
     required String circleId,
+    required KeyChannel channel,
     required int keyVersion,
     required String recipientDeviceId,
     required String senderDeviceId,
@@ -129,6 +154,7 @@ class KeyEnvelopeService {
     return (BytesBuilder(copy: false)
           ..add(utf8.encode(_label))
           ..add(uuidToBytes(circleId))
+          ..addByte(channel.wireId)
           ..add(version.buffer.asUint8List())
           ..add(uuidToBytes(recipientDeviceId))
           ..add(uuidToBytes(senderDeviceId))

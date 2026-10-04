@@ -40,6 +40,7 @@ void main() {
   KeyEnvelope seal() => service.seal(
     circleKey: circleKey,
     circleId: circleId,
+    channel: KeyChannel.location,
     keyVersion: 3,
     recipientDeviceId: recipientDevice,
     recipientBoxPublicKey: recipient.box.publicKey,
@@ -50,11 +51,13 @@ void main() {
   KeyEnvelope copyWith(
     KeyEnvelope e, {
     String? circle,
+    KeyChannel? channel,
     int? version,
     String? senderId,
     Uint8List? sealedKey,
   }) => KeyEnvelope(
     circleId: circle ?? e.circleId,
+    channel: channel ?? e.channel,
     keyVersion: version ?? e.keyVersion,
     recipientDeviceId: e.recipientDeviceId,
     senderDeviceId: senderId ?? e.senderDeviceId,
@@ -119,6 +122,9 @@ void main() {
       'as another key version',
       () => expectRejected(copyWith(seal(), version: 4)),
     );
+    test('as another channel (location key relabelled as alert key)', () {
+      expectRejected(copyWith(seal(), channel: KeyChannel.alert));
+    });
     test('as from another sender device', () {
       expectRejected(copyWith(seal(), senderId: recipientDevice));
     });
