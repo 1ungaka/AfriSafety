@@ -22,7 +22,10 @@ dependencies:
   intl: ^0.20.3
   latlong2: ^0.10.1
   path_provider: ^2.1.6
-  permission_handler: ^13.0.2
+  # Pinned: 13.x pulls permission_handler_android 14.x, which needs Android
+  # SDK 37 - newer than the Android Gradle Plugin bundled with Flutter 3.47
+  # supports. 12.0.3 uses permission_handler_android 13.0.1 (SDK 35).
+  permission_handler: 12.0.3
   share_plus: ^13.3.1
   sodium: ^4.1.1+2
   supabase_flutter: ^2.18.0

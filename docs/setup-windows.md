@@ -263,4 +263,5 @@ flutter test
 | `flutter devices` doesn't list the phone | Run `adb devices`. If it says `unauthorized`, accept the prompt on the phone. If it's empty, check the cable, USB mode (File transfer) and the OEM driver |
 | `[sodium] WARNING: configure: ... signal handlers` | Harmless. libsodium's configure step is working |
 | "Skipped N frames" in the log of a debug build | Normal for debug. Use `flutter run --release` to judge real speed |
+| `permission_handler_android requires ... compile against version 37` | Fixed in the repo by pinning `permission_handler` to 12.0.3. Run `git pull`, then `flutter pub get` |
 | Build fails in a `sodium` step | Copy the whole error text and send it to Claude. Cross-compiling libsodium on Windows is the most fragile step |
