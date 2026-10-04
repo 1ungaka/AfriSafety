@@ -107,7 +107,16 @@ winget install --id Google.AndroidStudio -e --source winget
 1. Open Android Studio and choose **Standard** in the setup wizard. It downloads
    the Android SDK.
 2. On the welcome screen: **More Actions → SDK Manager → SDK Tools** tab. Tick
-   **Android SDK Command-line Tools (latest)**, then **Apply**.
+   **Show Package Details**, then tick:
+   - **Android SDK Command-line Tools (latest)**
+   - **Android SDK Platform-Tools**
+   - **NDK (Side by side) → 28.2.13676358** (needed to compile libsodium).
+     Gradle can't install it automatically any more: Google replaced
+     `sdkmanager` with the new Android CLI, which fails with
+     `Package ndk not found`.
+   - **CMake** (latest)
+
+   Then **Apply**.
 3. Optional: **Plugins → Flutter** (also installs Dart) if you want to code in
    Android Studio. VS Code with the Flutter extension works too.
 
@@ -215,7 +224,7 @@ flutter pub get
 flutter run --dart-define-from-file=.env
 ```
 
-The **first build takes 10–20 minutes**: Gradle downloads, the Android NDK
+The **first build takes 10–20 minutes** (about 8½ minutes on a typical laptop): Gradle downloads, the Android NDK
 installs, and libsodium compiles for each phone CPU type. Later builds take
 under a minute. You should see the Circle icon and the AfriSafety home screen.
 
@@ -249,4 +258,9 @@ flutter test
 | `supabase start` says Docker isn't running | Open Docker Desktop and wait for "Engine running". If WSL errors appear, run `wsl --update` |
 | Port 54321 already in use | `supabase stop`, then `supabase start` again |
 | Phone missing from `flutter devices` | Use a data cable (not charge-only), accept the USB debugging prompt, install the OEM driver |
+| `Android sdkmanager did not install NDK 28.2.13676358` / `Package ndk not found` | Install **NDK (Side by side) 28.2.13676358** in Android Studio's SDK Manager (step 5) |
+| `Android SDK file not found: ...build-tools\36.1.0\aapt` | SDK Manager → SDK Tools → Show Package Details → reinstall **Android SDK Build-Tools 36.1.0** |
+| `flutter devices` doesn't list the phone | Run `adb devices`. If it says `unauthorized`, accept the prompt on the phone. If it's empty, check the cable, USB mode (File transfer) and the OEM driver |
+| `[sodium] WARNING: configure: ... signal handlers` | Harmless. libsodium's configure step is working |
+| "Skipped N frames" in the log of a debug build | Normal for debug. Use `flutter run --release` to judge real speed |
 | Build fails in a `sodium` step | Copy the whole error text and send it to Claude. Cross-compiling libsodium on Windows is the most fragile step |
