@@ -44,26 +44,41 @@ Check that it worked: **Table Editor** should list `circles`, `devices`,
 `location_latest` and the other tables, each with a **RLS enabled** badge.
 
 ### 1.3 Configure sign-in (email codes)
-Dashboard → **Authentication**:
 
-1. **Sign In / Providers → Email:** enabled. Turn **Confirm email** on.
-2. **Emails → Templates:** the app signs in with a 6-digit **code**, not a
-   link, so edit **both** the *Confirm signup* and *Magic Link* templates to
-   show the code. For example:
+Supabase only lets you edit email templates after you connect your own email
+service (SMTP). Its built-in email also only reaches your own Supabase team, so
+you need SMTP before anyone else can sign up anyway.
+
+**Development: Gmail with an app password** (free, about 5 minutes)
+1. **myaccount.google.com → Security:** turn on **2-Step Verification**.
+2. Search your Google Account for **App passwords**. Create one named
+   `AfriSafety Supabase` and copy the 16-character password. It's a secret.
+3. Supabase → **Authentication → Emails → Set up SMTP**:
+
+   | Field | Value |
+   |---|---|
+   | Enable custom SMTP | On |
+   | Sender email / Username | your Gmail address |
+   | Sender name | `AfriSafety` |
+   | Host / Port | `smtp.gmail.com` / `465` |
+   | Password | the app password (no spaces) |
+   | Minimum interval | `60` seconds |
+
+For a public launch, use a sender on your own domain (e.g. Resend or Brevo)
+instead of a personal Gmail.
+
+**Then:**
+1. **Emails → Templates:** the app signs in with a 6-digit **code**, not a link.
+   Edit **both** *Confirm signup* and *Magic Link* (Source tab), set the subject
+   to `Your AfriSafety code`, and use:
    ```html
    <h2>Your AfriSafety code</h2>
    <p>Enter this code in the app: <strong>{{ .Token }}</strong></p>
    <p>It expires in 10 minutes. Never share it with anyone.</p>
    ```
-3. **Configuration → Auth settings:** set *Email OTP Expiration* to `600`
-   seconds (10 minutes).
-4. **Rate limits:** keep the defaults or tighten them.
-
-> **Email delivery:** Supabase's built-in email only sends to members of
-> your Supabase team, and only a few emails per hour. That's fine for
-> testing with your own address. Before family or friends can sign up, add
-> a custom SMTP provider (e.g. Resend or Brevo free tier) under
-> **Authentication → Emails → SMTP settings**.
+2. **Sign In / Providers → Email:** enabled, *Confirm email* on, *Email OTP
+   Expiration* `600` seconds.
+3. **Rate limits:** keep the defaults or tighten them.
 
 ### 1.4 Get the app keys
 Dashboard → **Project Settings → API Keys**. Copy:
@@ -170,7 +185,8 @@ already git-ignored, but there's no need to keep it.
 
 | Problem | Fix |
 |---|---|
-| No email arrives | Check spam. Built-in email only reaches Supabase team members (see 1.3). Check **Authentication → Logs** |
+| No email arrives | Check spam. Check the SMTP settings and app password (1.3), and **Authentication → Logs** |
+| Templates can't be edited | Set up custom SMTP first (1.3) |
 | Email has a link but no code | Edit both templates to include `{{ .Token }}` (1.3) |
 | "That code didn't work" | Codes expire after 10 minutes and work once. Request a new one |
 | Map is grey, but members are listed | Check `TILE_URL_TEMPLATE` and your MapTiler key. The list view works without tiles |
