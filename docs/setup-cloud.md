@@ -100,7 +100,10 @@ so use a provider with a free tier. **MapTiler** is one:
    ```
    https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=YOUR_KEY
    ```
-3. In MapTiler, restrict the key to your app if the option is offered.
+3. Don't add **Allowed HTTP origins** to the key. Phone apps send no web
+   origin, so MapTiler rejects every tile and the map shows "Invalid key".
+   A tile key ships inside the app anyway, so it's public by design; watch
+   your usage in MapTiler instead.
 
 (Stadia Maps and Thunderforest work too. Use any `{z}/{x}/{y}` raster URL.)
 
@@ -192,6 +195,7 @@ already git-ignored, but there's no need to keep it.
 | Templates can't be edited | Set up custom SMTP first (1.3) |
 | Email has a link but no code | Edit both templates to include `{{ .Token }}` (1.3) |
 | "That code didn't work" | Codes expire after 10 minutes and work once. Request a new one |
+| Map says "Invalid key" | `TILE_URL_TEMPLATE` still has `YOUR_KEY`, the key was copied wrong, or the key has HTTP-origin restrictions (section 2). Fix `app\\.env`, then stop the app and rerun `flutter run --dart-define-from-file=.env` (hot reload doesn't reread `.env`) |
 | Map is grey, but members are listed | Check `TILE_URL_TEMPLATE` and your MapTiler key. The list view works without tiles |
 | Member shows "Waiting for keys from their phone" | Their phone hasn't been online since you joined. Opening AfriSafety on it hands over the keys |
 | Sharing stops after swiping the app away | Known Phase 1 limitation. Keep the app in recents. Fixed in Phase 2 (headless background service) |
