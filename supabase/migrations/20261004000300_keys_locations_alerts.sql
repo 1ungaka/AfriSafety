@@ -129,6 +129,9 @@ create table public.alerts (
   ciphertext text not null check (char_length(ciphertext) <= 1024),
   created_at timestamptz not null default now(),
   resolved_at timestamptz,
+  -- Set by the dispatch-alert function (service role) after pushing, so a
+  -- sender can't make it push the same alert again and again.
+  dispatched_at timestamptz,
   foreign key (circle_id, sender_id)
     references public.circle_members (circle_id, user_id) on delete cascade
 );
@@ -147,6 +150,7 @@ create policy alerts_insert_own on public.alerts
   with check (
     sender_id = (select auth.uid())
     and resolved_at is null
+    and dispatched_at is null
     and private.is_my_active_device(sender_device_id)
     and private.is_circle_member(circle_id)
   );

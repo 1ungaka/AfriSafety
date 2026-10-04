@@ -23,3 +23,15 @@ jobs:
         run: supabase db lint --level error
       - name: RLS and security tests (pgTAP)
         run: supabase test db
+
+  edge-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check
+        run: deno check supabase/functions/dispatch-alert/index.ts
+      - name: Unit tests
+        run: deno test supabase/functions/tests/

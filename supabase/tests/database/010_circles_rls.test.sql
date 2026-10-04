@@ -275,6 +275,16 @@ select throws_ok(
 select throws_ok(
   $$ select acknowledge_alert('a1e70000-0000-4000-8000-000000000001', true) $$,
   '42501', 'not_a_recipient', 'the sender cannot acknowledge their own alert');
+select throws_ok(
+  $$ insert into alerts (id, incident_id, circle_id, sender_id, sender_device_id, kind, key_version,
+       ciphertext, dispatched_at)
+     values ('a1e70000-0000-4000-8000-000000000003', 'a1e70000-0000-4000-8000-0000000000fd',
+       (select val::uuid from t_ids where name = 'family'), auth.uid(),
+       'bbbbbbbb-0000-4000-8000-0000000000d2', 'panic', 1, 'AAAA', now()) $$,
+  '42501', null, 'clients cannot set dispatched_at (only the push function does)');
+select throws_ok(
+  $$ update alerts set dispatched_at = null $$,
+  '42501', null, 'alerts cannot be edited directly');
 
 set local request.jwt.claims = '{"sub":"aaaaaaaa-0000-4000-8000-000000000001","role":"authenticated"}';
 select is((select count(*)::int from alerts), 1, 'members receive the alert');
