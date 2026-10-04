@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sodium/sodium.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/config/app_config.dart';
 import 'core/config/config_providers.dart';
 import 'core/crypto/crypto_providers.dart';
+import 'core/crypto/secret_store.dart';
 import 'core/logging/safe_logger.dart';
+import 'core/supabase/secure_session_storage.dart';
+import 'core/supabase/supabase_providers.dart';
+import 'features/push/push_service.dart';
 
 const _log = SafeLogger('bootstrap');
 
@@ -30,11 +35,26 @@ Future<void> bootstrap() async {
   // package's build hook, so there's no prebuilt binary to trust.
   final sodium = await SodiumInit.init();
 
+  final secrets = FlutterSecretStore();
+  await Supabase.initialize(
+    url: config.supabaseUrl,
+    publishableKey: config.supabasePublishableKey,
+    authOptions: FlutterAuthClientOptions(
+      localStorage: SecureSessionStorage(secrets),
+    ),
+  );
+
+  // Optional: the app works without push (alerts then arrive while open).
+  final pushAvailable = await initPush(config.firebase);
+
   runApp(
     ProviderScope(
       overrides: [
         appConfigProvider.overrideWithValue(config),
         sodiumProvider.overrideWithValue(sodium),
+        secretStoreProvider.overrideWithValue(secrets),
+        supabaseProvider.overrideWithValue(Supabase.instance.client),
+        pushAvailableProvider.overrideWithValue(pushAvailable),
       ],
       child: const AfriSafetyApp(),
     ),
