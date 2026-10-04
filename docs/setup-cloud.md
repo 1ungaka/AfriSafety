@@ -23,7 +23,12 @@ git pull origin claude/safety-app-prompt-ga7xf8
 3. **Region:** pick the closest one with strong data-protection law, e.g.
    *West EU (Ireland)* or *Central EU (Frankfurt)*. Note the region; it goes
    in the privacy policy (POPIA s72, cross-border transfer).
-4. Wait for the project to finish setting up.
+4. **Security** options:
+   - **Enable Data API:** on (the app uses it).
+   - **Automatically expose new tables:** **off**. Our migrations grant exactly what's needed (`20261004000400_explicit_api_grants.sql`).
+   - **Enable automatic RLS:** on (a safety net; migrations enable RLS anyway).
+   - GitHub repository: leave empty.
+5. Wait for the project to finish setting up.
 
 ### 1.2 Push the database schema
 ```powershell
