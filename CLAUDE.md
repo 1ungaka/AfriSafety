@@ -5,7 +5,7 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**Phases 0 and 1 are complete. Phase 2 (safety features) is next.** Read these
+**Phases 0 and 1 are complete (Phase 1 verified on two devices, 2026-10-05). Phase 2 (safety features) is next.** Read these
 before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
@@ -129,4 +129,5 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-04 | D7: per-sender keys (location + alert channel per device per Circle) | Decided (owner: "D7 yes") |
 | 2026-10-04 | Backend: cloud Supabase project instead of local Docker (owner: "(b)") | Decided |
 | 2026-10-04 | Push optional; generic notification text, details decrypted in-app | Decided |
+| 2026-10-05 | OSM standard tiles allowed for light dev testing only; a release needs a tile provider (MapTiler) | Decided |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

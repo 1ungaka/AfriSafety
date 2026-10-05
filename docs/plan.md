@@ -1,6 +1,6 @@
 # AfriSafety: Build Plan
 
-> Status: **Phase 1 complete.** Each phase ends with tests passing, a summary,
+> Status: **Phase 1 complete and verified on devices (2026-10-05).** Each phase ends with tests passing, a summary,
 > a list of manual setup steps, and a pause for your go-ahead.
 
 ## Decisions
@@ -129,7 +129,8 @@ scaffolding every later phase depends on.
 - [x] Panic: 3 s cancellable countdown, idempotent encrypted alerts retried until stored, `dispatch-alert` Edge Function (generic push, no personal data), delivery and seen receipts, SMS fallback after 10 s, 10111/112
 - [x] Incoming alerts: full-screen alert, open in maps, call buttons
 - [x] Privacy policy draft (`docs/privacy-policy.md`) and cloud setup guide (`docs/setup-cloud.md`)
-- [x] **Tests:** 113 Flutter (crypto, codecs, key protocol, tracking policy, panic flow, consent gating, SOS cancel, formatter, SMS), 95 pgTAP, 5 Deno
+- [x] **Tests:** 119 Flutter (crypto, codecs, key protocol, tracking policy, panic flow, consent gating, SOS cancel, formatter, SMS, auth errors), 100 pgTAP, 5 Deno
+- [x] **Verified on devices (2026-10-05)** against the cloud project: Galaxy A05 (Android 15) + Pixel 7 emulator (API 35). Email-code sign-in, onboarding, create and join a Circle, both members on each other's map, SOS-only hides the location, SOS shows the full-screen alert with Delivered → Seen. Push (Firebase) not yet configured
 
 **You configure:** see `docs/setup-cloud.md` (Supabase project, email code templates, map tile key, optional Firebase).
 
