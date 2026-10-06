@@ -46,9 +46,18 @@ class CircleSwitcher extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              selected?.circle.name ?? l10n.circleCreate,
-              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            // Long names shrink with an ellipsis instead of overflowing
+            // the header row on narrow phones.
+            Flexible(
+              child: Text(
+                selected?.circle.name ?? l10n.circleCreate,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
             ),
             const SizedBox(width: 6),
             const Icon(Icons.expand_more, size: 20),
