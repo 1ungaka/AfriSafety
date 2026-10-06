@@ -8,6 +8,8 @@ abstract final class AppRoutes {
   static const sos = '/sos';
   static const privacy = '/privacy';
   static const alert = '/alert';
+  static const places = '/places';
+  static const addPlace = '/places/new';
 
   static String alertDetail(String id) => '$alert/$id';
 }

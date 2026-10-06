@@ -802,5 +802,164 @@
   "notificationSharingBody": "Open the app to pause, or to see who can see you.",
   "@notificationSharingBody": {
     "description": "Foreground service notification body."
+  },
+  "placesTitle": "Places",
+  "@placesTitle": {
+    "description": "Places screen title."
+  },
+  "placesIntro": "Your Circle gets a message when you arrive at or leave these places.",
+  "@placesIntro": {
+    "description": "Places intro."
+  },
+  "placesSharingNote": "Places are stored only on this phone, encrypted. Messages are only sent while you share your location, and only to people who can see it.",
+  "@placesSharingNote": {
+    "description": "Places privacy note."
+  },
+  "placesEmpty": "No places yet. Add home, work or campus.",
+  "@placesEmpty": {
+    "description": "Empty places list."
+  },
+  "placesAdd": "Add a place",
+  "@placesAdd": {
+    "description": "Add place button and screen title."
+  },
+  "placesDelete": "Delete {name}",
+  "@placesDelete": {
+    "description": "Delete place button label.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "placesLimit": "You can save up to 20 places.",
+  "@placesLimit": {
+    "description": "Places limit reached."
+  },
+  "placeNameLabel": "Name",
+  "@placeNameLabel": {
+    "description": "Place name field."
+  },
+  "placeNameHint": "For example Home or Campus",
+  "@placeNameHint": {
+    "description": "Place name hint."
+  },
+  "placeRadiusLabel": "Size",
+  "@placeRadiusLabel": {
+    "description": "Place radius label."
+  },
+  "placeRadiusValue": "{meters} m",
+  "@placeRadiusValue": {
+    "description": "Place radius in metres.",
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "placeMoveMapHint": "Move the map so the pin is on the spot.",
+  "@placeMoveMapHint": {
+    "description": "Map picker hint."
+  },
+  "placeSave": "Save place",
+  "@placeSave": {
+    "description": "Save place button."
+  },
+  "activityTitle": "Recent activity",
+  "@activityTitle": {
+    "description": "Activity feed heading."
+  },
+  "activityEmpty": "Nothing in the last day.",
+  "@activityEmpty": {
+    "description": "Empty activity feed."
+  },
+  "eventPlaceArrived": "{name} arrived at {place}",
+  "@eventPlaceArrived": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "eventPlaceLeft": "{name} left {place}",
+  "@eventPlaceLeft": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "eventJourneyStarted": "{name} is on the way to {place}, expected by {time}",
+  "@eventJourneyStarted": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventJourneyArrived": "{name} arrived safely at {place}",
+  "@eventJourneyArrived": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "eventJourneyEnded": "{name} ended their journey",
+  "@eventJourneyEnded": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "eventCheckInStarted": "{name} started a check-in timer until {time}",
+  "@eventCheckInStarted": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventCheckInOk": "{name} checked in safely",
+  "@eventCheckInOk": {
+    "description": "Event text.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyToolsHeading": "Safety tools",
+  "@safetyToolsHeading": {
+    "description": "Safety tab section."
+  },
+  "safetyPlacesSubtitle": "Let your Circle know when you arrive or leave",
+  "@safetyPlacesSubtitle": {
+    "description": "Places entry subtitle."
   }
 }

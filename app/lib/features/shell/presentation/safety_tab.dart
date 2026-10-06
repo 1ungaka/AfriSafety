@@ -31,6 +31,22 @@ class SafetyTab extends ConsumerWidget {
             child: const EmergencyDialBar(),
           ),
           const SizedBox(height: 28),
+          Text(l10n.safetyToolsHeading, style: text.titleLarge),
+          const SizedBox(height: 8),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.place_outlined),
+                  title: Text(l10n.placesTitle),
+                  subtitle: Text(l10n.safetyPlacesSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.places),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
           Text(l10n.safetyAccountHeading, style: text.titleLarge),
           const SizedBox(height: 8),
           Card(

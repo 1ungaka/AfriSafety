@@ -1101,6 +1101,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open the app to pause, or to see who can see you.'**
   String get notificationSharingBody;
+
+  /// Places screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Places'**
+  String get placesTitle;
+
+  /// Places intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Circle gets a message when you arrive at or leave these places.'**
+  String get placesIntro;
+
+  /// Places privacy note.
+  ///
+  /// In en, this message translates to:
+  /// **'Places are stored only on this phone, encrypted. Messages are only sent while you share your location, and only to people who can see it.'**
+  String get placesSharingNote;
+
+  /// Empty places list.
+  ///
+  /// In en, this message translates to:
+  /// **'No places yet. Add home, work or campus.'**
+  String get placesEmpty;
+
+  /// Add place button and screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a place'**
+  String get placesAdd;
+
+  /// Delete place button label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String placesDelete(String name);
+
+  /// Places limit reached.
+  ///
+  /// In en, this message translates to:
+  /// **'You can save up to 20 places.'**
+  String get placesLimit;
+
+  /// Place name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get placeNameLabel;
+
+  /// Place name hint.
+  ///
+  /// In en, this message translates to:
+  /// **'For example Home or Campus'**
+  String get placeNameHint;
+
+  /// Place radius label.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get placeRadiusLabel;
+
+  /// Place radius in metres.
+  ///
+  /// In en, this message translates to:
+  /// **'{meters} m'**
+  String placeRadiusValue(int meters);
+
+  /// Map picker hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map so the pin is on the spot.'**
+  String get placeMoveMapHint;
+
+  /// Save place button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save place'**
+  String get placeSave;
+
+  /// Activity feed heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get activityTitle;
+
+  /// Empty activity feed.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the last day.'**
+  String get activityEmpty;
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} arrived at {place}'**
+  String eventPlaceArrived(String name, String place);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} left {place}'**
+  String eventPlaceLeft(String name, String place);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is on the way to {place}, expected by {time}'**
+  String eventJourneyStarted(String name, String place, String time);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} arrived safely at {place}'**
+  String eventJourneyArrived(String name, String place);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ended their journey'**
+  String eventJourneyEnded(String name);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} started a check-in timer until {time}'**
+  String eventCheckInStarted(String name, String time);
+
+  /// Event text.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} checked in safely'**
+  String eventCheckInOk(String name);
+
+  /// Safety tab section.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety tools'**
+  String get safetyToolsHeading;
+
+  /// Places entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let your Circle know when you arrive or leave'**
+  String get safetyPlacesSubtitle;
 }
 
 class _AppLocalizationsDelegate

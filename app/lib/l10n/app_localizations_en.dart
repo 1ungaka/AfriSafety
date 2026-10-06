@@ -624,4 +624,97 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationSharingBody =>
       'Open the app to pause, or to see who can see you.';
+
+  @override
+  String get placesTitle => 'Places';
+
+  @override
+  String get placesIntro =>
+      'Your Circle gets a message when you arrive at or leave these places.';
+
+  @override
+  String get placesSharingNote =>
+      'Places are stored only on this phone, encrypted. Messages are only sent while you share your location, and only to people who can see it.';
+
+  @override
+  String get placesEmpty => 'No places yet. Add home, work or campus.';
+
+  @override
+  String get placesAdd => 'Add a place';
+
+  @override
+  String placesDelete(String name) {
+    return 'Delete $name';
+  }
+
+  @override
+  String get placesLimit => 'You can save up to 20 places.';
+
+  @override
+  String get placeNameLabel => 'Name';
+
+  @override
+  String get placeNameHint => 'For example Home or Campus';
+
+  @override
+  String get placeRadiusLabel => 'Size';
+
+  @override
+  String placeRadiusValue(int meters) {
+    return '$meters m';
+  }
+
+  @override
+  String get placeMoveMapHint => 'Move the map so the pin is on the spot.';
+
+  @override
+  String get placeSave => 'Save place';
+
+  @override
+  String get activityTitle => 'Recent activity';
+
+  @override
+  String get activityEmpty => 'Nothing in the last day.';
+
+  @override
+  String eventPlaceArrived(String name, String place) {
+    return '$name arrived at $place';
+  }
+
+  @override
+  String eventPlaceLeft(String name, String place) {
+    return '$name left $place';
+  }
+
+  @override
+  String eventJourneyStarted(String name, String place, String time) {
+    return '$name is on the way to $place, expected by $time';
+  }
+
+  @override
+  String eventJourneyArrived(String name, String place) {
+    return '$name arrived safely at $place';
+  }
+
+  @override
+  String eventJourneyEnded(String name) {
+    return '$name ended their journey';
+  }
+
+  @override
+  String eventCheckInStarted(String name, String time) {
+    return '$name started a check-in timer until $time';
+  }
+
+  @override
+  String eventCheckInOk(String name) {
+    return '$name checked in safely';
+  }
+
+  @override
+  String get safetyToolsHeading => 'Safety tools';
+
+  @override
+  String get safetyPlacesSubtitle =>
+      'Let your Circle know when you arrive or leave';
 }

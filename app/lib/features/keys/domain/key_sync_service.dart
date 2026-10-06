@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import '../../../core/crypto/alert_codec.dart';
 import '../../../core/crypto/device_keys.dart';
+import '../../../core/crypto/event_codec.dart';
 import '../../../core/crypto/key_envelope.dart';
 import '../../../core/crypto/key_sync_plan.dart';
 import '../../../core/crypto/location_codec.dart';
@@ -276,6 +277,32 @@ class KeySyncService {
     keyVersion: keyVersion,
     ciphertext: ciphertext,
     decode: AlertCodec.decode,
+  );
+
+  /// Place and journey events travel on the *location* channel: they say
+  /// where the sender is, so SOS-only viewers must not be able to read them.
+  Sealed? encryptEvent(String circleId, CircleEvent event) => _seal(
+    circleId,
+    KeyChannel.location,
+    PayloadContext.event,
+    EventCodec.encode(event),
+  );
+
+  Opened<CircleEvent> decryptEvent({
+    required String circleId,
+    required String senderId,
+    required String senderDeviceId,
+    required int keyVersion,
+    required Uint8List ciphertext,
+  }) => _open(
+    circleId: circleId,
+    senderId: senderId,
+    senderDeviceId: senderDeviceId,
+    channel: KeyChannel.location,
+    context: PayloadContext.event,
+    keyVersion: keyVersion,
+    ciphertext: ciphertext,
+    decode: EventCodec.decode,
   );
 
   /// Forget everything about a Circle (after leaving it).

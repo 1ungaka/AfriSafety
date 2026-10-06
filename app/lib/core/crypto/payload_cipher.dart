@@ -11,7 +11,8 @@ enum PayloadContext {
   location(1),
   alert(2),
   place(3),
-  journey(4);
+  journey(4),
+  event(5);
 
   const PayloadContext(this.id);
 

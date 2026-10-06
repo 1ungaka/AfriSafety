@@ -9,6 +9,8 @@ import '../../features/onboarding/data/profile_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/panic/presentation/incoming_alert_screen.dart';
 import '../../features/panic/presentation/sos_screen.dart';
+import '../../features/places/presentation/add_place_screen.dart';
+import '../../features/places/presentation/places_screen.dart';
 import '../../features/session/domain/session_controller.dart';
 import '../../features/session/presentation/loading_screen.dart';
 import '../../features/shell/presentation/home_shell.dart';
@@ -82,6 +84,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.sos,
         builder: (context, state) => const SosScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.places,
+        builder: (context, state) => const PlacesScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.addPlace,
+        builder: (context, state) => const AddPlaceScreen(),
       ),
       GoRoute(
         path: '${AppRoutes.alert}/:id',

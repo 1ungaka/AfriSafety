@@ -10,7 +10,10 @@ import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../circles/domain/circles_controller.dart';
 import '../../circles/presentation/circle_tab.dart';
+import '../../events/domain/circle_events_controller.dart';
+import '../../events/presentation/activity_card.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
+import '../../places/domain/places_controller.dart';
 import '../../push/push_service.dart';
 import '../../sharing/data/location_source.dart';
 import '../../sharing/domain/sharing_controller.dart';
@@ -79,6 +82,23 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     ref.watch(pushRegistrationProvider);
+    // Arrive/leave detection runs while the app (or its engine) is alive.
+    ref.watch(placeMonitorProvider);
+
+    // Place and journey updates from others appear as a short message.
+    ref.listen(circleEventsFeedProvider, (previous, next) {
+      final before = previous?.value;
+      final after = next.value;
+      if (before == null || after == null) return;
+      final known = {for (final i in before) i.id};
+      final fresh = after.where((i) => !known.contains(i.id)).firstOrNull;
+      if (fresh == null) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(describeEvent(context, fresh.senderName, fresh.event)),
+        ),
+      );
+    });
 
     // A new alert from someone in a Circle takes over the screen.
     ref.listen(incomingAlertsProvider, (_, next) {

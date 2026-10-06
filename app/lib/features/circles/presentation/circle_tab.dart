@@ -5,6 +5,7 @@ import '../../../core/logging/safe_logger.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../events/presentation/activity_card.dart';
 import '../../shell/presentation/empty_circle_card.dart';
 import '../domain/circles_controller.dart';
 import '../domain/models.dart';
@@ -58,6 +59,8 @@ class CircleTab extends ConsumerWidget {
               label: Text(l10n.circleInvite),
               onPressed: () => showInviteSheet(context, view.circle),
             ),
+            const SizedBox(height: 16),
+            const ActivityCard(),
             const SizedBox(height: 24),
             _PauseAllButton(paused: (circles.value?.sharingIn ?? []).isEmpty),
             const SizedBox(height: 10),

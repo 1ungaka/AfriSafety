@@ -3,7 +3,11 @@ import 'dart:typed_data';
 import 'location_codec.dart';
 
 enum AlertKind {
-  panic(1);
+  panic(1),
+
+  /// Escrowed when a check-in timer or journey starts; released by the
+  /// server's watchdog only if the deadline passes without a check-in.
+  checkInMissed(2);
 
   const AlertKind(this.wireId);
 
