@@ -1175,5 +1175,139 @@
   "alertMissedCheckInBody": "They set a timer and didn't check in before it ran out. Try calling them. Their last known location is below.",
   "@alertMissedCheckInBody": {
     "description": "Incoming missed check-in explanation."
+  },
+  "contactsTitle": "SMS emergency contacts",
+  "@contactsTitle": {
+    "description": "Contacts screen title."
+  },
+  "safetyContactsSubtitle": "People without the app who get your SOS text",
+  "@safetyContactsSubtitle": {
+    "description": "Contacts entry subtitle."
+  },
+  "contactsIntro": "When you press SOS and can't reach your Circle, AfriSafety opens your SMS app with these people already filled in. You press send.",
+  "@contactsIntro": {
+    "description": "Contacts intro."
+  },
+  "contactsPrivacy": "Their numbers are stored only on this phone, encrypted. AfriSafety never texts anyone by itself.",
+  "@contactsPrivacy": {
+    "description": "Contacts privacy note."
+  },
+  "contactsEmpty": "No SMS contacts yet.",
+  "@contactsEmpty": {
+    "description": "Empty contacts list."
+  },
+  "contactsAdd": "Add a contact",
+  "@contactsAdd": {
+    "description": "Add contact button and sheet title."
+  },
+  "contactsDelete": "Delete {name}",
+  "@contactsDelete": {
+    "description": "Delete contact button label.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsLimit": "You can add up to 5 SMS contacts.",
+  "@contactsLimit": {
+    "description": "Contacts limit."
+  },
+  "contactsName": "Name",
+  "@contactsName": {
+    "description": "Contact name field."
+  },
+  "contactsPhone": "Mobile number",
+  "@contactsPhone": {
+    "description": "Contact phone field."
+  },
+  "contactsPhoneInvalid": "Enter a valid mobile number, e.g. 082 123 4567",
+  "@contactsPhoneInvalid": {
+    "description": "Invalid phone."
+  },
+  "contactsConsent": "This person agreed to get emergency texts from me.",
+  "@contactsConsent": {
+    "description": "Contact consent checkbox (POPIA)."
+  },
+  "contactsSave": "Save contact",
+  "@contactsSave": {
+    "description": "Save contact button."
+  },
+  "historyTitle": "Location history",
+  "@historyTitle": {
+    "description": "History screen title."
+  },
+  "safetyHistorySubtitle": "Your own timeline, kept only on this phone",
+  "@safetyHistorySubtitle": {
+    "description": "History entry subtitle."
+  },
+  "historyToggle": "Keep a history on this phone",
+  "@historyToggle": {
+    "description": "History switch."
+  },
+  "historyToggleSubtitle": "Remembers where you've been while you share your location. Turning this off deletes it.",
+  "@historyToggleSubtitle": {
+    "description": "History switch subtitle."
+  },
+  "historyPrivacy": "Only you can see your history. It's encrypted on this phone and never uploaded, so nobody in your Circles (and not AfriSafety) can see where you've been.",
+  "@historyPrivacy": {
+    "description": "History privacy note."
+  },
+  "historyKeepFor": "Keep for",
+  "@historyKeepFor": {
+    "description": "Retention heading."
+  },
+  "historyDays": "{days, plural, =1{1 day} other{{days} days}}",
+  "@historyDays": {
+    "description": "Retention choice.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "historyEmpty": "Nothing recorded yet. Points are added while you share your location.",
+  "@historyEmpty": {
+    "description": "Empty history."
+  },
+  "historySummary": "{count} points between {from} and {to}",
+  "@historySummary": {
+    "description": "History day summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "historyDelete": "Delete history",
+  "@historyDelete": {
+    "description": "Delete history button."
+  },
+  "historyMapSemantic": "Map of your route with {count} points",
+  "@historyMapSemantic": {
+    "description": "History map label.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batteryTipTitle": "Keep AfriSafety working in the background",
+  "@batteryTipTitle": {
+    "description": "Battery tip title."
+  },
+  "batteryTipBody": "Some phones (Samsung, Xiaomi, Tecno and others) stop apps to save battery, which can stop sharing and journeys. In settings, choose Battery → Unrestricted for AfriSafety.",
+  "@batteryTipBody": {
+    "description": "Battery tip body."
+  },
+  "batteryTipAction": "Open app settings",
+  "@batteryTipAction": {
+    "description": "Opens the app settings page."
   }
 }

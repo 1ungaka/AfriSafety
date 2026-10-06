@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
@@ -43,7 +44,56 @@ class SafetyTab extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.push(AppRoutes.places),
                 ),
+                const Divider(indent: 16, endIndent: 16),
+                ListTile(
+                  leading: const Icon(Icons.sms_outlined),
+                  title: Text(l10n.contactsTitle),
+                  subtitle: Text(l10n.safetyContactsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.contacts),
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                ListTile(
+                  leading: const Icon(Icons.timeline),
+                  title: Text(l10n.historyTitle),
+                  subtitle: Text(l10n.safetyHistorySubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.history),
+                ),
               ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.battery_alert_outlined,
+                        color: AppColors.teal,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          l10n.batteryTipTitle,
+                          style: text.titleMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(l10n.batteryTipBody),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: openAppSettings,
+                    child: Text(l10n.batteryTipAction),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 28),

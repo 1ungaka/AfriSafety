@@ -28,4 +28,19 @@ void main() {
   test('SMS fallback still works without a location', () {
     expect(sosSmsBody(l10n, null), contains('Please call me'));
   });
+
+  test('the sms: link pre-fills emergency contacts and encodes the body', () {
+    final uri = smsUri(
+      'Help me & call',
+      recipients: ['+27821234567', '+27831234567'],
+    );
+    expect(
+      uri.toString(),
+      'sms:+27821234567;+27831234567?body=Help%20me%20%26%20call',
+    );
+  });
+
+  test('without contacts the user picks recipients in the SMS app', () {
+    expect(smsUri('Hi').toString(), 'sms:?body=Hi');
+  });
 }

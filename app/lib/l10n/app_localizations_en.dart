@@ -867,4 +867,109 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get alertMissedCheckInBody =>
       'They set a timer and didn\'t check in before it ran out. Try calling them. Their last known location is below.';
+
+  @override
+  String get contactsTitle => 'SMS emergency contacts';
+
+  @override
+  String get safetyContactsSubtitle =>
+      'People without the app who get your SOS text';
+
+  @override
+  String get contactsIntro =>
+      'When you press SOS and can\'t reach your Circle, AfriSafety opens your SMS app with these people already filled in. You press send.';
+
+  @override
+  String get contactsPrivacy =>
+      'Their numbers are stored only on this phone, encrypted. AfriSafety never texts anyone by itself.';
+
+  @override
+  String get contactsEmpty => 'No SMS contacts yet.';
+
+  @override
+  String get contactsAdd => 'Add a contact';
+
+  @override
+  String contactsDelete(String name) {
+    return 'Delete $name';
+  }
+
+  @override
+  String get contactsLimit => 'You can add up to 5 SMS contacts.';
+
+  @override
+  String get contactsName => 'Name';
+
+  @override
+  String get contactsPhone => 'Mobile number';
+
+  @override
+  String get contactsPhoneInvalid =>
+      'Enter a valid mobile number, e.g. 082 123 4567';
+
+  @override
+  String get contactsConsent =>
+      'This person agreed to get emergency texts from me.';
+
+  @override
+  String get contactsSave => 'Save contact';
+
+  @override
+  String get historyTitle => 'Location history';
+
+  @override
+  String get safetyHistorySubtitle =>
+      'Your own timeline, kept only on this phone';
+
+  @override
+  String get historyToggle => 'Keep a history on this phone';
+
+  @override
+  String get historyToggleSubtitle =>
+      'Remembers where you\'ve been while you share your location. Turning this off deletes it.';
+
+  @override
+  String get historyPrivacy =>
+      'Only you can see your history. It\'s encrypted on this phone and never uploaded, so nobody in your Circles (and not AfriSafety) can see where you\'ve been.';
+
+  @override
+  String get historyKeepFor => 'Keep for';
+
+  @override
+  String historyDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyEmpty =>
+      'Nothing recorded yet. Points are added while you share your location.';
+
+  @override
+  String historySummary(int count, String from, String to) {
+    return '$count points between $from and $to';
+  }
+
+  @override
+  String get historyDelete => 'Delete history';
+
+  @override
+  String historyMapSemantic(int count) {
+    return 'Map of your route with $count points';
+  }
+
+  @override
+  String get batteryTipTitle => 'Keep AfriSafety working in the background';
+
+  @override
+  String get batteryTipBody =>
+      'Some phones (Samsung, Xiaomi, Tecno and others) stop apps to save battery, which can stop sharing and journeys. In settings, choose Battery → Unrestricted for AfriSafety.';
+
+  @override
+  String get batteryTipAction => 'Open app settings';
 }

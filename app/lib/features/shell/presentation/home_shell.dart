@@ -12,6 +12,7 @@ import '../../circles/domain/circles_controller.dart';
 import '../../circles/presentation/circle_tab.dart';
 import '../../events/domain/circle_events_controller.dart';
 import '../../events/presentation/activity_card.dart';
+import '../../history/domain/history_controller.dart';
 import '../../journey/domain/journey_controller.dart';
 import '../../journey/presentation/journey_tab.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
@@ -98,6 +99,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.watch(pushRegistrationProvider);
     // Arrive/leave detection runs while the app (or its engine) is alive.
     ref.watch(placeMonitorProvider);
+    ref.watch(historyRecorderProvider);
     // Restores a running check-in or journey after a restart.
     ref.watch(journeyControllerProvider);
 

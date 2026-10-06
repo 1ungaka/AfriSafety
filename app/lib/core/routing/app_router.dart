@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/circles/presentation/create_circle_screen.dart';
 import '../../features/circles/presentation/join_circle_screen.dart';
+import '../../features/contacts/presentation/contacts_screen.dart';
+import '../../features/history/presentation/history_screen.dart';
 import '../../features/journey/presentation/pick_destination_screen.dart';
 import '../../features/onboarding/data/profile_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
@@ -85,6 +87,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.sos,
         builder: (context, state) => const SosScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.contacts,
+        builder: (context, state) => const ContactsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.history,
+        builder: (context, state) => const HistoryScreen(),
       ),
       GoRoute(
         path: AppRoutes.pickDestination,

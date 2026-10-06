@@ -1491,6 +1491,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'They set a timer and didn\'t check in before it ran out. Try calling them. Their last known location is below.'**
   String get alertMissedCheckInBody;
+
+  /// Contacts screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS emergency contacts'**
+  String get contactsTitle;
+
+  /// Contacts entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'People without the app who get your SOS text'**
+  String get safetyContactsSubtitle;
+
+  /// Contacts intro.
+  ///
+  /// In en, this message translates to:
+  /// **'When you press SOS and can\'t reach your Circle, AfriSafety opens your SMS app with these people already filled in. You press send.'**
+  String get contactsIntro;
+
+  /// Contacts privacy note.
+  ///
+  /// In en, this message translates to:
+  /// **'Their numbers are stored only on this phone, encrypted. AfriSafety never texts anyone by itself.'**
+  String get contactsPrivacy;
+
+  /// Empty contacts list.
+  ///
+  /// In en, this message translates to:
+  /// **'No SMS contacts yet.'**
+  String get contactsEmpty;
+
+  /// Add contact button and sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a contact'**
+  String get contactsAdd;
+
+  /// Delete contact button label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String contactsDelete(String name);
+
+  /// Contacts limit.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to 5 SMS contacts.'**
+  String get contactsLimit;
+
+  /// Contact name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get contactsName;
+
+  /// Contact phone field.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number'**
+  String get contactsPhone;
+
+  /// Invalid phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid mobile number, e.g. 082 123 4567'**
+  String get contactsPhoneInvalid;
+
+  /// Contact consent checkbox (POPIA).
+  ///
+  /// In en, this message translates to:
+  /// **'This person agreed to get emergency texts from me.'**
+  String get contactsConsent;
+
+  /// Save contact button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save contact'**
+  String get contactsSave;
+
+  /// History screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location history'**
+  String get historyTitle;
+
+  /// History entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own timeline, kept only on this phone'**
+  String get safetyHistorySubtitle;
+
+  /// History switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a history on this phone'**
+  String get historyToggle;
+
+  /// History switch subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembers where you\'ve been while you share your location. Turning this off deletes it.'**
+  String get historyToggleSubtitle;
+
+  /// History privacy note.
+  ///
+  /// In en, this message translates to:
+  /// **'Only you can see your history. It\'s encrypted on this phone and never uploaded, so nobody in your Circles (and not AfriSafety) can see where you\'ve been.'**
+  String get historyPrivacy;
+
+  /// Retention heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep for'**
+  String get historyKeepFor;
+
+  /// Retention choice.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String historyDays(int days);
+
+  /// Empty history.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded yet. Points are added while you share your location.'**
+  String get historyEmpty;
+
+  /// History day summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} points between {from} and {to}'**
+  String historySummary(int count, String from, String to);
+
+  /// Delete history button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete history'**
+  String get historyDelete;
+
+  /// History map label.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of your route with {count} points'**
+  String historyMapSemantic(int count);
+
+  /// Battery tip title.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep AfriSafety working in the background'**
+  String get batteryTipTitle;
+
+  /// Battery tip body.
+  ///
+  /// In en, this message translates to:
+  /// **'Some phones (Samsung, Xiaomi, Tecno and others) stop apps to save battery, which can stop sharing and journeys. In settings, choose Battery → Unrestricted for AfriSafety.'**
+  String get batteryTipBody;
+
+  /// Opens the app settings page.
+  ///
+  /// In en, this message translates to:
+  /// **'Open app settings'**
+  String get batteryTipAction;
 }
 
 class _AppLocalizationsDelegate

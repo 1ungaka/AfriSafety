@@ -11,6 +11,8 @@ abstract final class AppRoutes {
   static const places = '/places';
   static const addPlace = '/places/new';
   static const pickDestination = '/journey/destination';
+  static const contacts = '/contacts';
+  static const history = '/history';
 
   static String alertDetail(String id) => '$alert/$id';
 }

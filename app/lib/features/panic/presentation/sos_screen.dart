@@ -9,6 +9,7 @@ import '../../../core/emergency/emergency_numbers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../contacts/domain/contacts_controller.dart';
 import '../domain/panic_controller.dart';
 
 /// Builds the offline SMS text. Coordinates are rounded to 5 decimals
@@ -25,13 +26,21 @@ String sosSmsBody(AppLocalizations l10n, LocationFix? fix) {
   );
 }
 
-/// Opens the SMS app pre-filled. No SEND_SMS permission: the user picks
-/// recipients and presses send themselves (Play policy, and it works
-/// without mobile data).
-Future<bool> openSms(String body) async {
+/// Builds the `sms:` link. Recipients are the user's SMS emergency
+/// contacts (if any); the SMS app still lets them add or remove people.
+Uri smsUri(String body, {List<String> recipients = const []}) {
   // Build the query by hand: Uri.queryParameters encodes spaces as '+',
-  // which many SMS apps show literally.
-  final uri = Uri.parse('sms:?body=${Uri.encodeComponent(body)}');
+  // which many SMS apps show literally. Recipients are validated E.164
+  // numbers (only '+' and digits), separated by ';' (understood by Samsung
+  // Messages and Google Messages).
+  final to = recipients.join(';');
+  return Uri.parse('sms:$to?body=${Uri.encodeComponent(body)}');
+}
+
+/// Opens the SMS app pre-filled. No SEND_SMS permission: the user presses
+/// send themselves (Play policy, and it works without mobile data).
+Future<bool> openSms(String body, {List<String> recipients = const []}) async {
+  final uri = smsUri(body, recipients: recipients);
   try {
     return await launchUrl(uri);
   } on Exception {
@@ -200,6 +209,8 @@ class _ActiveView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Loads the SMS emergency contacts for the fallback button.
+    final contacts = ref.watch(contactsControllerProvider).value ?? const [];
     final l10n = AppLocalizations.of(context);
     final fix = state.fix;
     const onDark = TextStyle(color: AppColors.ground, fontSize: 15);
@@ -305,7 +316,10 @@ class _ActiveView extends ConsumerWidget {
             ),
             icon: const Icon(Icons.sms_outlined),
             label: Text(l10n.sosSms),
-            onPressed: () => openSms(sosSmsBody(l10n, fix)),
+            onPressed: () => openSms(
+              sosSmsBody(l10n, fix),
+              recipients: [for (final c in contacts) c.phone],
+            ),
           ),
           const SizedBox(height: 6),
           Text(
