@@ -362,7 +362,31 @@ class _MemberList extends ConsumerWidget {
                   : m.member.displayName,
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
-            subtitle: Text(_statusText(l10n, m)),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_statusText(l10n, m)),
+                // The OS reported a mock-location app on their phone. We
+                // can't prove where they are, so we say so (Phase 3).
+                if (!m.isMe && (m.fix?.isMocked ?? false))
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        size: 16,
+                        color: AppColors.sosText,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          l10n.statusMaybeSimulated,
+                          style: const TextStyle(color: AppColors.sosText),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
       ],
     );

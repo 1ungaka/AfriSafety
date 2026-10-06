@@ -1707,5 +1707,17 @@
   "guideLifelineBody": "0861 322 322, 24 hours: counselling and support.",
   "@guideLifelineBody": {
     "description": "Helpline details."
+  },
+  "statusMaybeSimulated": "Location may be simulated",
+  "@statusMaybeSimulated": {
+    "description": "Shown when a member's phone reports a mock location provider."
+  },
+  "shakeSosTitle": "Shake to start SOS",
+  "@shakeSosTitle": {
+    "description": "Shake setting title."
+  },
+  "shakeSosSubtitle": "Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.",
+  "@shakeSosSubtitle": {
+    "description": "Shake setting subtitle."
   }
 }

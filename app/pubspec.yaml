@@ -26,6 +26,8 @@ dependencies:
   # SDK 37 - newer than the Android Gradle Plugin bundled with Flutter 3.47
   # supports. 12.0.3 uses permission_handler_android 13.0.1 (SDK 35).
   permission_handler: 12.0.3
+  # Shake-to-SOS. compileSdk follows Flutter's and it supports AGP 9.
+  sensors_plus: ^7.1.1
   share_plus: ^13.3.1
   sodium: ^4.1.1+2
   supabase_flutter: ^2.18.0

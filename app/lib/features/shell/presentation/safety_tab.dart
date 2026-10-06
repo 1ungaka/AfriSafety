@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/emergency_dial_bar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../panic/domain/shake_sos.dart';
 import '../../session/domain/session_controller.dart';
 
 class SafetyTab extends ConsumerWidget {
@@ -115,6 +116,15 @@ class SafetyTab extends ConsumerWidget {
                 ListTile(
                   leading: const Icon(Icons.person_outline),
                   title: Text(l10n.safetySignedInAs(name)),
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                SwitchListTile(
+                  secondary: const Icon(Icons.vibration),
+                  title: Text(l10n.shakeSosTitle),
+                  subtitle: Text(l10n.shakeSosSubtitle),
+                  value: ref.watch(shakeSosEnabledProvider).value ?? false,
+                  onChanged: (on) =>
+                      ref.read(shakeSosEnabledProvider.notifier).set(on),
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 ListTile(

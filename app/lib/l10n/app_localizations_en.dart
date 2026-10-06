@@ -1278,4 +1278,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get guideLifelineBody =>
       '0861 322 322, 24 hours: counselling and support.';
+
+  @override
+  String get statusMaybeSimulated => 'Location may be simulated';
+
+  @override
+  String get shakeSosTitle => 'Shake to start SOS';
+
+  @override
+  String get shakeSosSubtitle =>
+      'Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.';
 }

@@ -2133,6 +2133,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'0861 322 322, 24 hours: counselling and support.'**
   String get guideLifelineBody;
+
+  /// Shown when a member's phone reports a mock location provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Location may be simulated'**
+  String get statusMaybeSimulated;
+
+  /// Shake setting title.
+  ///
+  /// In en, this message translates to:
+  /// **'Shake to start SOS'**
+  String get shakeSosTitle;
+
+  /// Shake setting subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.'**
+  String get shakeSosSubtitle;
 }
 
 class _AppLocalizationsDelegate

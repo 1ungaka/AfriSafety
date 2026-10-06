@@ -15,7 +15,9 @@ import '../../events/presentation/activity_card.dart';
 import '../../history/domain/history_controller.dart';
 import '../../journey/domain/journey_controller.dart';
 import '../../journey/presentation/journey_tab.dart';
+import '../../lock/domain/app_lock_controller.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
+import '../../panic/domain/shake_sos.dart';
 import '../../places/domain/places_controller.dart';
 import '../../push/push_service.dart';
 import '../../session/domain/session_controller.dart';
@@ -113,6 +115,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.watch(historyRecorderProvider);
     // Restores a running check-in or journey after a restart.
     ref.watch(journeyControllerProvider);
+
+    // Shake-to-SOS (opt-in): opens the SOS screen, whose countdown can
+    // still be cancelled. Works over the app lock too.
+    ref.listen(shakeTriggersProvider, (_, next) {
+      if (next.value == null) return;
+      final lock = ref.read(appLockProvider);
+      if (lock.showLock) ref.read(appLockProvider.notifier).openSos();
+      final router = GoRouter.of(context);
+      if (router.routerDelegate.currentConfiguration.uri.path !=
+          AppRoutes.sos) {
+        unawaited(router.push(AppRoutes.sos));
+      }
+    });
 
     // The notification says how many people can see you; keep it true.
     ref.listen(
