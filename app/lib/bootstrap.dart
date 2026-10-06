@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sodium/sodium.dart';
+import 'package:sodium/sodium.dart' show SodiumInit;
+import 'package:sodium/sodium_sumo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
@@ -13,6 +14,8 @@ import 'core/crypto/secret_store.dart';
 import 'core/logging/safe_logger.dart';
 import 'core/supabase/secure_session_storage.dart';
 import 'core/supabase/supabase_providers.dart';
+import 'features/lock/domain/app_lock_controller.dart';
+import 'features/lock/domain/pin_hasher.dart';
 import 'features/push/push_service.dart';
 
 const _log = SafeLogger('bootstrap');
@@ -33,7 +36,18 @@ Future<void> bootstrap() async {
 
   // libsodium is built from source for each platform by the `sodium`
   // package's build hook, so there's no prebuilt binary to trust.
-  final sodium = await SodiumInit.init();
+  // The "sumo" build adds password hashing (Argon2id) for the app-lock
+  // PIN. If it can't load, the app still runs and app lock is hidden.
+  Sodium sodium;
+  PinHasher? pinHasher;
+  try {
+    final sumo = await SodiumSumoInit.init();
+    sodium = sumo;
+    pinHasher = Argon2PinHasher(sumo);
+  } on Object catch (e) {
+    _log.warning('libsodium sumo unavailable; app lock disabled', e);
+    sodium = await SodiumInit.init();
+  }
 
   final secrets = FlutterSecretStore();
   await Supabase.initialize(
@@ -52,6 +66,7 @@ Future<void> bootstrap() async {
       overrides: [
         appConfigProvider.overrideWithValue(config),
         sodiumProvider.overrideWithValue(sodium),
+        pinHasherProvider.overrideWithValue(pinHasher),
         secretStoreProvider.overrideWithValue(secrets),
         supabaseProvider.overrideWithValue(Supabase.instance.client),
         pushAvailableProvider.overrideWithValue(pushAvailable),

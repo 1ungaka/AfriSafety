@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/lock/presentation/lock_screen.dart';
 import 'l10n/app_localizations.dart';
 
 class AfriSafetyApp extends ConsumerWidget {
@@ -18,6 +19,7 @@ class AfriSafetyApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: ref.watch(appRouterProvider),
       debugShowCheckedModeBanner: false,
+      builder: (context, child) => AppLockGate(child: child!),
     );
   }
 }

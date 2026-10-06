@@ -1090,4 +1090,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String trustChangedBanner(String name) {
     return '$name\'s security code changed. Tap to check it.';
   }
+
+  @override
+  String get lockTitle => 'Enter your PIN';
+
+  @override
+  String get lockWrong => 'Wrong PIN';
+
+  @override
+  String lockWait(int seconds) {
+    return 'Too many tries. Try again in $seconds s';
+  }
+
+  @override
+  String get lockForgot => 'Forgot your PIN?';
+
+  @override
+  String get lockForgotTitle => 'Forgot your PIN?';
+
+  @override
+  String get lockForgotBody =>
+      'Sign out to reset it. This erases AfriSafety\'s data on this phone (keys, places, contacts, history). You can sign in again straight away.';
+
+  @override
+  String get lockSos => 'SOS';
+
+  @override
+  String get lockAlertWaiting =>
+      'Someone in your Circle needs help. Unlock to see.';
+
+  @override
+  String lockDigitsEntered(int count) {
+    return '$count of 6 digits entered';
+  }
+
+  @override
+  String get lockBackspace => 'Delete last digit';
+
+  @override
+  String get lockSettingsTitle => 'App lock';
+
+  @override
+  String get safetyLockSubtitle => 'Ask for a PIN when AfriSafety opens';
+
+  @override
+  String get lockSettingsIntro =>
+      'Keep people who pick up your phone out of AfriSafety. SOS and the emergency numbers still work while it is locked.';
+
+  @override
+  String get lockSettingsToggle => 'Lock with a 6-digit PIN';
+
+  @override
+  String get lockUnavailable => 'App lock is not available on this phone.';
+
+  @override
+  String get lockTimeoutTitle => 'Lock after';
+
+  @override
+  String get lockTimeoutImmediately => 'Immediately';
+
+  @override
+  String lockTimeoutMinutes(int minutes) {
+    return '$minutes min in the background';
+  }
+
+  @override
+  String get lockChangePin => 'Change PIN';
+
+  @override
+  String get lockEnterCurrent => 'Enter your current PIN';
+
+  @override
+  String get lockChoosePin => 'Choose a 6-digit PIN';
+
+  @override
+  String get lockConfirmPin => 'Enter it again';
+
+  @override
+  String get lockPinsDontMatch => 'The PINs didn\'t match. Try again.';
+
+  @override
+  String get lockSettingsNote =>
+      'The lock doesn\'t hide that you\'re sharing your location: Android\'s notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.';
 }

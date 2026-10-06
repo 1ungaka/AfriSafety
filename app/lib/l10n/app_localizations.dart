@@ -1839,6 +1839,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}\'s security code changed. Tap to check it.'**
   String trustChangedBanner(String name);
+
+  /// Lock screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN'**
+  String get lockTitle;
+
+  /// Wrong PIN.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong PIN'**
+  String get lockWrong;
+
+  /// Lockout countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in {seconds} s'**
+  String lockWait(int seconds);
+
+  /// Forgot PIN link.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your PIN?'**
+  String get lockForgot;
+
+  /// Forgot title.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your PIN?'**
+  String get lockForgotTitle;
+
+  /// Forgot explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out to reset it. This erases AfriSafety\'s data on this phone (keys, places, contacts, history). You can sign in again straight away.'**
+  String get lockForgotBody;
+
+  /// SOS button on lock screen.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS'**
+  String get lockSos;
+
+  /// Lock screen alert notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone in your Circle needs help. Unlock to see.'**
+  String get lockAlertWaiting;
+
+  /// PIN dots label.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of 6 digits entered'**
+  String lockDigitsEntered(int count);
+
+  /// Backspace label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete last digit'**
+  String get lockBackspace;
+
+  /// Settings title.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get lockSettingsTitle;
+
+  /// Safety tab entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for a PIN when AfriSafety opens'**
+  String get safetyLockSubtitle;
+
+  /// Settings intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep people who pick up your phone out of AfriSafety. SOS and the emergency numbers still work while it is locked.'**
+  String get lockSettingsIntro;
+
+  /// Lock switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock with a 6-digit PIN'**
+  String get lockSettingsToggle;
+
+  /// Lock unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock is not available on this phone.'**
+  String get lockUnavailable;
+
+  /// Timeout heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock after'**
+  String get lockTimeoutTitle;
+
+  /// Timeout choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediately'**
+  String get lockTimeoutImmediately;
+
+  /// Timeout choice.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min in the background'**
+  String lockTimeoutMinutes(int minutes);
+
+  /// Change PIN button.
+  ///
+  /// In en, this message translates to:
+  /// **'Change PIN'**
+  String get lockChangePin;
+
+  /// Current PIN title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current PIN'**
+  String get lockEnterCurrent;
+
+  /// New PIN title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a 6-digit PIN'**
+  String get lockChoosePin;
+
+  /// Confirm PIN title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter it again'**
+  String get lockConfirmPin;
+
+  /// Mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The PINs didn\'t match. Try again.'**
+  String get lockPinsDontMatch;
+
+  /// Settings note.
+  ///
+  /// In en, this message translates to:
+  /// **'The lock doesn\'t hide that you\'re sharing your location: Android\'s notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.'**
+  String get lockSettingsNote;
 }
 
 class _AppLocalizationsDelegate

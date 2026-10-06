@@ -10,6 +10,7 @@ import '../../features/device/presentation/devices_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/journey/presentation/pick_destination_screen.dart';
 import '../../features/keys/presentation/safety_number_screen.dart';
+import '../../features/lock/presentation/app_lock_settings_screen.dart';
 import '../../features/onboarding/data/profile_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/panic/presentation/incoming_alert_screen.dart';
@@ -100,6 +101,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           userId: state.pathParameters['userId']!,
           name: state.uri.queryParameters['name'] ?? '',
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.appLock,
+        builder: (context, state) => const AppLockSettingsScreen(),
       ),
       GoRoute(
         path: AppRoutes.devices,

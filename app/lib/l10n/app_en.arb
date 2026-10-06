@@ -1483,5 +1483,116 @@
         "type": "String"
       }
     }
+  },
+  "lockTitle": "Enter your PIN",
+  "@lockTitle": {
+    "description": "Lock screen title."
+  },
+  "lockWrong": "Wrong PIN",
+  "@lockWrong": {
+    "description": "Wrong PIN."
+  },
+  "lockWait": "Too many tries. Try again in {seconds} s",
+  "@lockWait": {
+    "description": "Lockout countdown.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "lockForgot": "Forgot your PIN?",
+  "@lockForgot": {
+    "description": "Forgot PIN link."
+  },
+  "lockForgotTitle": "Forgot your PIN?",
+  "@lockForgotTitle": {
+    "description": "Forgot title."
+  },
+  "lockForgotBody": "Sign out to reset it. This erases AfriSafety's data on this phone (keys, places, contacts, history). You can sign in again straight away.",
+  "@lockForgotBody": {
+    "description": "Forgot explanation."
+  },
+  "lockSos": "SOS",
+  "@lockSos": {
+    "description": "SOS button on lock screen."
+  },
+  "lockAlertWaiting": "Someone in your Circle needs help. Unlock to see.",
+  "@lockAlertWaiting": {
+    "description": "Lock screen alert notice."
+  },
+  "lockDigitsEntered": "{count} of 6 digits entered",
+  "@lockDigitsEntered": {
+    "description": "PIN dots label.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lockBackspace": "Delete last digit",
+  "@lockBackspace": {
+    "description": "Backspace label."
+  },
+  "lockSettingsTitle": "App lock",
+  "@lockSettingsTitle": {
+    "description": "Settings title."
+  },
+  "safetyLockSubtitle": "Ask for a PIN when AfriSafety opens",
+  "@safetyLockSubtitle": {
+    "description": "Safety tab entry subtitle."
+  },
+  "lockSettingsIntro": "Keep people who pick up your phone out of AfriSafety. SOS and the emergency numbers still work while it is locked.",
+  "@lockSettingsIntro": {
+    "description": "Settings intro."
+  },
+  "lockSettingsToggle": "Lock with a 6-digit PIN",
+  "@lockSettingsToggle": {
+    "description": "Lock switch."
+  },
+  "lockUnavailable": "App lock is not available on this phone.",
+  "@lockUnavailable": {
+    "description": "Lock unavailable."
+  },
+  "lockTimeoutTitle": "Lock after",
+  "@lockTimeoutTitle": {
+    "description": "Timeout heading."
+  },
+  "lockTimeoutImmediately": "Immediately",
+  "@lockTimeoutImmediately": {
+    "description": "Timeout choice."
+  },
+  "lockTimeoutMinutes": "{minutes} min in the background",
+  "@lockTimeoutMinutes": {
+    "description": "Timeout choice.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lockChangePin": "Change PIN",
+  "@lockChangePin": {
+    "description": "Change PIN button."
+  },
+  "lockEnterCurrent": "Enter your current PIN",
+  "@lockEnterCurrent": {
+    "description": "Current PIN title."
+  },
+  "lockChoosePin": "Choose a 6-digit PIN",
+  "@lockChoosePin": {
+    "description": "New PIN title."
+  },
+  "lockConfirmPin": "Enter it again",
+  "@lockConfirmPin": {
+    "description": "Confirm PIN title."
+  },
+  "lockPinsDontMatch": "The PINs didn't match. Try again.",
+  "@lockPinsDontMatch": {
+    "description": "Mismatch."
+  },
+  "lockSettingsNote": "The lock doesn't hide that you're sharing your location: Android's notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.",
+  "@lockSettingsNote": {
+    "description": "Settings note."
   }
 }

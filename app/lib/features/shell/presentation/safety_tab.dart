@@ -108,6 +108,14 @@ class SafetyTab extends ConsumerWidget {
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 ListTile(
+                  leading: const Icon(Icons.lock_outline),
+                  title: Text(l10n.lockSettingsTitle),
+                  subtitle: Text(l10n.safetyLockSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.appLock),
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                ListTile(
                   leading: const Icon(Icons.devices_outlined),
                   title: Text(l10n.devicesTitle),
                   subtitle: Text(l10n.safetyDevicesSubtitle),

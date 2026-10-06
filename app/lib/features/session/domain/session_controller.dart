@@ -11,6 +11,7 @@ import '../../circles/data/circles_repository.dart';
 import '../../device/data/device_repository.dart';
 import '../../keys/data/supabase_key_directory.dart';
 import '../../keys/domain/key_sync_service.dart';
+import '../../lock/domain/app_lock_controller.dart';
 import '../../onboarding/data/profile_repository.dart';
 import '../../panic/data/alerts_repository.dart';
 import '../../sharing/data/location_repository.dart';
@@ -133,6 +134,7 @@ class SessionController extends AsyncNotifier<SessionState> {
     ref.read(remoteSignOutProvider.notifier).set(true);
     try {
       await ref.read(deviceRepositoryProvider).wipeLocal();
+      await ref.read(appLockProvider.notifier).clear();
       await ref.read(localVaultProvider).wipe();
     } on Object catch (e) {
       _log.warning('Wipe after remote sign-out failed', e);
@@ -149,8 +151,10 @@ class SessionController extends AsyncNotifier<SessionState> {
       _log.warning('Device revoke failed during sign-out; keys wiped', e);
     }
     // Places, SMS contacts and history stay on this phone only; they go
-    // with the account so the next person to sign in can't read them.
+    // with the account so the next person to sign in can't read them. So
+    // does the app-lock PIN.
     try {
+      await ref.read(appLockProvider.notifier).clear();
       await ref.read(localVaultProvider).wipe();
     } on Object catch (e) {
       _log.warning('Vault wipe failed during sign-out', e);

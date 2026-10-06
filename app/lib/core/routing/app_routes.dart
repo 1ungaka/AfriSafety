@@ -14,6 +14,7 @@ abstract final class AppRoutes {
   static const contacts = '/contacts';
   static const history = '/history';
   static const devices = '/devices';
+  static const appLock = '/app-lock';
   static const safetyNumberBase = '/security-code';
 
   static String safetyNumber(String userId, String name) => Uri(
