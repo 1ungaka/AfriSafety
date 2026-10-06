@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/crypto/crypto_providers.dart';
 import '../../../core/logging/safe_logger.dart';
+import '../../../core/storage/local_vault.dart';
 import '../../../core/supabase/supabase_providers.dart';
 import '../../circles/data/circles_repository.dart';
 import '../../device/data/device_repository.dart';
@@ -115,6 +116,13 @@ class SessionController extends AsyncNotifier<SessionState> {
       await ref.read(deviceRepositoryProvider).revokeAndWipe();
     } on Object catch (e) {
       _log.warning('Device revoke failed during sign-out; keys wiped', e);
+    }
+    // Places, SMS contacts and history stay on this phone only; they go
+    // with the account so the next person to sign in can't read them.
+    try {
+      await ref.read(localVaultProvider).wipe();
+    } on Object catch (e) {
+      _log.warning('Vault wipe failed during sign-out', e);
     }
     await ref.read(supabaseProvider).auth.signOut();
   }

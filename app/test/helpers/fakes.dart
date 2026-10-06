@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:afrisafety/core/crypto/secret_store.dart';
 import 'package:afrisafety/core/emergency/dialer.dart';
+import 'package:afrisafety/core/storage/local_vault.dart';
 
 class InMemorySecretStore implements SecretStore {
   final Map<String, String> values = {};
@@ -25,4 +28,18 @@ class FakeDialer implements Dialer {
     dialled.add(number);
     return succeed;
   }
+}
+
+class InMemoryVaultFiles implements VaultFiles {
+  final Map<String, Uint8List> files = {};
+
+  @override
+  Future<Uint8List?> read(String name) async => files[name];
+
+  @override
+  Future<void> write(String name, Uint8List bytes) async =>
+      files[name] = Uint8List.fromList(bytes);
+
+  @override
+  Future<void> deleteAll() async => files.clear();
 }
