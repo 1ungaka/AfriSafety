@@ -27,3 +27,28 @@ jobs:
         run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
+
+  # Compiles the Android app (Kotlin, Gradle plugins, libsodium for every
+  # CPU type), which the analyze/test job above doesn't touch.
+  android-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: stable
+          cache: true
+      - name: Install the Android NDK libsodium is built with
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358" > /dev/null
+      - run: flutter pub get
+      - name: Build debug APK
+        run: flutter build apk --debug
