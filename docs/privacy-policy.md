@@ -63,6 +63,19 @@ What we *can* see is **metadata**: that you're in a Circle with certain
 people, and when your phone sends an update. We use it only to run the
 service.
 
+### Community reports (optional, separate consent)
+
+If you turn on community reports, you can anonymously report things like
+theft or suspicious activity. Your phone rounds the place to a square of
+about 1 km and the time to a 4-hour block before anything is sent; we never
+receive your exact location for a report. Nobody (other users, moderators
+or AfriSafety staff using the app) can see who reported. A square only
+appears on the map once at least 3 different people reported there in 30
+days. We keep your account id with each report privately, only to limit
+spam, act on abuse and delete your reports if you delete your account.
+Reports are deleted after 90 days. You can stop using community reports at
+any time.
+
 ## 3. Location is never collected secretly
 
 - Location is collected only while sharing is on, and Android always shows

@@ -5,7 +5,7 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**Phases 0–3 are complete (Phase 1 verified on devices; Phase 2 partly tested on the emulator; Phase 3 built 2026-10-07). Phase 4 (community layer) is next.** Read these
+**All planned phases (0–4) are built (Phase 1 verified on devices; Phases 2–4 tested on the emulator/CI). Next: launch readiness (see `docs/plan.md`).** Read these
 before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
@@ -34,7 +34,7 @@ rewritten to match).
 - **State/navigation:** Riverpod 3 (plain providers, no codegen, which keeps the code
   readable without build_runner), go_router
 - **Backend:** Supabase (Postgres + RLS, Auth, Realtime, Edge Functions in Deno/TS,
-  pg_cron; PostGIS for community features only), in `supabase/`
+  pg_cron), in `supabase/`. Community reports use an integer 0.01° grid, not PostGIS
 - **Push:** Firebase Cloud Messaging, optional, configured from dart-defines (no
   google-services.json). Pushes carry generic text plus an opaque id, never personal data
 - **Maps:** flutter_map + OSM-based tiles (respect provider tile usage policy)
@@ -151,4 +151,6 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-07 | Security codes: BLAKE2b over each person's device keys, 60 digits; TOFU with change warnings | Decided (Phase 3) |
 | 2026-10-07 | Device revocation is final (DB trigger); revoked phones wipe themselves | Decided (Phase 3) |
 | 2026-10-07 | Certificate pinning deferred (lock-out risk) | Decided (Phase 3) |
+| 2026-10-08 | Firebase push skipped for now (owner); missed-check-in push code kept in a local stash only | Decided (owner) |
+| 2026-10-08 | Community reports: category only, grid snapped on the phone, k = 3, no raw reads, no PostGIS, no stranger SOS | Decided (Phase 4) |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

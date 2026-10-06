@@ -1,6 +1,6 @@
 # AfriSafety: Architecture Overview
 
-> Status: **Phases 1–3 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft. Phase 2 keeps places, SMS contacts and history on the phone only (§4.7).
+> Status: **Phases 1–4 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft. Phase 2 keeps places, SMS contacts and history on the phone only (§4.7).
 > Package identifier: `za.co.afrisafety.app`
 
 AfriSafety is a privacy-first personal safety and location-sharing app for South
@@ -46,7 +46,7 @@ flowchart LR
 
   subgraph Supabase
     AUTH[Auth<br/>email / phone OTP]
-    PG[(Postgres + RLS<br/>PostGIS for community only)]
+    PG[(Postgres + RLS)]
     RT[Realtime<br/>Postgres Changes, RLS-filtered]
     EF[Edge Functions<br/>dispatch-alert]
     CRON[pg_cron<br/>check-in watchdog, retention]
@@ -111,15 +111,15 @@ with shared infrastructure in `lib/core/`. See [`plan.md`](plan.md#folder-struct
   watchdog, plain SQL) and `private.purge_expired()` nightly (alerts 30 days,
   events 7 days, finished check-ins 7 days, rate-limit counters 2 days). Rate
   limits are enforced in SQL triggers (`private.hit_rate_limit`).
-- **PostGIS:** used only by the Phase 4 community layer (grid-blurred incidents and
-  patrol radius matching). Circle locations are ciphertext, so the server cannot run
-  spatial queries on them. That is by design.
+- **No PostGIS:** community reports use an integer 0.01° grid (§4.10). Circle
+  locations are ciphertext, so the server can't run spatial queries on them. That
+  is by design.
 
 ### 2.3 Third parties and what they see
 
 | Service | Sees | Does not see |
 |---|---|---|
-| Supabase | Account (email/phone), Circle membership graph, timestamps, ciphertext sizes, IPs, FCM tokens, that a check-in timer exists and its deadline | Locations, places, destinations, alert and event details (E2EE), SMS contacts and history (on the phone only) |
+| Supabase | Account (email/phone), Circle membership graph, the ~1 km square, date block and category of community reports you choose to send, timestamps, ciphertext sizes, IPs, FCM tokens, that a check-in timer exists and its deadline | Locations, places, destinations, alert and event details (E2EE), SMS contacts and history (on the phone only) |
 | Firebase (FCM) | That a push was sent to a device, opaque alert ID | Who sent it, location, Circle names |
 | Your SMS app / mobile network | The SOS text you choose to send (includes location) | Anything else. AfriSafety never sends SMS itself |
 | Tile provider | Approximate viewport area being viewed, IP | Who is being viewed, member locations |
@@ -150,7 +150,8 @@ delete. Everything location-related is ciphertext.
 | `checkins` | `id`, `user_id`, `kind` (`timer`/`journey`), `deadline`, `status`, `missed_at` | yes: no location, owner-only | 2 |
 | `checkin_escrows` | PK(`checkin_id`,`circle_id`), `alert_id`, `sender_device_id`, `key_version`, `ciphertext` | ciphertext (an E2EE alert), owner-only until released | 2 |
 | `private.rate_limits` | `bucket`, `subject`, `window_start`, `hits` | yes (not exposed by the API) | 1 |
-| `incident_reports` | `category`, `grid_cell` (PostGIS, about 1 km), `occurred_at_bucket` | blurred | 4 |
+| `incident_reports` | `reporter_id` (never readable), `category`, `cell_lat`/`cell_lon` (0.01° grid, ~1 km, snapped on the phone), `occurred_on`, `period` (4-hour block) | blurred; aggregates only (k = 3) | 4 |
+| `community_flags`, `community_decisions` | flags per square/category; moderator keep/hide | no client reads | 4 |
 
 ---
 
@@ -251,8 +252,8 @@ protects against someone who kept old keys or later obtains a database dump.
 |---|---|---|
 | Server-side SMS to non-app emergency contacts | An SMS gateway needs text to send | **Not built.** Phase 2 uses the on-device `sms:` link with the user's saved contacts pre-filled, so no number or location reaches our server. A gateway (`send-sms`) needs the owner's explicit approval first (security rule 3) |
 | Missed check-in when phone is dead | Phone can't send anything, so the server must act alone | **Solved without plaintext.** The phone escrows an ordinary E2EE alert per Circle when the check-in starts; the watchdog only copies that ciphertext into `alerts` (§4.8). The server learns that a timer existed and when it ended, never a location |
-| Community incident reports (Phase 4) | Server must aggregate and radius-match | Location snapped to a ~1 km grid cell, time bucketed, no user ID stored on the public row |
-| Patrol radius alerts (Phase 4) | Server must find nearby patrollers | Opt-in only, coarse grid cell only, per alert |
+| Community incident reports (Phase 4, built) | Server must aggregate | Category only. The phone snaps the place to a 0.01° square (~1 km) and the time to a 4-hour block before sending. Raw rows are unreadable; only aggregates with 3+ distinct reporters (30 days) are returned. Reporter id kept privately for rate limits, bans and deletion |
+| Patrol radius alerts | Server must find nearby people | **Not built:** a stranger-directed SOS can be faked to lure someone |
 
 The **on-device SMS fallback** (`sms:` intent pre-filled with a location link)
 needs no server at all and is the true "no data" path. Server-side SMS still
@@ -352,6 +353,23 @@ sequenceDiagram
   Keystore-backed storage. The lock screen is drawn above the router (so it
   covers every route), keeps SOS and 10111/112 available, and never hides the
   sharing notification.
+
+### 4.10 Community reports (Phase 4)
+
+The only feature where the server sees anything location-like, so the
+location never leaves the phone precisely:
+
+```
+phone:  fix (-26.20412, 28.04731), 14:20  ->  square (-2621, 2804), today, block 3
+server: incident_reports(reporter_id, category, square, date, block)   (no read grant)
+map:    community_cells(box) -> squares/categories with >= 3 distinct reporters
+```
+
+Five distinct flags hide a square/category until a moderator keeps or hides
+it (`community_decisions`). Moderators are listed in `private.moderators`
+(owner-managed) and see counts and squares, never identities. Bans
+(`private.community_bans`) stop new reports and drop a user's past reports
+from every count.
 
 ---
 

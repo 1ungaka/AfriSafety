@@ -123,6 +123,21 @@ Editor (open it in Notepad, copy everything, paste, name the query
 `05 AfriSafety Phase 3 – RUN ONCE`, **Run**). It makes signing out a phone
 from the Devices screen permanent. Or use `supabase db push`.
 
+### 1.7 Phase 4: community reports (2 minutes)
+
+1. Run `supabase/migrations/20261008000100_community_reports.sql` in the SQL
+   Editor (query name `06 AfriSafety Phase 4 – RUN ONCE`).
+2. Make yourself a moderator: **Authentication → Users**, copy your user's
+   UID, then run:
+   ```sql
+   insert into private.moderators (user_id) values ('PASTE-YOUR-UID');
+   ```
+   A **Moderation** entry then appears under Safety in the app.
+3. To ban someone who abuses reports (the UID comes from the Users list):
+   ```sql
+   insert into private.community_bans (user_id, reason) values ('UID', 'false reports');
+   ```
+
 ## 2. Map tiles (about 5 minutes)
 
 **Just testing on a few phones?** Skip the sign-up and use OpenStreetMap's

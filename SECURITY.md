@@ -86,7 +86,8 @@ Legend: **M** = mitigation (phase it lands in), **R** = residual risk.
 | Server learns places, destinations or history | A4 | Places, SMS contacts and history are never uploaded: encrypted on the phone (`LocalVault`, key in Keystore). Arrive/leave and journey updates are E2EE `circle_events` under the location key (P2) | Server sees that an event or check-in happened, and when (timing metadata) |
 | SOS-only viewers learn where you are from place events | A1, A5 | Events use the *location* key, which SOS-only viewers never receive (D7). Pausing blocks event writes in RLS (P2) | They can see that an encrypted event was posted |
 | Tile provider learns where you look | A7 | Tile caching. Data-saver list mode with no tiles (P1) | Viewport plus IP visible to provider |
-| Community reports de-anonymise reporters | A2 | ~1 km grid snapping, time bucketing, no user ID on public rows, minimum k reports before display in sparse areas (P4) | Rural sparse areas. Higher k there |
+| Community reports de-anonymise reporters | A2 | Snapped to ~1 km **on the phone**, 4-hour time blocks, no raw-row reads at all, only aggregates with k = 3 distinct reporters (**P4**) | In a sparse rural square, 3 reporters may still be few enough to guess. A larger k for sparse areas is future work |
+| False or malicious community reports | A5, A8 | Category only (no text), 10 reports/day, one per person/square/category/day, 5 flags auto-hide, moderator review, bans that also remove past reports from counts (**P4**) | Several fake accounts could reach k = 3 in one square. Email/phone OTP and rate limits make this costly, not impossible |
 
 ### Denial of service
 
@@ -239,3 +240,17 @@ and 6 make this discoverable, not impossible.
 | Shake-to-SOS ignores walking, running and drops; needs 4 peaks in 2.5 s; cooldown | `ShakeDetector` | `shake_detector_test.dart` |
 | Mutes expire after 24 h; sharing review due weekly | `MutesController`, `SharingReviewController` | `mutes_and_review_test.dart` |
 | Android app compiles (Kotlin, plugins, libsodium) on every change | CI `android-build` job | `.github/workflows/app.yml` |
+
+## 11. Phase 4: implemented controls and evidence
+
+| Control | Where | Proven by |
+|---|---|---|
+| Reporting needs a separate community consent; banned users can't report; 10 reports/day | `private.submit_report` | `050_community.test.sql` |
+| Nobody can read raw reports | no grant on `incident_reports` | `050`: "nobody can read raw reports" |
+| A square shows only with 3+ distinct reporters, counting each person once | `private.community_cells` | `050`: "two reporters are not enough", "counts once" |
+| Bounded map reads; future dates rejected | `community_cells`, table check | `050` |
+| 5 distinct flags hide; moderators keep/hide; non-moderators can't; moderators see counts only | flags, `community_decisions`, `private.moderators` | `050` moderation block |
+| Bans remove a user's reports from counts | `private.community_bans` | `050`: "a banned reporter's reports stop counting" |
+| 90-day retention | `private.purge_expired` | `050` retention block |
+| The phone snaps to the grid and a 4-hour block; nothing precise leaves it | `GridCell`, `resolveWhen` | `grid_test.dart`, `community_test.dart` |
+| No reporting before consent in the app | `CommunityScreen` | `community_test.dart` |

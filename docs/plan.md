@@ -1,6 +1,6 @@
 # AfriSafety: Build Plan
 
-> Status: **Phase 3 complete (2026-10-07).** Phase 1 verified on devices (2026-10-05); Phase 2 partly tested on the emulator (2026-10-06). Each phase ends with tests passing, a summary,
+> Status: **Phase 4 complete (2026-10-08): all planned phases built.** Phase 1 verified on devices (2026-10-05); Phase 2 partly tested on the emulator (2026-10-06). Each phase ends with tests passing, a summary,
 > a list of manual setup steps, and a pause for your go-ahead.
 
 ## Decisions
@@ -180,12 +180,23 @@ scaffolding every later phase depends on.
 
 **You configure:** run `supabase/migrations/20261007000100_device_revocation.sql` in the SQL Editor (query name `05 AfriSafety Phase 3 – RUN ONCE`).
 
-## Phase 4: Community layer
+## Phase 4: Community layer ✅
 
-- [ ] PostGIS-backed `incident_reports` snapped to ~1 km grid, time-bucketed, k-anonymity threshold for display
-- [ ] Neighbourhood watch groups with opt-in radius panic alerts (coarse cell only)
-- [ ] Moderation: report abuse, auto-hide on N reports, moderator role and tools, ban
-- [ ] Separate consent and privacy-policy section for community features
+- [x] `incident_reports`: category only (no free text), snapped **on the phone** to a 0.01° grid square (~1 km), dated to a 4-hour block; raw rows unreadable by anyone (no grant)
+- [x] `community_cells()`: k-anonymous aggregates only (k = 3 distinct reporters in 30 days), bounded area per request, banned reporters excluded
+- [x] Flags: 5 distinct flaggers hide a square until a moderator decides; moderators (owner-managed `private.moderators`) keep or hide; bans in `private.community_bans`
+- [x] Separate `community` consent with its own explanation; can be withdrawn from the screen
+- [x] App: Community reports screen (heat map, category filter, "Near you" = your square and its 8 neighbours), anonymous report sheet, flag button, moderation queue for moderators
+- [x] Rate limits: 10 reports and 20 flags per user per day; retention 90 days
+- [x] **Tests:** 192 Flutter (+ grid snapping, report timing, consent gate), 174 pgTAP (+ `050_community`: k-anonymity, no raw reads, flags, moderation, bans, retention)
+
+**Decisions taken in Phase 4:**
+- **No PostGIS:** an integer grid gives the same privacy property, needs no extension, and is testable everywhere.
+- **No free text:** removes doxxing and defamation risk, and most of the moderation burden.
+- **No SOS broadcast to strangers** (the planned "radius panic alerts"): a fake SOS could lure someone. Neighbourhood awareness is the "Near you" list instead; real emergencies go to your Circles and 10111.
+- **No watch groups as a separate structure:** a Circle already is a trusted group; community reports cover the neighbourhood view.
+
+**You configure:** run `supabase/migrations/20261008000100_community_reports.sql` in the SQL Editor; to make yourself a moderator, see `docs/setup-cloud.md` §1.7.
 
 ## Later (not scheduled)
 
