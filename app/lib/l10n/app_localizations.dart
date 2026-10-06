@@ -1767,6 +1767,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.'**
   String get signInRemoteSignOut;
+
+  /// Safety number screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Security code'**
+  String get safetyNumberTitle;
+
+  /// Safety number intro.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s phone and yours should show exactly the same 60 digits. If they do, nobody (not even AfriSafety\'s server) can read what you share with each other.'**
+  String safetyNumberIntro(String name);
+
+  /// Safety number how-to.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare in person, or read the numbers to each other on a phone call. Don\'t compare over a message in this app.'**
+  String get safetyNumberHowTo;
+
+  /// Safety number grid label.
+  ///
+  /// In en, this message translates to:
+  /// **'Security code, 12 groups of 5 digits'**
+  String get safetyNumberSemantic;
+
+  /// Verify button.
+  ///
+  /// In en, this message translates to:
+  /// **'They match: mark as verified'**
+  String get safetyNumberMarkVerified;
+
+  /// Verified state.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve verified {name}.'**
+  String safetyNumberVerified(String name);
+
+  /// Changed warning.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s security code changed. This normally means they signed in on a new phone. If they didn\'t, someone may be trying to listen in: compare the numbers again.'**
+  String safetyNumberChanged(String name);
+
+  /// Acknowledge change.
+  ///
+  /// In en, this message translates to:
+  /// **'They got a new phone: dismiss'**
+  String get safetyNumberAcknowledge;
+
+  /// Member trust: verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get trustVerified;
+
+  /// Member trust: unverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Check security code'**
+  String get trustUnverified;
+
+  /// Member trust: changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Security code changed'**
+  String get trustChanged;
+
+  /// Circle tab banner when a code changed.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s security code changed. Tap to check it.'**
+  String trustChangedBanner(String name);
 }
 
 class _AppLocalizationsDelegate

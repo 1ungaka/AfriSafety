@@ -1045,4 +1045,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get signInRemoteSignOut =>
       'This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.';
+
+  @override
+  String get safetyNumberTitle => 'Security code';
+
+  @override
+  String safetyNumberIntro(String name) {
+    return '$name\'s phone and yours should show exactly the same 60 digits. If they do, nobody (not even AfriSafety\'s server) can read what you share with each other.';
+  }
+
+  @override
+  String get safetyNumberHowTo =>
+      'Compare in person, or read the numbers to each other on a phone call. Don\'t compare over a message in this app.';
+
+  @override
+  String get safetyNumberSemantic => 'Security code, 12 groups of 5 digits';
+
+  @override
+  String get safetyNumberMarkVerified => 'They match: mark as verified';
+
+  @override
+  String safetyNumberVerified(String name) {
+    return 'You\'ve verified $name.';
+  }
+
+  @override
+  String safetyNumberChanged(String name) {
+    return '$name\'s security code changed. This normally means they signed in on a new phone. If they didn\'t, someone may be trying to listen in: compare the numbers again.';
+  }
+
+  @override
+  String get safetyNumberAcknowledge => 'They got a new phone: dismiss';
+
+  @override
+  String get trustVerified => 'Verified';
+
+  @override
+  String get trustUnverified => 'Check security code';
+
+  @override
+  String get trustChanged => 'Security code changed';
+
+  @override
+  String trustChangedBanner(String name) {
+    return '$name\'s security code changed. Tap to check it.';
+  }
 }

@@ -1415,5 +1415,73 @@
   "signInRemoteSignOut": "This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.",
   "@signInRemoteSignOut": {
     "description": "Shown on sign-in after a remote sign-out."
+  },
+  "safetyNumberTitle": "Security code",
+  "@safetyNumberTitle": {
+    "description": "Safety number screen title."
+  },
+  "safetyNumberIntro": "{name}'s phone and yours should show exactly the same 60 digits. If they do, nobody (not even AfriSafety's server) can read what you share with each other.",
+  "@safetyNumberIntro": {
+    "description": "Safety number intro.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyNumberHowTo": "Compare in person, or read the numbers to each other on a phone call. Don't compare over a message in this app.",
+  "@safetyNumberHowTo": {
+    "description": "Safety number how-to."
+  },
+  "safetyNumberSemantic": "Security code, 12 groups of 5 digits",
+  "@safetyNumberSemantic": {
+    "description": "Safety number grid label."
+  },
+  "safetyNumberMarkVerified": "They match: mark as verified",
+  "@safetyNumberMarkVerified": {
+    "description": "Verify button."
+  },
+  "safetyNumberVerified": "You've verified {name}.",
+  "@safetyNumberVerified": {
+    "description": "Verified state.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyNumberChanged": "{name}'s security code changed. This normally means they signed in on a new phone. If they didn't, someone may be trying to listen in: compare the numbers again.",
+  "@safetyNumberChanged": {
+    "description": "Changed warning.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyNumberAcknowledge": "They got a new phone: dismiss",
+  "@safetyNumberAcknowledge": {
+    "description": "Acknowledge change."
+  },
+  "trustVerified": "Verified",
+  "@trustVerified": {
+    "description": "Member trust: verified."
+  },
+  "trustUnverified": "Check security code",
+  "@trustUnverified": {
+    "description": "Member trust: unverified."
+  },
+  "trustChanged": "Security code changed",
+  "@trustChanged": {
+    "description": "Member trust: changed."
+  },
+  "trustChangedBanner": "{name}'s security code changed. Tap to check it.",
+  "@trustChangedBanner": {
+    "description": "Circle tab banner when a code changed.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

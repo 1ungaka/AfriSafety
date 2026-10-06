@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/logging/safe_logger.dart';
+import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../events/presentation/activity_card.dart';
+import '../../keys/domain/key_trust.dart';
 import '../../shell/presentation/empty_circle_card.dart';
 import '../domain/circles_controller.dart';
 import '../domain/models.dart';
@@ -52,6 +55,24 @@ class CircleTab extends ConsumerWidget {
           else ...[
             _E2eeBanner(text: l10n.circleE2eeBanner),
             const SizedBox(height: 16),
+            for (final m in view.others)
+              if (ref.watch(keyTrustProvider).value?[m.userId]?.status ==
+                  TrustStatus.changed) ...[
+                Card(
+                  color: AppColors.sosTint,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.gpp_maybe_outlined,
+                      color: AppColors.sosText,
+                    ),
+                    title: Text(l10n.trustChangedBanner(m.displayName)),
+                    onTap: () => context.push(
+                      AppRoutes.safetyNumber(m.userId, m.displayName),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
             _MembersCard(view: view),
             const SizedBox(height: 16),
             OutlinedButton.icon(
@@ -148,33 +169,66 @@ class _MemberRow extends ConsumerWidget {
       live ? l10n.circleLevelLive : l10n.circleLevelSosOnly,
       if (member.role == MemberRole.owner) l10n.circleOwnerTag,
     ].join(' · ');
-    return MergeSemantics(
-      child: SwitchListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-        title: Text(
-          member.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w700),
+    final trust = ref.watch(keyTrustProvider).value?[member.userId];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MergeSemantics(
+          child: SwitchListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 2,
+            ),
+            title: Text(
+              member.displayName,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+            subtitle: Text(details),
+            value: live,
+            onChanged: (on) async {
+              try {
+                await ref
+                    .read(circlesControllerProvider.notifier)
+                    .setShareLevel(
+                      view.circle.id,
+                      member.userId,
+                      on ? ShareLevel.live : ShareLevel.sosOnly,
+                    );
+              } on Object catch (e) {
+                _log.warning('Share level change failed', e);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+                }
+              }
+            },
+          ),
         ),
-        subtitle: Text(details),
-        value: live,
-        onChanged: (on) async {
-          try {
-            await ref
-                .read(circlesControllerProvider.notifier)
-                .setShareLevel(
-                  view.circle.id,
-                  member.userId,
-                  on ? ShareLevel.live : ShareLevel.sosOnly,
-                );
-          } on Object catch (e) {
-            _log.warning('Share level change failed', e);
-            if (context.mounted) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
-            }
-          }
-        },
-      ),
+        if (trust != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 4),
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                foregroundColor: trust.status == TrustStatus.changed
+                    ? AppColors.sosText
+                    : AppColors.teal,
+              ),
+              icon: Icon(switch (trust.status) {
+                TrustStatus.verified => Icons.verified_user,
+                TrustStatus.unverified => Icons.shield_outlined,
+                TrustStatus.changed => Icons.gpp_maybe_outlined,
+              }, size: 18),
+              label: Text(switch (trust.status) {
+                TrustStatus.verified => l10n.trustVerified,
+                TrustStatus.unverified => l10n.trustUnverified,
+                TrustStatus.changed => l10n.trustChanged,
+              }),
+              onPressed: () => context.push(
+                AppRoutes.safetyNumber(member.userId, member.displayName),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
