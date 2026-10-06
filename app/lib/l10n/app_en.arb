@@ -1309,5 +1309,111 @@
   "batteryTipAction": "Open app settings",
   "@batteryTipAction": {
     "description": "Opens the app settings page."
+  },
+  "devicesTitle": "Devices and security",
+  "@devicesTitle": {
+    "description": "Devices screen title."
+  },
+  "safetyDevicesSubtitle": "Phones signed in to your account, and recent security activity",
+  "@safetyDevicesSubtitle": {
+    "description": "Devices entry subtitle."
+  },
+  "devicesIntro": "These phones are signed in to your account. If you don't recognise one, sign it out: it loses access straight away, and your Circles' keys change so it can't read anything new.",
+  "@devicesIntro": {
+    "description": "Devices intro."
+  },
+  "devicesThisPhone": "This phone",
+  "@devicesThisPhone": {
+    "description": "Current device."
+  },
+  "devicesOtherPhone": "Another {platform} phone",
+  "@devicesOtherPhone": {
+    "description": "Other device.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "devicesLastSeen": "Last active {time}",
+  "@devicesLastSeen": {
+    "description": "Device last seen.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "devicesSignOutOthers": "Sign out all other phones",
+  "@devicesSignOutOthers": {
+    "description": "Sign out others button."
+  },
+  "devicesSignOutOthersTitle": "Sign out all other phones?",
+  "@devicesSignOutOthersTitle": {
+    "description": "Confirm title."
+  },
+  "devicesSignOutOthersBody": "They'll lose access to your account and Circles. To use AfriSafety on them again, you'll need to sign in there, and your Circle members will be told about the new device.",
+  "@devicesSignOutOthersBody": {
+    "description": "Confirm body."
+  },
+  "devicesSignedOutOthers": "Other phones signed out.",
+  "@devicesSignedOutOthers": {
+    "description": "Confirmation."
+  },
+  "securityActivityTitle": "Security activity",
+  "@securityActivityTitle": {
+    "description": "Security log heading."
+  },
+  "securityActivityEmpty": "Nothing yet.",
+  "@securityActivityEmpty": {
+    "description": "Empty security log."
+  },
+  "securityNewDevice": "A new phone signed in to your account",
+  "@securityNewDevice": {
+    "description": "Security event."
+  },
+  "securityDeviceRevoked": "A phone was signed out of your account",
+  "@securityDeviceRevoked": {
+    "description": "Security event."
+  },
+  "securityMemberJoined": "Someone joined {circle}",
+  "@securityMemberJoined": {
+    "description": "Security event.",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "securityMemberLeft": "Someone left {circle}",
+  "@securityMemberLeft": {
+    "description": "Security event.",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "securityJoinedCircle": "You joined {circle}",
+  "@securityJoinedCircle": {
+    "description": "Security event.",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "securityLeftCircle": "You left {circle}",
+  "@securityLeftCircle": {
+    "description": "Security event.",
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "signInRemoteSignOut": "This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.",
+  "@signInRemoteSignOut": {
+    "description": "Shown on sign-in after a remote sign-out."
   }
 }

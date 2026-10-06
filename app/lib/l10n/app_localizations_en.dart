@@ -972,4 +972,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get batteryTipAction => 'Open app settings';
+
+  @override
+  String get devicesTitle => 'Devices and security';
+
+  @override
+  String get safetyDevicesSubtitle =>
+      'Phones signed in to your account, and recent security activity';
+
+  @override
+  String get devicesIntro =>
+      'These phones are signed in to your account. If you don\'t recognise one, sign it out: it loses access straight away, and your Circles\' keys change so it can\'t read anything new.';
+
+  @override
+  String get devicesThisPhone => 'This phone';
+
+  @override
+  String devicesOtherPhone(String platform) {
+    return 'Another $platform phone';
+  }
+
+  @override
+  String devicesLastSeen(String time) {
+    return 'Last active $time';
+  }
+
+  @override
+  String get devicesSignOutOthers => 'Sign out all other phones';
+
+  @override
+  String get devicesSignOutOthersTitle => 'Sign out all other phones?';
+
+  @override
+  String get devicesSignOutOthersBody =>
+      'They\'ll lose access to your account and Circles. To use AfriSafety on them again, you\'ll need to sign in there, and your Circle members will be told about the new device.';
+
+  @override
+  String get devicesSignedOutOthers => 'Other phones signed out.';
+
+  @override
+  String get securityActivityTitle => 'Security activity';
+
+  @override
+  String get securityActivityEmpty => 'Nothing yet.';
+
+  @override
+  String get securityNewDevice => 'A new phone signed in to your account';
+
+  @override
+  String get securityDeviceRevoked => 'A phone was signed out of your account';
+
+  @override
+  String securityMemberJoined(String circle) {
+    return 'Someone joined $circle';
+  }
+
+  @override
+  String securityMemberLeft(String circle) {
+    return 'Someone left $circle';
+  }
+
+  @override
+  String securityJoinedCircle(String circle) {
+    return 'You joined $circle';
+  }
+
+  @override
+  String securityLeftCircle(String circle) {
+    return 'You left $circle';
+  }
+
+  @override
+  String get signInRemoteSignOut =>
+      'This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.';
 }

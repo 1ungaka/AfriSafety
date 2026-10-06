@@ -1653,6 +1653,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open app settings'**
   String get batteryTipAction;
+
+  /// Devices screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices and security'**
+  String get devicesTitle;
+
+  /// Devices entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Phones signed in to your account, and recent security activity'**
+  String get safetyDevicesSubtitle;
+
+  /// Devices intro.
+  ///
+  /// In en, this message translates to:
+  /// **'These phones are signed in to your account. If you don\'t recognise one, sign it out: it loses access straight away, and your Circles\' keys change so it can\'t read anything new.'**
+  String get devicesIntro;
+
+  /// Current device.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone'**
+  String get devicesThisPhone;
+
+  /// Other device.
+  ///
+  /// In en, this message translates to:
+  /// **'Another {platform} phone'**
+  String devicesOtherPhone(String platform);
+
+  /// Device last seen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last active {time}'**
+  String devicesLastSeen(String time);
+
+  /// Sign out others button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out all other phones'**
+  String get devicesSignOutOthers;
+
+  /// Confirm title.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out all other phones?'**
+  String get devicesSignOutOthersTitle;
+
+  /// Confirm body.
+  ///
+  /// In en, this message translates to:
+  /// **'They\'ll lose access to your account and Circles. To use AfriSafety on them again, you\'ll need to sign in there, and your Circle members will be told about the new device.'**
+  String get devicesSignOutOthersBody;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Other phones signed out.'**
+  String get devicesSignedOutOthers;
+
+  /// Security log heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Security activity'**
+  String get securityActivityTitle;
+
+  /// Empty security log.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet.'**
+  String get securityActivityEmpty;
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'A new phone signed in to your account'**
+  String get securityNewDevice;
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'A phone was signed out of your account'**
+  String get securityDeviceRevoked;
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone joined {circle}'**
+  String securityMemberJoined(String circle);
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone left {circle}'**
+  String securityMemberLeft(String circle);
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'You joined {circle}'**
+  String securityJoinedCircle(String circle);
+
+  /// Security event.
+  ///
+  /// In en, this message translates to:
+  /// **'You left {circle}'**
+  String securityLeftCircle(String circle);
+
+  /// Shown on sign-in after a remote sign-out.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone was signed out from another device, and its data was erased. Sign in again to keep using AfriSafety here.'**
+  String get signInRemoteSignOut;
 }
 
 class _AppLocalizationsDelegate

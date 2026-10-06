@@ -94,19 +94,50 @@ class SessionController extends AsyncNotifier<SessionState> {
     final status = await ref.read(profileRepositoryProvider).status();
     if (!status.isComplete) return NeedsOnboarding(status);
 
-    final (deviceId, keys) = await ref
-        .read(deviceRepositoryProvider)
-        .ensureRegistered();
-    return Ready(
-      identity: DeviceIdentity(userId: userId, deviceId: deviceId, keys: keys),
-      displayName: status.displayName!,
-    );
+    final DeviceIdentity identity;
+    try {
+      final (deviceId, keys) = await ref
+          .read(deviceRepositoryProvider)
+          .ensureRegistered();
+      identity = DeviceIdentity(userId: userId, deviceId: deviceId, keys: keys);
+    } on DeviceRevokedException {
+      await _wipeAfterRemoteSignOut();
+      return const SignedOut();
+    }
+    return Ready(identity: identity, displayName: status.displayName!);
   }
 
   /// Re-evaluates after onboarding steps complete.
   Future<void> refresh() async {
     ref.invalidateSelf();
     await future;
+  }
+
+  /// Called on resume: if this phone was signed out from another device,
+  /// wipe it and return to the sign-in screen.
+  Future<void> checkRevoked() async {
+    final session = state.value;
+    if (session is! Ready) return;
+    try {
+      if (await ref
+          .read(deviceRepositoryProvider)
+          .isRevoked(session.identity.deviceId)) {
+        await _wipeAfterRemoteSignOut();
+      }
+    } on Object catch (e) {
+      _log.warning('Revocation check failed', e);
+    }
+  }
+
+  Future<void> _wipeAfterRemoteSignOut() async {
+    ref.read(remoteSignOutProvider.notifier).set(true);
+    try {
+      await ref.read(deviceRepositoryProvider).wipeLocal();
+      await ref.read(localVaultProvider).wipe();
+    } on Object catch (e) {
+      _log.warning('Wipe after remote sign-out failed', e);
+    }
+    await ref.read(supabaseProvider).auth.signOut(scope: SignOutScope.local);
   }
 
   /// Revokes this device (members rotate away from it), wipes its keys and
@@ -126,6 +157,19 @@ class SessionController extends AsyncNotifier<SessionState> {
     }
     await ref.read(supabaseProvider).auth.signOut();
   }
+}
+
+/// True after this phone noticed it was signed out from another device, so
+/// the sign-in screen can say why.
+final remoteSignOutProvider = NotifierProvider<RemoteSignOut, bool>(
+  RemoteSignOut.new,
+);
+
+class RemoteSignOut extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool value) => state = value;
 }
 
 /// The current identity, or null when not ready.

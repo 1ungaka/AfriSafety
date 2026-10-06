@@ -18,6 +18,7 @@ import '../../journey/presentation/journey_tab.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
 import '../../places/domain/places_controller.dart';
 import '../../push/push_service.dart';
+import '../../session/domain/session_controller.dart';
 import '../../sharing/data/location_source.dart';
 import '../../sharing/domain/sharing_controller.dart';
 import '../../sharing/presentation/map_tab.dart';
@@ -44,6 +45,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       // Back from Settings or the background: pick up permission changes
       // and anything Realtime may have missed while suspended.
       onResume: () {
+        // Signed out from another phone while we were away?
+        unawaited(ref.read(sessionProvider.notifier).checkRevoked());
         unawaited(
           ref.read(sharingControllerProvider.notifier).refreshPermission(),
         );

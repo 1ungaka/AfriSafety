@@ -13,6 +13,7 @@ abstract final class AppRoutes {
   static const pickDestination = '/journey/destination';
   static const contacts = '/contacts';
   static const history = '/history';
+  static const devices = '/devices';
 
   static String alertDetail(String id) => '$alert/$id';
 }

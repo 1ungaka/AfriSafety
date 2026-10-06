@@ -5,9 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/logging/safe_logger.dart';
 import '../../../core/supabase/supabase_providers.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/afrisafety_logo.dart';
 import '../../../core/widgets/emergency_dial_bar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../session/domain/session_controller.dart';
 import '../domain/auth_failure.dart';
 
 const _log = SafeLogger('auth');
@@ -135,6 +137,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               child: AfriSafetyLogo(size: 56, semanticLabel: 'AfriSafety'),
             ),
             const SizedBox(height: 24),
+            if (ref.watch(remoteSignOutProvider)) ...[
+              Card(
+                color: AppColors.sosTint,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(l10n.signInRemoteSignOut),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
             Text(l10n.signInTitle, style: text.headlineSmall),
             const SizedBox(height: 8),
             Text(
