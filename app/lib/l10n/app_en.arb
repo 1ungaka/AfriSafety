@@ -623,10 +623,6 @@
   "@safetyPrivacy": {
     "description": "Link to privacy summary."
   },
-  "journeyComingSoon": "Walk me home: share your trip until you arrive. Coming in the next update.",
-  "@journeyComingSoon": {
-    "description": "Journey placeholder."
-  },
   "sosCountdownTitle": "Sending SOS",
   "@sosCountdownTitle": {
     "description": "Countdown heading."
@@ -961,5 +957,223 @@
   "safetyPlacesSubtitle": "Let your Circle know when you arrive or leave",
   "@safetyPlacesSubtitle": {
     "description": "Places entry subtitle."
+  },
+  "journeyTitle": "Journey",
+  "@journeyTitle": {
+    "description": "Journey tab title."
+  },
+  "journeyModeWalk": "Walk me home",
+  "@journeyModeWalk": {
+    "description": "Journey mode."
+  },
+  "journeyModeTimer": "Check-in timer",
+  "@journeyModeTimer": {
+    "description": "Timer mode."
+  },
+  "journeyWalkIntro": "Choose where you're going. People who can see your location will see you're on the way. If you don't arrive in time, all your Circles get an alert, even if your phone is off.",
+  "@journeyWalkIntro": {
+    "description": "Walk intro."
+  },
+  "journeyPickPlace": "Where to?",
+  "@journeyPickPlace": {
+    "description": "Destination heading."
+  },
+  "journeyChooseOnMap": "Choose on the map",
+  "@journeyChooseOnMap": {
+    "description": "Pick destination on map."
+  },
+  "journeyNoPlacesHint": "Tip: save places like Home under Safety → Places to pick them here.",
+  "@journeyNoPlacesHint": {
+    "description": "Hint when no places."
+  },
+  "journeyEta": "About {minutes} min on foot",
+  "@journeyEta": {
+    "description": "Walking estimate.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "journeyEtaLonger": "Add 5 minutes",
+  "@journeyEtaLonger": {
+    "description": "Increase ETA."
+  },
+  "journeyEtaShorter": "Remove 5 minutes",
+  "@journeyEtaShorter": {
+    "description": "Decrease ETA."
+  },
+  "journeyAlertAfter": "Your Circles are alerted if you haven't arrived by {time}.",
+  "@journeyAlertAfter": {
+    "description": "When the alert fires.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "journeyStart": "Start journey",
+  "@journeyStart": {
+    "description": "Start journey button."
+  },
+  "checkInIntro": "If you don't tap “I'm OK” before the timer ends, all your Circles get an alert with your last known location, even if your phone is off.",
+  "@checkInIntro": {
+    "description": "Timer intro."
+  },
+  "checkInMinutes": "{minutes} min",
+  "@checkInMinutes": {
+    "description": "Duration in minutes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "checkInHours": "{hours} h",
+  "@checkInHours": {
+    "description": "Duration in hours.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "checkInStart": "Start timer",
+  "@checkInStart": {
+    "description": "Start timer button."
+  },
+  "activeJourneyTitle": "On the way to {place}",
+  "@activeJourneyTitle": {
+    "description": "Active journey title.",
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "activeTimerTitle": "Check-in timer running",
+  "@activeTimerTitle": {
+    "description": "Active timer title."
+  },
+  "activeCheckInBy": "Check in by {time}",
+  "@activeCheckInBy": {
+    "description": "Deadline.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "activeExpectedBy": "Expected by {time}",
+  "@activeExpectedBy": {
+    "description": "Journey ETA.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "activeMinutesLeft": "{minutes} min left",
+  "@activeMinutesLeft": {
+    "description": "Countdown.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "activeOverdue": "Time's up. Your Circles are being alerted.",
+  "@activeOverdue": {
+    "description": "Deadline passed."
+  },
+  "activeImOk": "I'm OK",
+  "@activeImOk": {
+    "description": "Check in button."
+  },
+  "activeArrived": "I've arrived",
+  "@activeArrived": {
+    "description": "Arrived button."
+  },
+  "activeExtend": "+15 min",
+  "@activeExtend": {
+    "description": "Extend button."
+  },
+  "activeExtendSemantic": "Add 15 minutes",
+  "@activeExtendSemantic": {
+    "description": "Extend button label for screen readers."
+  },
+  "activeEndJourney": "End journey",
+  "@activeEndJourney": {
+    "description": "Cancel journey."
+  },
+  "activeAutoArrive": "This ends by itself when you get there.",
+  "@activeAutoArrive": {
+    "description": "Auto-arrival note."
+  },
+  "missedTitle": "Your Circles have been alerted",
+  "@missedTitle": {
+    "description": "Missed check-in title."
+  },
+  "missedBody": "You didn't check in in time. If you're safe, let them know.",
+  "@missedBody": {
+    "description": "Missed check-in body."
+  },
+  "missedImOk": "I'm safe, tell my Circles",
+  "@missedImOk": {
+    "description": "Resolve missed check-in."
+  },
+  "journeyErrorStart": "Couldn't start. Check your connection and try again.",
+  "@journeyErrorStart": {
+    "description": "Start failed."
+  },
+  "journeyErrorFinish": "Couldn't reach AfriSafety. Try again: until it gets through, your Circles will still be alerted at the deadline.",
+  "@journeyErrorFinish": {
+    "description": "Finish failed."
+  },
+  "journeyErrorNoCircles": "Create or join a Circle first: they're the people who get alerted.",
+  "@journeyErrorNoCircles": {
+    "description": "No circles."
+  },
+  "pickDestinationTitle": "Choose destination",
+  "@pickDestinationTitle": {
+    "description": "Pick destination screen title."
+  },
+  "pickDestinationName": "Name (optional)",
+  "@pickDestinationName": {
+    "description": "Destination name field."
+  },
+  "pickDestinationUse": "Use this spot",
+  "@pickDestinationUse": {
+    "description": "Confirm destination."
+  },
+  "destinationDefaultName": "your destination",
+  "@destinationDefaultName": {
+    "description": "Default destination name."
+  },
+  "notificationJourneyTitle": "AfriSafety check-in running",
+  "@notificationJourneyTitle": {
+    "description": "Foreground notification title during a check-in."
+  },
+  "notificationJourneyBody": "Check in by {time}. Open the app when you're safe.",
+  "@notificationJourneyBody": {
+    "description": "Foreground notification body during a check-in.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "alertMissedCheckIn": "{name} missed a check-in",
+  "@alertMissedCheckIn": {
+    "description": "Incoming alert title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertMissedCheckInBody": "They set a timer and didn't check in before it ran out. Try calling them. Their last known location is below.",
+  "@alertMissedCheckInBody": {
+    "description": "Incoming missed check-in explanation."
   }
 }

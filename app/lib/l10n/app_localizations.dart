@@ -904,12 +904,6 @@ abstract class AppLocalizations {
   /// **'Privacy summary'**
   String get safetyPrivacy;
 
-  /// Journey placeholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Walk me home: share your trip until you arrive. Coming in the next update.'**
-  String get journeyComingSoon;
-
   /// Countdown heading.
   ///
   /// In en, this message translates to:
@@ -1245,6 +1239,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let your Circle know when you arrive or leave'**
   String get safetyPlacesSubtitle;
+
+  /// Journey tab title.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey'**
+  String get journeyTitle;
+
+  /// Journey mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk me home'**
+  String get journeyModeWalk;
+
+  /// Timer mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in timer'**
+  String get journeyModeTimer;
+
+  /// Walk intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose where you\'re going. People who can see your location will see you\'re on the way. If you don\'t arrive in time, all your Circles get an alert, even if your phone is off.'**
+  String get journeyWalkIntro;
+
+  /// Destination heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to?'**
+  String get journeyPickPlace;
+
+  /// Pick destination on map.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose on the map'**
+  String get journeyChooseOnMap;
+
+  /// Hint when no places.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: save places like Home under Safety → Places to pick them here.'**
+  String get journeyNoPlacesHint;
+
+  /// Walking estimate.
+  ///
+  /// In en, this message translates to:
+  /// **'About {minutes} min on foot'**
+  String journeyEta(int minutes);
+
+  /// Increase ETA.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 5 minutes'**
+  String get journeyEtaLonger;
+
+  /// Decrease ETA.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove 5 minutes'**
+  String get journeyEtaShorter;
+
+  /// When the alert fires.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Circles are alerted if you haven\'t arrived by {time}.'**
+  String journeyAlertAfter(String time);
+
+  /// Start journey button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start journey'**
+  String get journeyStart;
+
+  /// Timer intro.
+  ///
+  /// In en, this message translates to:
+  /// **'If you don\'t tap “I\'m OK” before the timer ends, all your Circles get an alert with your last known location, even if your phone is off.'**
+  String get checkInIntro;
+
+  /// Duration in minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String checkInMinutes(int minutes);
+
+  /// Duration in hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String checkInHours(int hours);
+
+  /// Start timer button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start timer'**
+  String get checkInStart;
+
+  /// Active journey title.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way to {place}'**
+  String activeJourneyTitle(String place);
+
+  /// Active timer title.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in timer running'**
+  String get activeTimerTitle;
+
+  /// Deadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in by {time}'**
+  String activeCheckInBy(String time);
+
+  /// Journey ETA.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected by {time}'**
+  String activeExpectedBy(String time);
+
+  /// Countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min left'**
+  String activeMinutesLeft(int minutes);
+
+  /// Deadline passed.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up. Your Circles are being alerted.'**
+  String get activeOverdue;
+
+  /// Check in button.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m OK'**
+  String get activeImOk;
+
+  /// Arrived button.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve arrived'**
+  String get activeArrived;
+
+  /// Extend button.
+  ///
+  /// In en, this message translates to:
+  /// **'+15 min'**
+  String get activeExtend;
+
+  /// Extend button label for screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 15 minutes'**
+  String get activeExtendSemantic;
+
+  /// Cancel journey.
+  ///
+  /// In en, this message translates to:
+  /// **'End journey'**
+  String get activeEndJourney;
+
+  /// Auto-arrival note.
+  ///
+  /// In en, this message translates to:
+  /// **'This ends by itself when you get there.'**
+  String get activeAutoArrive;
+
+  /// Missed check-in title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Circles have been alerted'**
+  String get missedTitle;
+
+  /// Missed check-in body.
+  ///
+  /// In en, this message translates to:
+  /// **'You didn\'t check in in time. If you\'re safe, let them know.'**
+  String get missedBody;
+
+  /// Resolve missed check-in.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m safe, tell my Circles'**
+  String get missedImOk;
+
+  /// Start failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t start. Check your connection and try again.'**
+  String get journeyErrorStart;
+
+  /// Finish failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach AfriSafety. Try again: until it gets through, your Circles will still be alerted at the deadline.'**
+  String get journeyErrorFinish;
+
+  /// No circles.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or join a Circle first: they\'re the people who get alerted.'**
+  String get journeyErrorNoCircles;
+
+  /// Pick destination screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose destination'**
+  String get pickDestinationTitle;
+
+  /// Destination name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get pickDestinationName;
+
+  /// Confirm destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this spot'**
+  String get pickDestinationUse;
+
+  /// Default destination name.
+  ///
+  /// In en, this message translates to:
+  /// **'your destination'**
+  String get destinationDefaultName;
+
+  /// Foreground notification title during a check-in.
+  ///
+  /// In en, this message translates to:
+  /// **'AfriSafety check-in running'**
+  String get notificationJourneyTitle;
+
+  /// Foreground notification body during a check-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in by {time}. Open the app when you\'re safe.'**
+  String notificationJourneyBody(String time);
+
+  /// Incoming alert title.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} missed a check-in'**
+  String alertMissedCheckIn(String name);
+
+  /// Incoming missed check-in explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'They set a timer and didn\'t check in before it ran out. Try calling them. Their last known location is below.'**
+  String get alertMissedCheckInBody;
 }
 
 class _AppLocalizationsDelegate

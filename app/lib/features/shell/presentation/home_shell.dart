@@ -12,13 +12,14 @@ import '../../circles/domain/circles_controller.dart';
 import '../../circles/presentation/circle_tab.dart';
 import '../../events/domain/circle_events_controller.dart';
 import '../../events/presentation/activity_card.dart';
+import '../../journey/domain/journey_controller.dart';
+import '../../journey/presentation/journey_tab.dart';
 import '../../panic/domain/incoming_alerts_controller.dart';
 import '../../places/domain/places_controller.dart';
 import '../../push/push_service.dart';
 import '../../sharing/data/location_source.dart';
 import '../../sharing/domain/sharing_controller.dart';
 import '../../sharing/presentation/map_tab.dart';
-import 'journey_tab.dart';
 import 'safety_tab.dart';
 
 /// Map · Journey · SOS · Circle · Safety, from the design. SOS is the raised
@@ -72,6 +73,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             ),
           ),
     );
+    final clock = MaterialLocalizations.of(context);
+    ref
+        .read(journeyControllerProvider.notifier)
+        .configure(
+          (active) => SharingNotificationText(
+            title: l10n.notificationJourneyTitle,
+            body: l10n.notificationJourneyBody(
+              clock.formatTimeOfDay(
+                TimeOfDay.fromDateTime(active.deadline.toLocal()),
+              ),
+            ),
+          ),
+        );
   }
 
   void _openAlert(String id) {
@@ -84,6 +98,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.watch(pushRegistrationProvider);
     // Arrive/leave detection runs while the app (or its engine) is alive.
     ref.watch(placeMonitorProvider);
+    // Restores a running check-in or journey after a restart.
+    ref.watch(journeyControllerProvider);
 
     // Place and journey updates from others appear as a short message.
     ref.listen(circleEventsFeedProvider, (previous, next) {

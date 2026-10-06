@@ -16,6 +16,7 @@ class EncryptedAlert {
     required this.ciphertext,
     required this.createdAt,
     required this.resolvedAt,
+    this.kind = 'panic',
   });
 
   final String id;
@@ -27,6 +28,12 @@ class EncryptedAlert {
   final Uint8List ciphertext;
   final DateTime createdAt;
   final DateTime? resolvedAt;
+
+  /// 'panic' or 'checkin_missed' (a check-in deadline passed). Stored in
+  /// plaintext so the server can tell the two apart; the details aren't.
+  final String kind;
+
+  bool get isMissedCheckIn => kind == 'checkin_missed';
 
   static EncryptedAlert fromRow(Map<String, dynamic> r) => EncryptedAlert(
     id: r['id'] as String,
@@ -40,6 +47,7 @@ class EncryptedAlert {
     resolvedAt: r['resolved_at'] == null
         ? null
         : DateTime.parse(r['resolved_at'] as String),
+    kind: r['kind'] as String? ?? 'panic',
   );
 }
 
@@ -88,7 +96,7 @@ class SupabaseAlertsRepository implements AlertsRepository {
 
   static const _columns =
       'id, incident_id, circle_id, sender_id, sender_device_id, key_version, '
-      'ciphertext, created_at, resolved_at';
+      'ciphertext, created_at, resolved_at, kind';
 
   @override
   Future<void> insert({

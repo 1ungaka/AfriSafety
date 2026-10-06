@@ -58,4 +58,8 @@ abstract final class AppColors {
 
   /// SOS-coloured text or outline on white (darker for contrast).
   static const sosText = Color(0xFFA3360A);
+
+  /// Light SOS background for warning cards. [sosText] and the default text
+  /// colour both pass WCAG AA on it.
+  static const sosTint = Color(0xFFFBE9E1);
 }

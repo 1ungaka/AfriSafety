@@ -57,6 +57,8 @@ class _IncomingAlertScreenState extends ConsumerState<IncomingAlertScreen> {
               child: Text(
                 incoming == null
                     ? l10n.alertResolved(name)
+                    : incoming.alert.isMissedCheckIn
+                    ? l10n.alertMissedCheckIn(name)
                     : (name.isEmpty
                           ? l10n.alertSomeoneNeedsHelp
                           : l10n.alertNeedsHelp(name)),
@@ -79,6 +81,14 @@ class _IncomingAlertScreenState extends ConsumerState<IncomingAlertScreen> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: AppColors.textMutedOnDark),
               ),
+              if (incoming.alert.isMissedCheckIn) ...[
+                const SizedBox(height: 12),
+                Text(
+                  l10n.alertMissedCheckInBody,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AppColors.ground, fontSize: 15),
+                ),
+              ],
               const SizedBox(height: 20),
               DecoratedBox(
                 decoration: BoxDecoration(

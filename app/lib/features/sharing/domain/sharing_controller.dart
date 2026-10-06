@@ -71,6 +71,8 @@ class SharingController extends Notifier<SharingState> {
   LocationFix? _lastUploaded;
   Timer? _retry;
   bool _emergency = false;
+  bool _journey = false;
+  SharingNotificationText? _journeyText;
 
   LocationSource get _source => ref.read(locationSourceProvider);
 
@@ -120,7 +122,24 @@ class SharingController extends Notifier<SharingState> {
   Future<void> setEmergency(bool on) async {
     if (_emergency == on) return;
     _emergency = on;
-    await _restart(on ? TrackingMode.emergency : TrackingMode.moving);
+    await _restart(
+      on || _journey ? TrackingMode.emergency : TrackingMode.moving,
+    );
+    if (!on) await _reconcileRunning();
+  }
+
+  /// A journey or check-in timer is running: track closely (to notice
+  /// arrival and keep the escrowed alert's location fresh) and say so in
+  /// the notification. Runs even if sharing is paused everywhere, because
+  /// the user just asked for it; uploads still only go to shared Circles.
+  Future<void> setJourney(bool on, {SharingNotificationText? text}) async {
+    if (_journey == on && _journeyText == text) return;
+    _journey = on;
+    _journeyText = on ? text : null;
+    await _restart(
+      on || _emergency ? TrackingMode.emergency : TrackingMode.moving,
+    );
+    if (!on) await _reconcileRunning();
   }
 
   Future<void> _reconcileRunning() async {
@@ -131,7 +150,7 @@ class SharingController extends Notifier<SharingState> {
         _text != null;
     if (shouldRun && _sub == null) {
       await _restart(state.mode);
-    } else if (!shouldRun && _sub != null && !_emergency) {
+    } else if (!shouldRun && _sub != null && !_emergency && !_journey) {
       await _stop();
     }
   }
@@ -139,7 +158,7 @@ class SharingController extends Notifier<SharingState> {
   Future<void> _restart(TrackingMode mode) async {
     await _sub?.cancel();
     _sub = null;
-    final text = _text;
+    final text = _journeyText ?? _text;
     if (text == null || !state.permission.canTrack) return;
     _sub = _source
         .watch(LocationPolicy.specFor(mode), text)
@@ -180,7 +199,7 @@ class SharingController extends Notifier<SharingState> {
     final mode = LocationPolicy.modeFor(
       recent: _recent,
       batteryPercent: battery,
-      emergency: _emergency,
+      emergency: _emergency || _journey,
       now: now,
     );
     if (mode != state.mode) {

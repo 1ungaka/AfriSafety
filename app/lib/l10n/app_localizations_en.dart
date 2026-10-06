@@ -507,10 +507,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safetyPrivacy => 'Privacy summary';
 
   @override
-  String get journeyComingSoon =>
-      'Walk me home: share your trip until you arrive. Coming in the next update.';
-
-  @override
   String get sosCountdownTitle => 'Sending SOS';
 
   @override
@@ -717,4 +713,158 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get safetyPlacesSubtitle =>
       'Let your Circle know when you arrive or leave';
+
+  @override
+  String get journeyTitle => 'Journey';
+
+  @override
+  String get journeyModeWalk => 'Walk me home';
+
+  @override
+  String get journeyModeTimer => 'Check-in timer';
+
+  @override
+  String get journeyWalkIntro =>
+      'Choose where you\'re going. People who can see your location will see you\'re on the way. If you don\'t arrive in time, all your Circles get an alert, even if your phone is off.';
+
+  @override
+  String get journeyPickPlace => 'Where to?';
+
+  @override
+  String get journeyChooseOnMap => 'Choose on the map';
+
+  @override
+  String get journeyNoPlacesHint =>
+      'Tip: save places like Home under Safety → Places to pick them here.';
+
+  @override
+  String journeyEta(int minutes) {
+    return 'About $minutes min on foot';
+  }
+
+  @override
+  String get journeyEtaLonger => 'Add 5 minutes';
+
+  @override
+  String get journeyEtaShorter => 'Remove 5 minutes';
+
+  @override
+  String journeyAlertAfter(String time) {
+    return 'Your Circles are alerted if you haven\'t arrived by $time.';
+  }
+
+  @override
+  String get journeyStart => 'Start journey';
+
+  @override
+  String get checkInIntro =>
+      'If you don\'t tap “I\'m OK” before the timer ends, all your Circles get an alert with your last known location, even if your phone is off.';
+
+  @override
+  String checkInMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String checkInHours(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String get checkInStart => 'Start timer';
+
+  @override
+  String activeJourneyTitle(String place) {
+    return 'On the way to $place';
+  }
+
+  @override
+  String get activeTimerTitle => 'Check-in timer running';
+
+  @override
+  String activeCheckInBy(String time) {
+    return 'Check in by $time';
+  }
+
+  @override
+  String activeExpectedBy(String time) {
+    return 'Expected by $time';
+  }
+
+  @override
+  String activeMinutesLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String get activeOverdue => 'Time\'s up. Your Circles are being alerted.';
+
+  @override
+  String get activeImOk => 'I\'m OK';
+
+  @override
+  String get activeArrived => 'I\'ve arrived';
+
+  @override
+  String get activeExtend => '+15 min';
+
+  @override
+  String get activeExtendSemantic => 'Add 15 minutes';
+
+  @override
+  String get activeEndJourney => 'End journey';
+
+  @override
+  String get activeAutoArrive => 'This ends by itself when you get there.';
+
+  @override
+  String get missedTitle => 'Your Circles have been alerted';
+
+  @override
+  String get missedBody =>
+      'You didn\'t check in in time. If you\'re safe, let them know.';
+
+  @override
+  String get missedImOk => 'I\'m safe, tell my Circles';
+
+  @override
+  String get journeyErrorStart =>
+      'Couldn\'t start. Check your connection and try again.';
+
+  @override
+  String get journeyErrorFinish =>
+      'Couldn\'t reach AfriSafety. Try again: until it gets through, your Circles will still be alerted at the deadline.';
+
+  @override
+  String get journeyErrorNoCircles =>
+      'Create or join a Circle first: they\'re the people who get alerted.';
+
+  @override
+  String get pickDestinationTitle => 'Choose destination';
+
+  @override
+  String get pickDestinationName => 'Name (optional)';
+
+  @override
+  String get pickDestinationUse => 'Use this spot';
+
+  @override
+  String get destinationDefaultName => 'your destination';
+
+  @override
+  String get notificationJourneyTitle => 'AfriSafety check-in running';
+
+  @override
+  String notificationJourneyBody(String time) {
+    return 'Check in by $time. Open the app when you\'re safe.';
+  }
+
+  @override
+  String alertMissedCheckIn(String name) {
+    return '$name missed a check-in';
+  }
+
+  @override
+  String get alertMissedCheckInBody =>
+      'They set a timer and didn\'t check in before it ran out. Try calling them. Their last known location is below.';
 }

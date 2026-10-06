@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:afrisafety/core/crypto/location_codec.dart';
 import 'package:afrisafety/features/circles/domain/circles_controller.dart';
+import 'package:afrisafety/features/events/data/circle_events_repository.dart';
+import 'package:afrisafety/features/journey/data/checkins_repository.dart';
 import 'package:afrisafety/features/onboarding/data/profile_repository.dart';
 import 'package:afrisafety/features/panic/data/alerts_repository.dart';
 import 'package:afrisafety/features/sharing/data/location_source.dart';
@@ -120,4 +122,73 @@ class FakeProfileRepository implements ProfileRepository {
 
   @override
   Future<void> saveDisplayName(String name) async => savedName = name;
+}
+
+class FakeCheckInsRepository implements CheckInsRepository {
+  bool failStart = false;
+  bool failFinish = false;
+  final Map<String, (CheckInKind, DateTime)> started = {};
+  final Map<String, Set<String>> escrows = {};
+  final List<(String, bool)> finished = [];
+  final Map<String, DateTime> extended = {};
+  CheckInRow? currentRow;
+  // ignore: close_sinks (lives for the duration of a test)
+  final _changes = StreamController<void>.broadcast();
+
+  void emitChange() => _changes.add(null);
+
+  @override
+  Future<void> start({
+    required String id,
+    required CheckInKind kind,
+    required DateTime deadline,
+  }) async {
+    if (failStart) throw StateError('offline');
+    started[id] = (kind, deadline);
+  }
+
+  @override
+  Future<void> putEscrow({
+    required String checkInId,
+    required String circleId,
+    required String alertId,
+    required String deviceId,
+    required int keyVersion,
+    required Uint8List ciphertext,
+  }) async => (escrows[checkInId] ??= {}).add(circleId);
+
+  @override
+  Future<void> extend(String id, DateTime deadline) async =>
+      extended[id] = deadline;
+
+  @override
+  Future<void> finish(String id, {required bool cancelled}) async {
+    if (failFinish) throw StateError('offline');
+    finished.add((id, cancelled));
+  }
+
+  @override
+  Future<CheckInRow?> current() async => currentRow;
+
+  @override
+  Stream<void> changes() => _changes.stream;
+}
+
+class FakeCircleEventsRepository implements CircleEventsRepository {
+  final List<String> posted = [];
+
+  @override
+  Future<void> post({
+    required String id,
+    required String circleId,
+    required String deviceId,
+    required int keyVersion,
+    required Uint8List ciphertext,
+  }) async => posted.add(circleId);
+
+  @override
+  Future<List<EncryptedEvent>> recentFromOthers(Duration window) async => [];
+
+  @override
+  Stream<void> changes() => const Stream.empty();
 }

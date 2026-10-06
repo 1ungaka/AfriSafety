@@ -10,6 +10,7 @@ abstract final class AppRoutes {
   static const alert = '/alert';
   static const places = '/places';
   static const addPlace = '/places/new';
+  static const pickDestination = '/journey/destination';
 
   static String alertDetail(String id) => '$alert/$id';
 }
