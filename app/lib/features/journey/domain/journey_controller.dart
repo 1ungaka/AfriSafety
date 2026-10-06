@@ -134,7 +134,13 @@ class JourneyController extends Notifier<JourneyState> {
       },
     );
     final sub = _repo.changes().listen((_) => unawaited(_syncStatus()));
-    ref.onDispose(sub.cancel);
+    // Signed out (or a new identity): stop close tracking. A restored
+    // check-in turns it back on.
+    final sharing = ref.read(sharingControllerProvider.notifier);
+    ref.onDispose(() {
+      unawaited(sub.cancel());
+      unawaited(sharing.setJourney(false));
+    });
     unawaited(_restore());
     return const JourneyState();
   }

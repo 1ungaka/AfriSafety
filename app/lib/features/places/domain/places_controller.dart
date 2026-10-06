@@ -55,6 +55,9 @@ class PlacesController extends AsyncNotifier<List<Place>> {
 /// runs while sharing is paused or off: no fixes, no events.
 final placeMonitorProvider = Provider<void>((ref) {
   final evaluator = GeofenceEvaluator();
+  // Load the places now (and keep them loaded) without rebuilding this
+  // provider, which would reset the evaluator, whenever they change.
+  ref.listen(placesControllerProvider, (_, _) {}, fireImmediately: true);
   ref.listen<LocationFix?>(sharingControllerProvider.select((s) => s.lastFix), (
     _,
     fix,

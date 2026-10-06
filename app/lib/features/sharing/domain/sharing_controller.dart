@@ -133,6 +133,7 @@ class SharingController extends Notifier<SharingState> {
   /// the notification. Runs even if sharing is paused everywhere, because
   /// the user just asked for it; uploads still only go to shared Circles.
   Future<void> setJourney(bool on, {SharingNotificationText? text}) async {
+    if (!ref.mounted) return; // the app is shutting down
     if (_journey == on && _journeyText == text) return;
     _journey = on;
     _journeyText = on ? text : null;
@@ -143,6 +144,7 @@ class SharingController extends Notifier<SharingState> {
   }
 
   Future<void> _reconcileRunning() async {
+    if (!ref.mounted) return;
     final circles = ref.read(circlesControllerProvider).value;
     final shouldRun =
         (circles?.sharingIn.isNotEmpty ?? false) &&
