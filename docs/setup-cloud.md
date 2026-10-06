@@ -204,5 +204,5 @@ already git-ignored, but there's no need to keep it.
 | Map says "Invalid key" | `TILE_URL_TEMPLATE` still has `YOUR_KEY`, the key was copied wrong, or the key has HTTP-origin restrictions (section 2). Fix `app\.env`, then stop the app and rerun `flutter run --dart-define-from-file=.env` (hot reload doesn't reread `.env`) |
 | Map is grey, but members are listed | Check `TILE_URL_TEMPLATE` and your MapTiler key. The list view works without tiles |
 | Member shows "Waiting for keys from their phone" | Their phone hasn't been online since you joined. Opening AfriSafety on it hands over the keys |
-| Sharing stops after swiping the app away | Known Phase 1 limitation. Keep the app in recents. Fixed in Phase 2 (headless background service) |
+| Sharing stops after swiping the app away | Fixed in Phase 2: sharing continues while the "Sharing your location" notification shows. If it still stops, the phone's battery saver is killing the app: **Settings → Apps → AfriSafety → Battery → Unrestricted** |
 | `supabase db push` fails | Run `supabase link` again, and check the database password |
