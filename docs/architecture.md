@@ -1,6 +1,6 @@
 # AfriSafety: Architecture Overview
 
-> Status: **Phase 1 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft.
+> Status: **Phases 1 and 2 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft. Phase 2 keeps places, SMS contacts and history on the phone only (§4.7).
 > Package identifier: `za.co.afrisafety.app`
 
 AfriSafety is a privacy-first personal safety and location-sharing app for South
@@ -40,6 +40,7 @@ flowchart LR
     CRY[Crypto core<br/>libsodium via sodium]
     KS[(Secure storage<br/>Android Keystore)]
     Q[(Retry buffer<br/>in memory<br/>ciphertext only)]
+    V[(Local vault<br/>places, SMS contacts,<br/>history: encrypted)]
     SMSI[SMS intent fallback<br/>no SEND_SMS permission]
   end
 
@@ -47,23 +48,21 @@ flowchart LR
     AUTH[Auth<br/>email / phone OTP]
     PG[(Postgres + RLS<br/>PostGIS for community only)]
     RT[Realtime<br/>Postgres Changes, RLS-filtered]
-    EF[Edge Functions<br/>dispatch-alert, send-sms,<br/>checkin-watchdog, rate-limit]
-    CRON[pg_cron<br/>retention, watchdogs]
+    EF[Edge Functions<br/>dispatch-alert]
+    CRON[pg_cron<br/>check-in watchdog, retention]
   end
 
   FCM[Firebase Cloud Messaging]
-  SMSGW[SMS gateway<br/>Clickatell / Twilio]
   TILES[Map tile provider<br/>OSM-based]
 
   UI --> CRY --> KS
+  GEO --> V
   LOC --> GEO
   LOC --> CRY --> Q --> PG
   PG --> RT --> UI
   UI --> AUTH
-  PG -- trigger --> EF --> FCM --> Phone
-  EF --> SMSGW
+  UI -- invoke --> EF --> FCM --> Phone
   CRON --> PG
-  CRON --> EF
   UI --> TILES
   UI --> SMSI
 ```
@@ -79,7 +78,8 @@ flowchart LR
 | Maps | `flutter_map` + `latlong2`, OSM-based tiles | Tile caching; follow the provider's usage policy |
 | Crypto | `sodium` (libsodium, built from source by build hooks) | X25519, XChaCha20-Poly1305, Ed25519 |
 | Key storage | `flutter_secure_storage` | Android Keystore-backed |
-| Offline | In-memory | Latest unsent fix per Circle and pending alerts are retried; older fixes are superseded. (drift/SQLite deferred: no codegen, and stale locations have no value) |
+| Offline | In-memory | Latest unsent fix per Circle and pending alerts are retried; older fixes are superseded. (drift/SQLite not needed: no codegen, and stale locations have no value) |
+| On-device data | `LocalVault` (files sealed with libsodium, key in secure storage) | Places, SMS contacts, location history (§4.7) |
 | Push | `firebase_messaging` (optional, configured from dart-defines) | Generic notification with an opaque incident id; details fetched and decrypted in the app |
 | Connectivity, battery | `connectivity_plus`, `battery_plus` | Adaptive tracking |
 | Sensors | `sensors_plus` | Shake trigger (Phase 3) |
@@ -99,18 +99,18 @@ with shared infrastructure in `lib/core/`. See [`plan.md`](plan.md#folder-struct
   `private.is_circle_member(circle_id)`, with a fixed `search_path`. This avoids
   recursive policies and keeps the logic in one auditable place.
 - **Realtime:** Postgres Changes on `circle_members`, `share_levels`,
-  `sender_key_envelopes`, `location_latest`, `alerts` and `alert_receipts`. Realtime
+  `sender_key_envelopes`, `location_latest`, `alerts`, `alert_receipts`,
+  `circle_events` and `checkins`. Realtime
   enforces RLS, so subscribers only receive rows for Circles they belong to.
 - **Edge Functions (Deno/TypeScript):**
   - `dispatch-alert` (Phase 1): pushes a generic, data-free FCM notification to
     every member device, at most once per alert (§4.6).
-  - `send-sms`: sends SMS to opted-in emergency contacts through the gateway.
-    This is the only place plaintext location reaches our infrastructure (§4.5).
-  - `checkin-watchdog`: run by `pg_cron`. It fires alerts when a check-in deadline
-    passes without a check-in.
-  - Shared rate-limiting middleware backed by a Postgres table.
-- **pg_cron:** location-history retention deletion, expired invites cleanup,
-  watchdogs.
+  - `send-sms` (not built): server SMS to non-app contacts would put plaintext
+    location on our infrastructure, so it waits for explicit approval (§4.5).
+- **pg_cron (Phase 2):** `private.expire_checkins()` every minute (the check-in
+  watchdog, plain SQL) and `private.purge_expired()` nightly (alerts 30 days,
+  events 7 days, finished check-ins 7 days, rate-limit counters 2 days). Rate
+  limits are enforced in SQL triggers (`private.hit_rate_limit`).
 - **PostGIS:** used only by the Phase 4 community layer (grid-blurred incidents and
   patrol radius matching). Circle locations are ciphertext, so the server cannot run
   spatial queries on them. That is by design.
@@ -119,9 +119,9 @@ with shared infrastructure in `lib/core/`. See [`plan.md`](plan.md#folder-struct
 
 | Service | Sees | Does not see |
 |---|---|---|
-| Supabase | Account (email/phone), Circle membership graph, timestamps, ciphertext sizes, IPs, FCM tokens | Locations, places, alert details (E2EE) |
+| Supabase | Account (email/phone), Circle membership graph, timestamps, ciphertext sizes, IPs, FCM tokens, that a check-in timer exists and its deadline | Locations, places, destinations, alert and event details (E2EE), SMS contacts and history (on the phone only) |
 | Firebase (FCM) | That a push was sent to a device, opaque alert ID | Who sent it, location, Circle names |
-| SMS gateway | Emergency contact number + SMS text (includes location) | Anything else. Opt-in per contact |
+| Your SMS app / mobile network | The SOS text you choose to send (includes location) | Anything else. AfriSafety never sends SMS itself |
 | Tile provider | Approximate viewport area being viewed, IP | Who is being viewed, member locations |
 
 ---
@@ -146,11 +146,9 @@ delete. Everything location-related is ciphertext.
 | `alerts` | `id` (client UUID = idempotency key), `incident_id`, `circle_id`, `sender_id`, `sender_device_id`, `kind`, `key_version`, `ciphertext`, `created_at`, `resolved_at`, `dispatched_at` | ciphertext | 1 |
 | `alert_receipts` | `alert_id`, `recipient_id`, `delivered_at`, `seen_at` | yes | 1 |
 | `security_events` | `user_id`, `kind` (new device, member joined, key changed), `created_at` | yes (user-visible log) | 1 |
-| `places` | `circle_id`, `key_version`, `ciphertext` (name, centre, radius) | ciphertext | 2 |
-| `location_history` | `circle_id`, `user_id`, `key_version`, `ciphertext`, `recorded_at` | ciphertext (timestamp plaintext so it can be deleted) | 2 |
-| `journeys` | `owner_id`, `key_version`, `ciphertext`, `expires_at`, `ended_at` | ciphertext | 2 |
-| `checkins` | `user_id`, `due_at`, `status`, `sms_escrow_ciphertext` | see §4.5 | 2 |
-| `emergency_contacts` | `user_id`, `name`, `phone_e164`, `sms_consent_at` | yes (needed to send SMS) | 2 |
+| `circle_events` | `id` (client UUID), `circle_id`, `sender_id`, `sender_device_id`, `key_version`, `ciphertext`, `created_at` | ciphertext (event type is inside it); deleted after 7 days | 2 |
+| `checkins` | `id`, `user_id`, `kind` (`timer`/`journey`), `deadline`, `status`, `missed_at` | yes: no location, owner-only | 2 |
+| `checkin_escrows` | PK(`checkin_id`,`circle_id`), `alert_id`, `sender_device_id`, `key_version`, `ciphertext` | ciphertext (an E2EE alert), owner-only until released | 2 |
 | `private.rate_limits` | `bucket`, `subject`, `window_start`, `hits` | yes (not exposed by the API) | 1 |
 | `incident_reports` | `category`, `grid_cell` (PostGIS, about 1 km), `occurred_at_bucket` | blurred | 4 |
 
@@ -251,8 +249,8 @@ protects against someone who kept old keys or later obtains a database dump.
 
 | Feature | Why plaintext | Mitigation |
 |---|---|---|
-| Server-side SMS to non-app emergency contacts | An SMS gateway needs text to send | Opt-in per contact, with a recorded consent. Location sent in-request, never stored. Only for panic, missed check-in or journey alerts |
-| Missed check-in when phone is dead | Phone can't send anything, so the server must act alone | Optional "SMS escrow": while a check-in is active, the client uploads a short-lived location escrow the server can read. It is deleted when the check-in ends. Push alerts to app members stay E2EE (they decrypt last known location themselves) |
+| Server-side SMS to non-app emergency contacts | An SMS gateway needs text to send | **Not built.** Phase 2 uses the on-device `sms:` link with the user's saved contacts pre-filled, so no number or location reaches our server. A gateway (`send-sms`) needs the owner's explicit approval first (security rule 3) |
+| Missed check-in when phone is dead | Phone can't send anything, so the server must act alone | **Solved without plaintext.** The phone escrows an ordinary E2EE alert per Circle when the check-in starts; the watchdog only copies that ciphertext into `alerts` (§4.8). The server learns that a timer existed and when it ended, never a location |
 | Community incident reports (Phase 4) | Server must aggregate and radius-match | Location snapped to a ~1 km grid cell, time bucketed, no user ID stored on the public row |
 | Patrol radius alerts (Phase 4) | Server must find nearby patrollers | Opt-in only, coarse grid cell only, per alert |
 
@@ -271,6 +269,70 @@ within 10 minutes of being raised.
 
 Later: decrypt in a background isolate and show "Lwazi needs help" without opening
 the app.
+
+Missed check-in alerts are released by the server's watchdog, not by a phone,
+so nothing calls `dispatch-alert` for them yet. Members get them over Realtime
+while AfriSafety is running (which, since Phase 2, includes in the background
+while they share their location). Pushing them is a follow-up for when push is
+configured (a database webhook on `alerts`).
+
+### 4.7 Data that stays on the phone (vault)
+
+Places, SMS emergency contacts and location history never go to the server.
+They live in `LocalVault` (`app/lib/core/storage/local_vault.dart`): one file per
+kind in the app's private directory, each sealed with XChaCha20-Poly1305 under a
+random vault key held in secure storage (Android Keystore). The file name is the
+AAD, so a file can't be swapped for another. Signing out deletes the files and
+the key.
+
+Trade-offs: places and history don't follow you to a second phone, and other
+members can't see your saved places or your past route. For a safety app those
+are features: a Circle member (or a stalker in one) can't set geofences on you
+or browse where you've been.
+
+### 4.8 Places, events, check-ins and journeys
+
+```mermaid
+sequenceDiagram
+  participant P as Your phone
+  participant S as Supabase
+  participant M as Member's phone
+  Note over P: Places: evaluated on the phone
+  P->>P: fix within place radius (hysteresis)
+  P->>S: circle_events: E2EE("arrived at Home"), location key
+  S-->>M: Realtime (ciphertext)
+  M->>M: decrypt, "Lunga arrived at Home"
+  Note over P: Check-in timer / Walk me home
+  P->>S: checkins(deadline) + checkin_escrows(E2EE alert per Circle)
+  loop every ~2 min while active
+    P->>S: refresh escrow with latest fix
+  end
+  alt checked in / arrived
+    P->>S: status = completed, delete escrows
+  else deadline passes (phone off, broken or taken)
+    S->>S: pg_cron watchdog: status = missed, copy escrow ciphertext into alerts
+    S-->>M: Realtime: alert (kind checkin_missed)
+    M->>M: decrypt, full-screen "Lunga missed a check-in" + last location
+  end
+```
+
+- **Events** (place arrive/leave, journey started/arrived/ended, check-in
+  started/OK) are sealed with the sender's *location* key, so only members who can
+  see the sender's live location can read them. The event type is inside the
+  ciphertext. Writes follow the same rule as locations: own active device, not
+  paused.
+- **Geofencing** uses hysteresis (inside within the radius, outside only beyond
+  radius + max(50 m, radius/2)), ignores fixes less accurate than
+  max(100 m, radius), and never fires on the first fix after start-up.
+- **Escrowed alerts** are sealed with the *alert* key (every member holds it, like
+  an SOS) and go to every Circle, paused or not. The server can't read or forge
+  them: it can only release them unchanged. RLS stops members reading escrows
+  early, and only the watchdog can set `missed`; a missed check-in can't be undone
+  by an update, only resolved ("I'm safe").
+- **Walking estimate** is straight-line distance × 1.3 at 1.3 m/s, rounded up to
+  5 minutes, computed on the phone. No routing service sees the destination. The
+  Circle is alerted 10 minutes after the expected arrival; arrival within 150 m
+  ends the journey automatically.
 
 ---
 
@@ -295,6 +357,14 @@ Why this fits AfriSafety:
     `distanceFilter` 100 m, heartbeat every 15 min.
   - **Low battery** (< 15 %): heartbeat-only unless a journey or panic is active.
   - **Panic or journey active:** high accuracy, every 10 s, ignores battery saver.
+    A journey or check-in keeps the service running even if sharing is paused
+    everywhere (the user just asked for it); uploads still only go to Circles
+    where they share, and the notification says a check-in is running.
+- **Survives swipe-away (Phase 2):** `MainActivity` provides a process-wide Flutter
+  engine, so the Dart code keeps running when the activity is destroyed. The
+  process stays alive only while the location foreground service (and its
+  notification) runs. OEM battery savers can still kill it, hence the in-app
+  battery tip.
 - Upgrade path: the location layer sits behind a `LocationSource` interface, so we
   can swap in Transistor later without touching features.
 
@@ -342,11 +412,14 @@ In danger, call 10111 (SAPS) or 112."*
 
 ## 7. Offline, data and low-end device strategy
 
-- **Offline (Phase 1):** the newest unsent fix per Circle is kept in memory and
-  retried every 20 s; older fixes are superseded, because a stale location has no
-  value and costs data. Panic alerts retry with backoff until stored, and the SMS
-  fallback appears after 10 s without confirmation. A persistent on-disk queue
-  arrives with location history (Phase 2).
+- **Offline:** the newest unsent fix per Circle is kept in memory and retried
+  every 20 s; older fixes are superseded, because a stale location has no value
+  and costs data. Since the engine now survives swipe-away, the in-memory retry
+  lives as long as sharing does, so an on-disk upload queue wasn't needed
+  (history is on the phone, so it has nothing to upload). Panic alerts retry with
+  backoff until stored, and the SMS fallback appears after 10 s without
+  confirmation. Checking in while offline shows an error and keeps the timer
+  visibly running, because the server will still alert at the deadline.
 - **Batching:** on 2G/EDGE or when the last request took > 3 s, coalesce uploads.
 - **Map data:** tile caching, a "Data saver" mode that shows a list view (name,
   distance, last updated) with no tiles, and tile loading only on demand. Production

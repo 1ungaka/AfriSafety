@@ -1,6 +1,6 @@
 # AfriSafety: Build Plan
 
-> Status: **Phase 1 complete and verified on devices (2026-10-05).** Each phase ends with tests passing, a summary,
+> Status: **Phase 2 complete (2026-10-06), awaiting on-device testing.** Phase 1 verified on devices (2026-10-05). Each phase ends with tests passing, a summary,
 > a list of manual setup steps, and a pause for your go-ahead.
 
 ## Decisions
@@ -136,18 +136,27 @@ scaffolding every later phase depends on.
 
 **Carried into Phase 2:** headless background service (sharing survives swiping the app away), on-disk upload queue, alert retention job (`pg_cron`, 30 days), decrypt-in-background push.
 
-## Phase 2: Safety features
+## Phase 2: Safety features ✅
 
-- [ ] Places: encrypted with Circle key, **evaluated on device** against the location stream (enter/exit with hysteresis), arrive/leave alerts sent as E2EE alerts
-- [ ] Journey ("Walk me home"): ephemeral journey key, chosen app contacts via sealed box, non-app contacts via share link with key in URL fragment (static web viewer, optional), on-device straight-line ETA (no third-party routing), auto-stop on arrival or timeout
-- [ ] Check-in timer: server-side deadline (`checkins`), `checkin-watchdog` via `pg_cron`, E2EE push to Circle, optional opt-in SMS escrow for SMS contacts
-- [ ] Emergency contacts (SMS-only) with explicit SMS consent. `send-sms` Edge Function (Clickatell or Twilio)
-- [ ] SMS fallback for panic: server SMS when there's some data, SMS intent when there's none
-- [ ] Location history: encrypted points, batched upload, user-set retention (default 7, max 30 days), `pg_cron` deletion, on-device timeline view
-- [ ] Battery strategy refinement + `docs/battery-strategy.md`
-- [ ] **Tests:** geofence hysteresis, ETA calc, watchdog SQL, retention job, history RLS
+- [x] Sharing survives swipe-away: process-wide Flutter engine kept alive by the location foreground service (and its notification); in-app battery tip for OEM savers
+- [x] On-device encrypted vault (`LocalVault`) for data that never leaves the phone
+- [x] Places: stored **only on the phone** (not on the server, see decision below), evaluated on device with hysteresis and an accuracy filter; arrive/leave sent as E2EE `circle_events` under the sender's location key; Recent activity feed and in-app message for members
+- [x] Check-in timer: server-side deadline (`checkins`), escrowed E2EE alert per Circle (`checkin_escrows`), `private.expire_checkins()` watchdog every minute via `pg_cron`, missed check-ins shown full-screen to members, "I'm safe" to resolve
+- [x] Walk me home: destination from saved places or the map, on-device walking estimate (no routing service), close tracking while active, escrow refreshed with the latest location every ~2 min, auto-arrive within 150 m, 10 min grace before the alert
+- [x] SMS emergency contacts (POPIA consent confirmation), stored only on the phone and pre-filled into the SOS `sms:` link
+- [x] Location history: off by default, on the phone only, 1/7/30 days, timeline map; turning it off deletes it
+- [x] Retention job (`private.purge_expired`, nightly): alerts 30 days, events 7, finished check-ins 7, rate-limit counters 2
+- [x] Battery strategy documented (`docs/battery-strategy.md`)
+- [x] **Tests:** 161 Flutter (+ vault, geofence hysteresis, event codec, ETA, journey/check-in controller, history, SMS contacts), 139 pgTAP (+ `030_phase2`: events, check-ins, escrows, watchdog, retention), 5 Deno
 
-**You configure:** SMS gateway account + secrets, `pg_cron` enabled on the Supabase project.
+**Decisions taken in Phase 2** (privacy-preserving simplifications of the original plan):
+- Places, SMS contacts and history are **device-only** instead of server-side ciphertext. Less for the server to hold, no key-rotation re-encryption, and nobody else can set geofences on you or browse your past route. Cost: no sync to a second phone.
+- **No server-side SMS gateway** (`send-sms`): it would put plaintext location on our infrastructure (security rule 3, needs explicit approval) and costs money. The `sms:` link with pre-filled contacts covers the case without it.
+- **Missed check-in without plaintext:** escrowed E2EE alerts replace the planned "SMS escrow" that the server could read.
+- **No on-disk upload queue:** with the engine surviving swipe-away the in-memory retry lasts as long as sharing does, and history has nothing to upload.
+- Decrypt-in-background push moved to Phase 3 (needs Firebase configured first).
+
+**You configure:** enable **Cron** (pg_cron) in Supabase and run the three Phase 2 migrations (see `docs/setup-cloud.md` §1.5). No SMS gateway needed.
 
 ## Phase 3: Security hardening
 

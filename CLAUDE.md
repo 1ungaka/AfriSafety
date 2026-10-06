@@ -5,7 +5,7 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**Phases 0 and 1 are complete (Phase 1 verified on two devices, 2026-10-05). Phase 2 (safety features) is next.** Read these
+**Phases 0–2 are complete (Phase 1 verified on two devices 2026-10-05; Phase 2 built 2026-10-06, awaiting device testing). Phase 3 (security hardening) is next.** Read these
 before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
@@ -36,9 +36,13 @@ before doing anything:
 - **Crypto:** libsodium via the `sodium` package (v4 builds libsodium from source
   through build hooks; `sodium_libs` is deprecated, don't add it). Keys in
   `flutter_secure_storage`. All primitives live in `app/lib/core/crypto/`
-- **Offline:** in-memory retry of the latest fix per Circle (no drift/codegen yet; an
-  on-disk queue comes with location history in Phase 2)
-- **SMS:** Edge Function → Clickatell/Twilio. On-device `sms:` intent fallback
+- **Offline:** in-memory retry of the latest fix per Circle (no drift/codegen). The
+  Flutter engine is process-wide (`MainActivity.provideFlutterEngine`), so it
+  survives swipe-away while the location foreground service runs
+- **On-device data:** places, SMS contacts and history live only in `LocalVault`
+  (`app/lib/core/storage/`), never on the server
+- **SMS:** on-device `sms:` link with saved contacts pre-filled. No server gateway
+  (it would need explicit approval under rule 3)
 
 ## Security rules (non-negotiable)
 
@@ -130,4 +134,8 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-04 | Backend: cloud Supabase project instead of local Docker (owner: "(b)") | Decided |
 | 2026-10-04 | Push optional; generic notification text, details decrypted in-app | Decided |
 | 2026-10-05 | OSM standard tiles allowed for light dev testing only; a release needs a tile provider (MapTiler) | Decided |
+| 2026-10-06 | Places, SMS contacts and history are device-only (encrypted vault), not server ciphertext | Decided (Phase 2) |
+| 2026-10-06 | Missed check-ins via escrowed E2EE alerts released by a pg_cron watchdog; no server-readable escrow | Decided (Phase 2) |
+| 2026-10-06 | No server SMS gateway; `sms:` link with pre-filled contacts | Decided (Phase 2; gateway needs owner approval) |
+| 2026-10-06 | Circle events (place/journey) use the location key; escrowed alerts use the alert key | Decided (Phase 2) |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

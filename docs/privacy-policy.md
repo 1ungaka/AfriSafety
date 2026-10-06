@@ -33,10 +33,21 @@ Officer about anything in this policy.
 | Which Circles you're in, and when you joined | To know who may see what | Yes |
 | **Your location** (only while sharing is on) | To show it to people you chose | **No: end-to-end encrypted** |
 | **SOS alerts and the location in them** | To get help to you | **No: end-to-end encrypted** |
+| **Arrive/leave and journey updates** ("arrived at Home") | To tell people who can see your location | **No: end-to-end encrypted** |
+| That a check-in timer or journey is running, and when it ends | So we can alert your Circles if you don't check in, even if your phone is off | Yes (the time only, never where you are or where you're going) |
+| **Missed check-in alerts** (prepared by your phone when you start a timer) | Released to your Circles only if you don't check in | **No: end-to-end encrypted** |
 | Technical data: IP address, times of requests | Running and securing the service | Yes, kept briefly |
 
-We do **not** collect your contacts, photos, messages, browsing or
-anything else on your phone.
+Some things never leave your phone at all. They are stored there,
+encrypted, and deleted when you sign out:
+
+- your **saved places** (Home, Campus...)
+- your **SMS emergency contacts** (names and numbers you type in, with
+  their permission)
+- your **location history**, if you turn it on (it is off by default)
+
+We do **not** collect your phone's contact list, photos, messages,
+browsing or anything else on your phone.
 
 ### What "end-to-end encrypted" means here
 
@@ -73,7 +84,9 @@ We use these service providers (operators under POPIA) to run AfriSafety:
 | Map tile provider [NAME] | Which map area your phone displays, and your IP address | [REGION] |
 
 If you send an SOS **by SMS**, the message (including your location) goes
-through your mobile network like any SMS. You choose the recipients.
+through your mobile network like any SMS. AfriSafety opens your SMS app
+with your emergency contacts filled in; you press send. AfriSafety never
+sends SMS by itself.
 
 We will disclose information to law enforcement only when legally required
 to, and we can only hand over what we can read (see the table above). We
@@ -89,9 +102,13 @@ agreeing to this policy you consent to this transfer.
 
 - **Latest location:** replaced with each update, and deleted when you pause,
   leave the Circle or delete your account.
-- **SOS alerts:** kept for [30] days, then deleted.
-- **Location history** (a later feature): off unless you turn it on, 7 days
-  by default, 30 days at most.
+- **SOS and missed check-in alerts:** kept for 30 days, then deleted.
+- **Arrive/leave and journey updates:** 7 days.
+- **Check-in timers:** 7 days after they end.
+- **Location history:** off unless you turn it on; kept only on your phone
+  for 1, 7 or 30 days (your choice); turning it off deletes it.
+- **Places and SMS contacts:** on your phone until you delete them or sign
+  out.
 - **Account data:** until you delete your account.
 - **Signing out:** erases this phone's encryption keys and revokes it. It
   stops receiving data straight away.

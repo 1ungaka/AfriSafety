@@ -39,7 +39,7 @@ profile) with steps to reproduce. You'll get an acknowledgement within 7 days.
 ## 3. Trust boundaries
 
 1. Device ↔ Supabase (TLS + pinning; server is **untrusted for confidentiality**)
-2. Supabase ↔ Edge Function ↔ FCM / SMS gateway (FCM sees an opaque ID; SMS gateway sees opt-in plaintext)
+2. Supabase ↔ Edge Function ↔ FCM (FCM sees an opaque ID). No SMS gateway: SOS texts are sent by the user from their own SMS app
 3. App ↔ OS (Keystore, other apps, accessibility services, backups)
 4. Circle member ↔ Circle member (members are trusted with *current* location only while they are members)
 
@@ -82,7 +82,9 @@ Legend: **M** = mitigation (phase it lands in), **R** = residual risk.
 | Lost or stolen phone exposes Circle | A3 | App lock with PIN or biometrics plus timeout (P3). Keys in Keystore-backed storage (P1). `android:allowBackup="false"` and excluded from cloud backup (P1). Sign-out revokes the device and wipes its keys, and members rotate away from it (**P1**). Revoking a lost phone *from another device* (P3). Location not shown in notifications on the lock screen (P1) | Unlocked phone in an attacker's hands |
 | Location leaks via logs or crash reports | A7 | `SafeLogger` wrapper that redacts coordinate types. Lint ban on raw `print`/`debugPrint` in `lib/`. No third-party analytics or crash SDK in MVP (P1) | — |
 | FCM learns content | A7 | Data-only push carrying an opaque alert ID. Content fetched and decrypted on device (P1) | Google sees push timing and frequency |
-| SMS gateway learns location | A7 | Opt-in per contact with explicit consent. Sent only for alerts. Not stored server-side (P2) | Gateway and carriers see SMS contents. Documented |
+| SMS gateway learns location | A7 | **No gateway (P2).** SMS contacts live only in the on-device vault and are pre-filled into the `sms:` link; the user presses send. A server gateway needs explicit approval first | Carriers see SMS contents the user chooses to send |
+| Server learns places, destinations or history | A4 | Places, SMS contacts and history are never uploaded: encrypted on the phone (`LocalVault`, key in Keystore). Arrive/leave and journey updates are E2EE `circle_events` under the location key (P2) | Server sees that an event or check-in happened, and when (timing metadata) |
+| SOS-only viewers learn where you are from place events | A1, A5 | Events use the *location* key, which SOS-only viewers never receive (D7). Pausing blocks event writes in RLS (P2) | They can see that an encrypted event was posted |
 | Tile provider learns where you look | A7 | Tile caching. Data-saver list mode with no tiles (P1) | Viewport plus IP visible to provider |
 | Community reports de-anonymise reporters | A2 | ~1 km grid snapping, time bucketing, no user ID on public rows, minimum k reports before display in sparse areas (P4) | Rural sparse areas. Higher k there |
 
@@ -90,11 +92,13 @@ Legend: **M** = mitigation (phase it lands in), **R** = residual risk.
 
 | Threat | Adv. | Mitigation | Residual |
 |---|---|---|---|
-| Panic alert not delivered (no data, FCM down, server down) | env, A4 | Idempotent retries until ack. On-device SMS intent fallback (P1/P2). Server-side SMS to contacts (P2). Delivery receipts shown to sender (P1). 10111/112 quick-dial always visible (P1) | A malicious server can drop alerts. SMS-from-phone path does not depend on us |
-| OS kills background service | env | Foreground service. OEM-specific battery-optimisation guide. "Last updated" staleness shown honestly (P1) | Aggressive OEMs. Test on real Tecno, Samsung and Xiaomi devices |
+| Panic alert not delivered (no data, FCM down, server down) | env, A4 | Idempotent retries until ack. On-device SMS intent fallback with saved contacts pre-filled (P1/P2). Delivery receipts shown to sender (P1). 10111/112 quick-dial always visible (P1) | A malicious server can drop alerts. SMS-from-phone path does not depend on us |
+| Phone switched off, broken or taken during a walk home or timer | A3, env | Server-side deadline with escrowed E2EE alerts, released by the `pg_cron` watchdog (P2). Only the watchdog can mark a check-in missed; a missed one can't be quietly undone | Needs pg_cron enabled. A malicious server could withhold the release |
+| False "missed check-in" alarm because checking in failed offline | env | The app keeps the timer visibly running and shows an error until the server confirms (P2) | User may not notice |
+| OS kills background service | env | Foreground service. Process-wide Flutter engine so sharing survives swipe-away (P2). In-app battery tip for OEM savers (P2). "Last updated" staleness shown honestly (P1) | Aggressive OEMs. Test on real Tecno, Samsung and Xiaomi devices |
 | OTP pumping (SMS cost fraud) | A8 | Supabase Auth rate limits plus CAPTCHA (hCaptcha/Turnstile) on OTP request. Restrict phone OTP to +27 initially (P1/P3) | — |
 | Invite code brute force | A8 | ~50-bit codes, 48 h expiry, max uses, per-user and per-IP rate limit on redemption (P1/P3) | — |
-| Alert spam by a member | A5 | Rate limit: 30 alert rows/hour/user, and each alert pushed at most once (**P1**), and any member can mute another for 24 h, **except** that panic alerts always break through mute (P3) | — |
+| Alert spam by a member | A5 | Rate limit: 30 alert rows/hour/user, and each alert pushed at most once (**P1**). Events 120/hour, check-ins 30/hour (P2). Any member can mute another for 24 h, **except** that panic alerts always break through mute (P3) | — |
 
 ### Elevation of privilege
 
@@ -142,8 +146,12 @@ and 6 make this discoverable, not impossible.
   flow in a later phase.
 - **Minimality (s10):** see the data model's plaintext column audit in
   `docs/architecture.md` §3.
-- **Retention (s14):** history defaults to 7 days (max 30), deleted by `pg_cron`.
+- **Retention (s14):** alerts 30 days, Circle events 7 days, finished check-ins
+  7 days, deleted nightly by `pg_cron` (`private.purge_expired`). Location history
+  is off by default and kept only on the phone (1, 7 or 30 days, user's choice).
   Account deletion is a hard delete with cascades.
+- **Third parties' numbers:** adding an SMS contact requires confirming that the
+  person agreed to receive emergency texts; numbers stay on the phone.
 - **Data subject rights (s23–25):** in-app export (JSON, decrypted on device) and
   delete.
 - **Security safeguards (s19):** this document.
@@ -156,14 +164,18 @@ and 6 make this discoverable, not impossible.
 
 - Metadata (who is in which Circle, when they update, IPs) is visible to the server.
 - Users who never verify fingerprints are vulnerable to an actively malicious server.
-- SMS fallback reveals location to the SMS gateway and mobile carriers.
+- SMS fallback reveals location to mobile carriers (the user sends it themselves).
 - Phones without Google Play Services do not receive push alerts.
 - A Circle member can always screenshot or remember your location while they are a member.
 - Location spoofing by a member can be flagged but not prevented.
-- **Phase 1:** location sharing runs while the app's process is alive (the
-  foreground service keeps it alive in the background). If the user swipes the app
-  away, sharing stops until it's reopened. A headless background service comes in
-  Phase 2.
+- **Phase 2:** sharing survives swipe-away, but OEM battery savers can still kill
+  the process. The app explains how to set Battery → Unrestricted.
+- **Phase 2:** missed check-in alerts are released by the server and reach
+  members over Realtime while AfriSafety runs (including in the background while
+  they share). They are not pushed yet, and the watchdog needs `pg_cron`.
+- **Phase 2:** places, SMS contacts and history don't sync to a second phone.
+- **Phase 2:** there is no local notification before a check-in deadline; the
+  persistent notification shows the deadline instead.
 - **Phase 1:** push notifications are generic ("Someone in your Circle needs
   help"), and a "delivered" receipt is recorded once the recipient's app has fetched
   the alert, not when the push arrives.
@@ -187,3 +199,19 @@ and 6 make this discoverable, not impossible.
 | No location in logs; no `print`; no SEND_SMS / CALL_PHONE; HTTPS-only; backups off; location only via foreground service | `SafeLogger`, manifest | `security_rules_test.dart`, `safe_logger_test.dart` |
 | Push carries no personal data; each alert pushed once, only by its sender, within 10 minutes | `dispatch-alert` | `supabase/functions/tests/dispatch_alert_test.ts`; `010`: "clients cannot set dispatched_at" |
 
+
+## 9. Phase 2: implemented controls and evidence
+
+| Control | Where | Proven by |
+|---|---|---|
+| Events, check-ins and escrows: RLS on, outsiders get zero rows, no writes as others or from others' devices, no events while paused | `20261006000100/200` | `030_phase2.test.sql` (+ the catalog-wide `000` checks) |
+| Members can't read escrowed alerts early or see each other's check-ins | `checkin_escrows`, `checkins` policies | `030`: "members cannot see escrowed alerts early", "members cannot see each other's check-ins" |
+| Only the watchdog marks a check-in missed; a missed one can't be undone; cancelled ones never fire; released alerts are byte-identical to the escrow | `private.expire_checkins` | `030`: "only the watchdog can mark a check-in missed", "a missed check-in cannot be quietly undone", "the cancelled check-in stays cancelled", "Alice receives the escrowed alert unchanged" |
+| Users can't run the watchdog or retention job | function grants | `030`: "users cannot run the watchdog / retention job" |
+| Retention deletes alerts > 30 days, events > 7 days, finished check-ins > 7 days | `private.purge_expired` | `030` retention block |
+| On-device vault: ciphertext only, file swap rejected, wiped on sign-out | `LocalVault` | `local_vault_test.dart` |
+| Geofencing hysteresis, accuracy filter, no event on first fix | `GeofenceEvaluator` | `geofence_test.dart` |
+| Event payloads are compact, bounded and never leak in `toString` | `EventCodec` | `event_codec_test.dart` |
+| A check-in only counts as started once every Circle's escrow is stored; offline check-in keeps the timer visible; missed check-ins resolve with "I'm safe" | `JourneyController` | `journey_controller_test.dart` |
+| History off by default; turning it off deletes it | `HistoryController` | `history_test.dart` |
+| SMS contacts normalised to E.164 and pre-filled; no SEND_SMS | `normalisePhone`, `smsUri` | `emergency_contact_test.dart`, `sos_sms_test.dart`, `security_rules_test.dart` |

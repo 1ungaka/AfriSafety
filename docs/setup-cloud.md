@@ -90,6 +90,32 @@ Never put the **secret / service_role** key in the app.
 
 ---
 
+### 1.5 Phase 2: turn on Cron and add the new tables (about 5 minutes)
+
+Phase 2 adds three migrations (Circle events, check-ins, retention jobs). The
+check-in watchdog runs every minute with **pg_cron**.
+
+1. Supabase dashboard → **Integrations → Cron** → **Enable** (it may say
+   "Install"). This turns on the `pg_cron` extension.
+2. Apply the migrations. With the CLI: `supabase db push`. If your network
+   blocks it (as in Phase 1), use the SQL Editor instead. In **Command Prompt**:
+   ```
+   cd /d C:\dev\AfriSafety
+   copy /b supabase\migrations\20261006000100_circle_events.sql + supabase\migrations\20261006000200_checkins.sql + supabase\migrations\20261006000300_retention_jobs.sql %TEMP%\afrisafety_phase2.sql
+   notepad %TEMP%\afrisafety_phase2.sql
+   ```
+   Select all (Ctrl+A), copy, paste into a new SQL Editor query, name it
+   `03 AfriSafety Phase 2 schema – RUN ONCE`, and click **Run** (choose "Run
+   this query" if it warns about destructive operations).
+3. Check the jobs exist (new query, `04 Check cron jobs`):
+   ```sql
+   select jobname, schedule from cron.job;
+   ```
+   You should see `afrisafety-checkin-watchdog` (`* * * * *`) and
+   `afrisafety-retention`. If the list is empty, Cron wasn't enabled before
+   step 2: enable it and run only the last file
+   (`20261006000300_retention_jobs.sql`) again.
+
 ## 2. Map tiles (about 5 minutes)
 
 **Just testing on a few phones?** Skip the sign-up and use OpenStreetMap's
@@ -146,6 +172,26 @@ You don't need `adb reverse` any more: the cloud URL is HTTPS.
 6. Press **SOS** on one phone and let the countdown finish. The other phone
    (with AfriSafety open) shows the full-screen alert, and the sender's
    screen shows *Delivered*, then *Seen*.
+
+**Phase 2 checks** (phone A = your Samsung, phone B = the emulator):
+7. **Background:** on phone A, swipe AfriSafety away from Recents. The
+   "sharing" notification stays, and phone B keeps seeing A move.
+8. **Places:** on phone A, **Safety → Places → Add a place** where you are now
+   ("Home"). Walk (or, on the emulator, set a location) more than ~200 m away,
+   then come back. Phone B shows "… left Home" and "… arrived at Home" under
+   **Circle → Recent activity**.
+9. **Check-in timer:** on phone A, **Journey → Check-in timer → 15 min →
+   Start**. Phone B shows "started a check-in timer". Tap **I'm OK**: B shows
+   "checked in safely".
+10. **Missed check-in:** start another 15-minute timer on A and turn A's
+    mobile data and Wi-Fi off. About a minute after the deadline, phone B
+    shows a full-screen "… missed a check-in" with A's last location. Turn A's
+    data back on: A shows "Your Circles have been alerted"; tap **I'm safe**.
+11. **Walk me home:** on A, **Journey → Walk me home**, pick a place, **Start
+    journey**. B sees "… is on the way to …"; arriving within 150 m ends it
+    by itself.
+12. **SMS contacts:** **Safety → SMS emergency contacts → Add a contact**. On
+    the SOS screen, the SMS button opens your SMS app with them filled in.
 
 ---
 
@@ -204,5 +250,7 @@ already git-ignored, but there's no need to keep it.
 | Map says "Invalid key" | `TILE_URL_TEMPLATE` still has `YOUR_KEY`, the key was copied wrong, or the key has HTTP-origin restrictions (section 2). Fix `app\.env`, then stop the app and rerun `flutter run --dart-define-from-file=.env` (hot reload doesn't reread `.env`) |
 | Map is grey, but members are listed | Check `TILE_URL_TEMPLATE` and your MapTiler key. The list view works without tiles |
 | Member shows "Waiting for keys from their phone" | Their phone hasn't been online since you joined. Opening AfriSafety on it hands over the keys |
+| Check-in timer never alerts anyone | Cron isn't running: check §1.5 step 3 |
+| Places don't announce arrive/leave | Sharing must be on (not paused) and someone must see your live location (not "SOS only"). The first fix after opening the app never announces |
 | Sharing stops after swiping the app away | Fixed in Phase 2: sharing continues while the "Sharing your location" notification shows. If it still stops, the phone's battery saver is killing the app: **Settings → Apps → AfriSafety → Battery → Unrestricted** |
 | `supabase db push` fails | Run `supabase link` again, and check the database password |
