@@ -5,7 +5,7 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**All planned phases (0–4) are built (Phase 1 verified on devices; Phases 2–4 tested on the emulator/CI). Next: launch readiness (see `docs/plan.md`).** Read these
+**All planned phases (0–4) are built (Phase 1 verified on devices; Phases 2–4 tested on the emulator/CI). Launch readiness code is done; owner steps are in `docs/launch-checklist.md`.** Read these
 before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
@@ -153,4 +153,7 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-07 | Certificate pinning deferred (lock-out risk) | Decided (Phase 3) |
 | 2026-10-08 | Firebase push skipped for now (owner); missed-check-in push code kept in a local stash only | Decided (owner) |
 | 2026-10-08 | Community reports: category only, grid snapped on the phone, k = 3, no raw reads, no PostGIS, no stranger SOS | Decided (Phase 4) |
+| 2026-10-09 | Account deletion leaves Circles first (ownership passes on), then deletes auth.users | Decided (launch) |
+| 2026-10-09 | MainActivity is a FlutterFragmentActivity (local_auth); fingerprint unlock is biometrics-only | Decided (launch) |
+| 2026-10-09 | Phone sign-in behind AUTH_METHOD=phone, +27 only | Decided (launch) |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

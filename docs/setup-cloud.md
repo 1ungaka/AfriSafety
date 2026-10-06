@@ -138,6 +138,20 @@ from the Devices screen permanent. Or use `supabase db push`.
    insert into private.community_bans (user_id, reason) values ('UID', 'false reports');
    ```
 
+### 1.8 Account deletion (1 minute)
+
+Run `supabase/migrations/20261009000100_account_deletion.sql` in the SQL
+Editor (query name `07 AfriSafety account deletion – RUN ONCE`). It powers
+**Safety → Delete my account**.
+
+### 1.9 Phone-number sign-in (production)
+
+1. Supabase → **Authentication → Sign In / Providers → Phone**: enable, pick
+   an SMS provider (e.g. Twilio) and paste its credentials there (never in
+   the app).
+2. Set `AUTH_METHOD=phone` in the `.env` you build with.
+3. Turn on CAPTCHA and keep the SMS rate limits low: each code costs money.
+
 ## 2. Map tiles (about 5 minutes)
 
 **Just testing on a few phones?** Skip the sign-up and use OpenStreetMap's

@@ -198,6 +198,15 @@ scaffolding every later phase depends on.
 
 **You configure:** run `supabase/migrations/20261008000100_community_reports.sql` in the SQL Editor; to make yourself a moderator, see `docs/setup-cloud.md` §1.7.
 
+## Launch readiness (in progress)
+
+- [x] In-app account deletion (`20261009000100_account_deletion.sql`, pgTAP `060`)
+- [x] Fingerprint unlock (`local_auth`, `FlutterFragmentActivity`, AppCompat themes)
+- [x] Release signing via `android/key.properties`; CI builds a release app bundle
+- [x] Phone-number sign-in (`AUTH_METHOD=phone`, +27 only)
+- [x] `docs/release.md`, `docs/play-store.md`, `docs/launch-checklist.md`
+- [ ] Owner steps in `docs/launch-checklist.md` (accounts, legal, real-phone testing, Play Console)
+
 ## Later (not scheduled)
 
 isiZulu, isiXhosa, Sesotho and Afrikaans translations · guardian consent for minors ·

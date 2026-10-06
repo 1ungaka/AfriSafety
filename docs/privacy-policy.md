@@ -140,8 +140,10 @@ Under POPIA you can:
 - complain to the **Information Regulator**: inforeg.org.za,
   enquiries@inforegulator.org.za
 
-In-app export and account deletion are coming in a later update. Until
-then, email the Information Officer.
+You can delete your account at any time in the app (**Safety → Delete my
+account**). It erases everything we store about you; Circles you shared with
+others continue without you, and their members are told you left. For a
+copy of your information, email the Information Officer.
 
 ## 8. Children
 
