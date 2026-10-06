@@ -1288,4 +1288,157 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shakeSosSubtitle =>
       'Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.';
+
+  @override
+  String get communityTitle => 'Community reports';
+
+  @override
+  String get safetyCommunitySubtitle =>
+      'Anonymous reports of incidents near you';
+
+  @override
+  String get communityReport => 'Report';
+
+  @override
+  String get communityConsentTitle => 'Before you use community reports';
+
+  @override
+  String get communityConsentPoint1 =>
+      'Reports are anonymous. Nobody, including other users and moderators, can see who reported.';
+
+  @override
+  String get communityConsentPoint2 =>
+      'Your phone rounds the place to a square of about 1 km before sending it. AfriSafety never receives your exact location for a report.';
+
+  @override
+  String get communityConsentPoint3 =>
+      'A square only appears once at least 3 different people have reported there in the last 30 days.';
+
+  @override
+  String get communityConsentPoint4 =>
+      'Only report things you saw or experienced. False reports can be flagged, hidden and lead to a ban. This is not a way to call for help: for emergencies use SOS or call 10111.';
+
+  @override
+  String get communityConsentAgree => 'I understand, turn on community reports';
+
+  @override
+  String get communityIntro =>
+      'Squares where at least 3 people reported something in the last 30 days. Your square has a green border.';
+
+  @override
+  String get communityAll => 'All';
+
+  @override
+  String get communityNearYou => 'Near you';
+
+  @override
+  String get communityNothingNear =>
+      'Nothing reported in or next to your square in the last 30 days.';
+
+  @override
+  String communityInYourArea(int count) {
+    return '$count people reported this in your area';
+  }
+
+  @override
+  String communityNextToYou(int count) {
+    return '$count people reported this next to your area';
+  }
+
+  @override
+  String get communityFlag => 'Looks wrong';
+
+  @override
+  String get communityFlagged =>
+      'Thanks. If enough people agree, it will be hidden until a moderator checks it.';
+
+  @override
+  String get communityNoLocation =>
+      'Couldn\'t get your location. Turn on location and try again.';
+
+  @override
+  String communityMapSemantic(int count) {
+    return 'Map with $count reported squares';
+  }
+
+  @override
+  String get communityReportTitle => 'Report something';
+
+  @override
+  String get communityReportPrivacy =>
+      'Anonymous, and only for your approximate area (about 1 km). It won\'t show on the map until 2 other people report the same.';
+
+  @override
+  String get communityWhat => 'What happened?';
+
+  @override
+  String get communityWhen => 'When?';
+
+  @override
+  String get communityWhenNow => 'In the last few hours';
+
+  @override
+  String get communityWhenToday => 'Earlier today';
+
+  @override
+  String get communityWhenYesterday => 'Yesterday';
+
+  @override
+  String get communityWhere => 'Where: the square you are in now.';
+
+  @override
+  String get communitySubmit => 'Send anonymous report';
+
+  @override
+  String get communityThanks => 'Thanks. Your report was sent anonymously.';
+
+  @override
+  String get communityBanned => 'You can\'t send community reports any more.';
+
+  @override
+  String get communityStop => 'Stop using community reports';
+
+  @override
+  String get categorySuspicious => 'Suspicious activity';
+
+  @override
+  String get categoryTheft => 'Theft';
+
+  @override
+  String get categoryRobbery => 'Robbery';
+
+  @override
+  String get categoryAssault => 'Assault';
+
+  @override
+  String get categoryHarassment => 'Harassment';
+
+  @override
+  String get categoryVandalism => 'Vandalism';
+
+  @override
+  String get moderationTitle => 'Moderation';
+
+  @override
+  String get moderationEmpty => 'Nothing flagged.';
+
+  @override
+  String moderationCounts(int reporters, int flags) {
+    return '$reporters reporters · $flags flags';
+  }
+
+  @override
+  String get moderationHidden => 'Hidden';
+
+  @override
+  String get moderationKept => 'Kept';
+
+  @override
+  String get moderationHide => 'Hide';
+
+  @override
+  String get moderationKeep => 'Keep';
+
+  @override
+  String get safetyModerationSubtitle => 'Review flagged community reports';
 }

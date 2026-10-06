@@ -1719,5 +1719,208 @@
   "shakeSosSubtitle": "Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.",
   "@shakeSosSubtitle": {
     "description": "Shake setting subtitle."
+  },
+  "communityTitle": "Community reports",
+  "@communityTitle": {
+    "description": "Community screen title."
+  },
+  "safetyCommunitySubtitle": "Anonymous reports of incidents near you",
+  "@safetyCommunitySubtitle": {
+    "description": "Safety tab entry subtitle."
+  },
+  "communityReport": "Report",
+  "@communityReport": {
+    "description": "Report button."
+  },
+  "communityConsentTitle": "Before you use community reports",
+  "@communityConsentTitle": {
+    "description": "Consent heading."
+  },
+  "communityConsentPoint1": "Reports are anonymous. Nobody, including other users and moderators, can see who reported.",
+  "@communityConsentPoint1": {
+    "description": "Consent point."
+  },
+  "communityConsentPoint2": "Your phone rounds the place to a square of about 1 km before sending it. AfriSafety never receives your exact location for a report.",
+  "@communityConsentPoint2": {
+    "description": "Consent point."
+  },
+  "communityConsentPoint3": "A square only appears once at least 3 different people have reported there in the last 30 days.",
+  "@communityConsentPoint3": {
+    "description": "Consent point."
+  },
+  "communityConsentPoint4": "Only report things you saw or experienced. False reports can be flagged, hidden and lead to a ban. This is not a way to call for help: for emergencies use SOS or call 10111.",
+  "@communityConsentPoint4": {
+    "description": "Consent point."
+  },
+  "communityConsentAgree": "I understand, turn on community reports",
+  "@communityConsentAgree": {
+    "description": "Consent button."
+  },
+  "communityIntro": "Squares where at least 3 people reported something in the last 30 days. Your square has a green border.",
+  "@communityIntro": {
+    "description": "Community intro."
+  },
+  "communityAll": "All",
+  "@communityAll": {
+    "description": "Filter: all categories."
+  },
+  "communityNearYou": "Near you",
+  "@communityNearYou": {
+    "description": "Near you heading."
+  },
+  "communityNothingNear": "Nothing reported in or next to your square in the last 30 days.",
+  "@communityNothingNear": {
+    "description": "Nothing near."
+  },
+  "communityInYourArea": "{count} people reported this in your area",
+  "@communityInYourArea": {
+    "description": "Near item.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityNextToYou": "{count} people reported this next to your area",
+  "@communityNextToYou": {
+    "description": "Near item.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityFlag": "Looks wrong",
+  "@communityFlag": {
+    "description": "Flag button."
+  },
+  "communityFlagged": "Thanks. If enough people agree, it will be hidden until a moderator checks it.",
+  "@communityFlagged": {
+    "description": "Flag confirmation."
+  },
+  "communityNoLocation": "Couldn't get your location. Turn on location and try again.",
+  "@communityNoLocation": {
+    "description": "No location."
+  },
+  "communityMapSemantic": "Map with {count} reported squares",
+  "@communityMapSemantic": {
+    "description": "Map label.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityReportTitle": "Report something",
+  "@communityReportTitle": {
+    "description": "Report sheet title."
+  },
+  "communityReportPrivacy": "Anonymous, and only for your approximate area (about 1 km). It won't show on the map until 2 other people report the same.",
+  "@communityReportPrivacy": {
+    "description": "Report privacy note."
+  },
+  "communityWhat": "What happened?",
+  "@communityWhat": {
+    "description": "Category question."
+  },
+  "communityWhen": "When?",
+  "@communityWhen": {
+    "description": "When question."
+  },
+  "communityWhenNow": "In the last few hours",
+  "@communityWhenNow": {
+    "description": "When choice."
+  },
+  "communityWhenToday": "Earlier today",
+  "@communityWhenToday": {
+    "description": "When choice."
+  },
+  "communityWhenYesterday": "Yesterday",
+  "@communityWhenYesterday": {
+    "description": "When choice."
+  },
+  "communityWhere": "Where: the square you are in now.",
+  "@communityWhere": {
+    "description": "Where note."
+  },
+  "communitySubmit": "Send anonymous report",
+  "@communitySubmit": {
+    "description": "Submit button."
+  },
+  "communityThanks": "Thanks. Your report was sent anonymously.",
+  "@communityThanks": {
+    "description": "Report confirmation."
+  },
+  "communityBanned": "You can't send community reports any more.",
+  "@communityBanned": {
+    "description": "Banned message."
+  },
+  "communityStop": "Stop using community reports",
+  "@communityStop": {
+    "description": "Withdraw consent."
+  },
+  "categorySuspicious": "Suspicious activity",
+  "@categorySuspicious": {
+    "description": "Category."
+  },
+  "categoryTheft": "Theft",
+  "@categoryTheft": {
+    "description": "Category."
+  },
+  "categoryRobbery": "Robbery",
+  "@categoryRobbery": {
+    "description": "Category."
+  },
+  "categoryAssault": "Assault",
+  "@categoryAssault": {
+    "description": "Category."
+  },
+  "categoryHarassment": "Harassment",
+  "@categoryHarassment": {
+    "description": "Category."
+  },
+  "categoryVandalism": "Vandalism",
+  "@categoryVandalism": {
+    "description": "Category."
+  },
+  "moderationTitle": "Moderation",
+  "@moderationTitle": {
+    "description": "Moderation title."
+  },
+  "moderationEmpty": "Nothing flagged.",
+  "@moderationEmpty": {
+    "description": "Empty queue."
+  },
+  "moderationCounts": "{reporters} reporters · {flags} flags",
+  "@moderationCounts": {
+    "description": "Queue counts.",
+    "placeholders": {
+      "reporters": {
+        "type": "int"
+      },
+      "flags": {
+        "type": "int"
+      }
+    }
+  },
+  "moderationHidden": "Hidden",
+  "@moderationHidden": {
+    "description": "Status."
+  },
+  "moderationKept": "Kept",
+  "@moderationKept": {
+    "description": "Status."
+  },
+  "moderationHide": "Hide",
+  "@moderationHide": {
+    "description": "Hide action."
+  },
+  "moderationKeep": "Keep",
+  "@moderationKeep": {
+    "description": "Keep action."
+  },
+  "safetyModerationSubtitle": "Review flagged community reports",
+  "@safetyModerationSubtitle": {
+    "description": "Moderation entry subtitle."
   }
 }

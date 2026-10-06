@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/circles/presentation/create_circle_screen.dart';
 import '../../features/circles/presentation/join_circle_screen.dart';
+import '../../features/community/presentation/community_screen.dart';
+import '../../features/community/presentation/moderation_screen.dart';
 import '../../features/contacts/presentation/contacts_screen.dart';
 import '../../features/device/presentation/devices_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
@@ -102,6 +104,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           userId: state.pathParameters['userId']!,
           name: state.uri.queryParameters['name'] ?? '',
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.community,
+        builder: (context, state) => const CommunityScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.moderation,
+        builder: (context, state) => const ModerationScreen(),
       ),
       GoRoute(
         path: AppRoutes.safetyGuide,

@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/emergency_dial_bar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../community/domain/community_controller.dart';
 import '../../panic/domain/shake_sos.dart';
 import '../../session/domain/session_controller.dart';
 
@@ -48,6 +49,24 @@ class SafetyTab extends ConsumerWidget {
           Card(
             child: Column(
               children: [
+                ListTile(
+                  leading: const Icon(Icons.campaign_outlined),
+                  title: Text(l10n.communityTitle),
+                  subtitle: Text(l10n.safetyCommunitySubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.community),
+                ),
+                if (ref.watch(isModeratorProvider).value ?? false) ...[
+                  const Divider(indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: const Icon(Icons.gavel_outlined),
+                    title: Text(l10n.moderationTitle),
+                    subtitle: Text(l10n.safetyModerationSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push(AppRoutes.moderation),
+                  ),
+                ],
+                const Divider(indent: 16, endIndent: 16),
                 ListTile(
                   leading: const Icon(Icons.place_outlined),
                   title: Text(l10n.placesTitle),

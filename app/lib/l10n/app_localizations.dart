@@ -2151,6 +2151,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shake your phone hard 4 times while AfriSafety is open or sharing. The 3-second countdown still lets you cancel.'**
   String get shakeSosSubtitle;
+
+  /// Community screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Community reports'**
+  String get communityTitle;
+
+  /// Safety tab entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous reports of incidents near you'**
+  String get safetyCommunitySubtitle;
+
+  /// Report button.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get communityReport;
+
+  /// Consent heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you use community reports'**
+  String get communityConsentTitle;
+
+  /// Consent point.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports are anonymous. Nobody, including other users and moderators, can see who reported.'**
+  String get communityConsentPoint1;
+
+  /// Consent point.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone rounds the place to a square of about 1 km before sending it. AfriSafety never receives your exact location for a report.'**
+  String get communityConsentPoint2;
+
+  /// Consent point.
+  ///
+  /// In en, this message translates to:
+  /// **'A square only appears once at least 3 different people have reported there in the last 30 days.'**
+  String get communityConsentPoint3;
+
+  /// Consent point.
+  ///
+  /// In en, this message translates to:
+  /// **'Only report things you saw or experienced. False reports can be flagged, hidden and lead to a ban. This is not a way to call for help: for emergencies use SOS or call 10111.'**
+  String get communityConsentPoint4;
+
+  /// Consent button.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand, turn on community reports'**
+  String get communityConsentAgree;
+
+  /// Community intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Squares where at least 3 people reported something in the last 30 days. Your square has a green border.'**
+  String get communityIntro;
+
+  /// Filter: all categories.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get communityAll;
+
+  /// Near you heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Near you'**
+  String get communityNearYou;
+
+  /// Nothing near.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing reported in or next to your square in the last 30 days.'**
+  String get communityNothingNear;
+
+  /// Near item.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} people reported this in your area'**
+  String communityInYourArea(int count);
+
+  /// Near item.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} people reported this next to your area'**
+  String communityNextToYou(int count);
+
+  /// Flag button.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks wrong'**
+  String get communityFlag;
+
+  /// Flag confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks. If enough people agree, it will be hidden until a moderator checks it.'**
+  String get communityFlagged;
+
+  /// No location.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t get your location. Turn on location and try again.'**
+  String get communityNoLocation;
+
+  /// Map label.
+  ///
+  /// In en, this message translates to:
+  /// **'Map with {count} reported squares'**
+  String communityMapSemantic(int count);
+
+  /// Report sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report something'**
+  String get communityReportTitle;
+
+  /// Report privacy note.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous, and only for your approximate area (about 1 km). It won\'t show on the map until 2 other people report the same.'**
+  String get communityReportPrivacy;
+
+  /// Category question.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get communityWhat;
+
+  /// When question.
+  ///
+  /// In en, this message translates to:
+  /// **'When?'**
+  String get communityWhen;
+
+  /// When choice.
+  ///
+  /// In en, this message translates to:
+  /// **'In the last few hours'**
+  String get communityWhenNow;
+
+  /// When choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier today'**
+  String get communityWhenToday;
+
+  /// When choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get communityWhenYesterday;
+
+  /// Where note.
+  ///
+  /// In en, this message translates to:
+  /// **'Where: the square you are in now.'**
+  String get communityWhere;
+
+  /// Submit button.
+  ///
+  /// In en, this message translates to:
+  /// **'Send anonymous report'**
+  String get communitySubmit;
+
+  /// Report confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks. Your report was sent anonymously.'**
+  String get communityThanks;
+
+  /// Banned message.
+  ///
+  /// In en, this message translates to:
+  /// **'You can\'t send community reports any more.'**
+  String get communityBanned;
+
+  /// Withdraw consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop using community reports'**
+  String get communityStop;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspicious activity'**
+  String get categorySuspicious;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Theft'**
+  String get categoryTheft;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Robbery'**
+  String get categoryRobbery;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Assault'**
+  String get categoryAssault;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Harassment'**
+  String get categoryHarassment;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Vandalism'**
+  String get categoryVandalism;
+
+  /// Moderation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderation'**
+  String get moderationTitle;
+
+  /// Empty queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing flagged.'**
+  String get moderationEmpty;
+
+  /// Queue counts.
+  ///
+  /// In en, this message translates to:
+  /// **'{reporters} reporters · {flags} flags'**
+  String moderationCounts(int reporters, int flags);
+
+  /// Status.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get moderationHidden;
+
+  /// Status.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept'**
+  String get moderationKept;
+
+  /// Hide action.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get moderationHide;
+
+  /// Keep action.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get moderationKeep;
+
+  /// Moderation entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review flagged community reports'**
+  String get safetyModerationSubtitle;
 }
 
 class _AppLocalizationsDelegate
