@@ -2469,6 +2469,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unlock with fingerprint'**
   String get lockBiometricToggle;
+
+  /// Sign-in intro for phone.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll text you a 6-digit code. No password needed.'**
+  String get signInIntroPhone;
+
+  /// Phone field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number'**
+  String get signInPhoneLabel;
+
+  /// Invalid phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a South African mobile number, e.g. 082 123 4567.'**
+  String get signInPhoneInvalid;
+
+  /// Change phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a different number'**
+  String get signInUseDifferentPhone;
 }
 
 class _AppLocalizationsDelegate

@@ -3,42 +3,79 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/config/app_config.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/logging/safe_logger.dart';
 import '../../../core/supabase/supabase_providers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/afrisafety_logo.dart';
 import '../../../core/widgets/emergency_dial_bar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../contacts/domain/emergency_contact.dart';
 import '../../session/domain/session_controller.dart';
 import '../domain/auth_failure.dart';
 
 const _log = SafeLogger('auth');
 
-/// Abstracts Supabase OTP auth so the screen is testable.
+/// Abstracts Supabase OTP auth so the screen is testable. [identifier] is
+/// an email address or an E.164 phone number, depending on [method].
 abstract interface class AuthGateway {
-  Future<void> sendCode(String email);
-  Future<void> verify(String email, String code);
+  SignInMethod get method;
+  Future<void> sendCode(String identifier);
+  Future<void> verify(String identifier, String code);
 }
 
 class SupabaseAuthGateway implements AuthGateway {
-  SupabaseAuthGateway(this._db);
+  SupabaseAuthGateway(this._db, this.method);
 
   final SupabaseClient _db;
 
   @override
-  Future<void> sendCode(String email) =>
-      _db.auth.signInWithOtp(email: email, shouldCreateUser: true);
+  final SignInMethod method;
 
   @override
-  Future<void> verify(String email, String code) =>
-      _db.auth.verifyOTP(email: email, token: code, type: OtpType.email);
+  Future<void> sendCode(String identifier) => switch (method) {
+    SignInMethod.email => _db.auth.signInWithOtp(
+      email: identifier,
+      shouldCreateUser: true,
+    ),
+    SignInMethod.phone => _db.auth.signInWithOtp(
+      phone: identifier,
+      shouldCreateUser: true,
+    ),
+  };
+
+  @override
+  Future<void> verify(String identifier, String code) => switch (method) {
+    SignInMethod.email => _db.auth.verifyOTP(
+      email: identifier,
+      token: code,
+      type: OtpType.email,
+    ),
+    SignInMethod.phone => _db.auth.verifyOTP(
+      phone: identifier,
+      token: code,
+      type: OtpType.sms,
+    ),
+  };
 }
 
 final authGatewayProvider = Provider<AuthGateway>(
-  (ref) => SupabaseAuthGateway(ref.watch(supabaseProvider)),
+  (ref) => SupabaseAuthGateway(
+    ref.watch(supabaseProvider),
+    ref.watch(appConfigProvider).signInMethod,
+  ),
 );
 
-/// Email one-time-code sign-in (D3: phone OTP comes in production).
+/// Normalises a sign-in phone number to E.164. Only South African numbers
+/// are accepted (D3): SMS codes cost money per message, and limiting the
+/// countries limits "SMS pumping" fraud.
+String? normaliseSignInPhone(String input) {
+  final phone = normalisePhone(input);
+  return phone != null && phone.startsWith('+27') ? phone : null;
+}
+
+/// One-time-code sign-in by email (development) or SMS (production, D3).
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
@@ -62,25 +99,37 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
+  bool get _phone => ref.read(authGatewayProvider).method == SignInMethod.phone;
+
+  /// The email address or E.164 number, or null if it isn't valid.
+  String? get _identifier {
+    final raw = _email.text.trim();
+    if (_phone) return normaliseSignInPhone(raw);
+    return _emailPattern.hasMatch(raw) ? raw : null;
+  }
+
   Future<void> _sendCode() async {
     final l10n = AppLocalizations.of(context);
-    final email = _email.text.trim();
-    if (!_emailPattern.hasMatch(email)) {
-      setState(() => _error = l10n.signInEmailInvalid);
+    final identifier = _identifier;
+    if (identifier == null) {
+      setState(
+        () =>
+            _error = _phone ? l10n.signInPhoneInvalid : l10n.signInEmailInvalid,
+      );
       return;
     }
     await _run(() async {
-      await ref.read(authGatewayProvider).sendCode(email);
+      await ref.read(authGatewayProvider).sendCode(identifier);
       setState(() => _codeSent = true);
     });
   }
 
   Future<void> _verify() async {
     final l10n = AppLocalizations.of(context);
+    final identifier = _identifier;
+    if (identifier == null) return;
     await _run(() async {
-      await ref
-          .read(authGatewayProvider)
-          .verify(_email.text.trim(), _code.text.trim());
+      await ref.read(authGatewayProvider).verify(identifier, _code.text.trim());
       // The router redirects once the session changes.
     }, onAuthError: l10n.signInWrongCode);
   }
@@ -127,6 +176,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
+    final phone = _phone;
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -151,19 +201,26 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             const SizedBox(height: 8),
             Text(
               _codeSent
-                  ? l10n.signInCodeSent(_email.text.trim())
-                  : l10n.signInIntro,
+                  ? l10n.signInCodeSent(_identifier ?? _email.text.trim())
+                  : (phone ? l10n.signInIntroPhone : l10n.signInIntro),
               style: text.bodyLarge,
             ),
             const SizedBox(height: 24),
             if (!_codeSent)
               TextField(
                 controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                autofillHints: const [AutofillHints.email],
+                keyboardType: phone
+                    ? TextInputType.phone
+                    : TextInputType.emailAddress,
+                autofillHints: [
+                  phone ? AutofillHints.telephoneNumber : AutofillHints.email,
+                ],
                 autocorrect: false,
                 decoration: InputDecoration(
-                  labelText: l10n.signInEmailLabel,
+                  labelText: phone
+                      ? l10n.signInPhoneLabel
+                      : l10n.signInEmailLabel,
+                  hintText: phone ? '082 123 4567' : null,
                   border: const OutlineInputBorder(),
                 ),
                 onSubmitted: (_) => _sendCode(),
@@ -214,7 +271,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         _code.clear();
                         _error = null;
                       }),
-                child: Text(l10n.signInUseDifferentEmail),
+                child: Text(
+                  phone
+                      ? l10n.signInUseDifferentPhone
+                      : l10n.signInUseDifferentEmail,
+                ),
               ),
             ],
           ],

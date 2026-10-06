@@ -1468,4 +1468,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lockBiometricToggle => 'Unlock with fingerprint';
+
+  @override
+  String get signInIntroPhone =>
+      'We\'ll text you a 6-digit code. No password needed.';
+
+  @override
+  String get signInPhoneLabel => 'Mobile number';
+
+  @override
+  String get signInPhoneInvalid =>
+      'Enter a South African mobile number, e.g. 082 123 4567.';
+
+  @override
+  String get signInUseDifferentPhone => 'Use a different number';
 }

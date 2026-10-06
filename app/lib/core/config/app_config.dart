@@ -5,6 +5,10 @@
 /// the Supabase publishable (anon) key is safe to ship because Row Level
 /// Security, not key secrecy, protects the data. Server secrets (service role
 /// key, SMS and FCM credentials) must never be added here.
+/// How people sign in (D3): email codes while developing, SMS codes to
+/// South African numbers in production.
+enum SignInMethod { email, phone }
+
 class AppConfig {
   const AppConfig({
     required this.environment,
@@ -12,6 +16,7 @@ class AppConfig {
     required this.supabasePublishableKey,
     required this.tileUrlTemplate,
     this.firebase,
+    this.signInMethod = SignInMethod.email,
   });
 
   /// Reads the compile-time defines. Call [validate] before using the result.
@@ -23,6 +28,9 @@ class AppConfig {
     ),
     tileUrlTemplate: const String.fromEnvironment('TILE_URL_TEMPLATE'),
     firebase: FirebaseConfig.fromEnvironment(),
+    signInMethod: const String.fromEnvironment('AUTH_METHOD') == 'phone'
+        ? SignInMethod.phone
+        : SignInMethod.email,
   );
 
   final String environment;
@@ -33,6 +41,10 @@ class AppConfig {
   /// Optional. Without it the app still works, but alerts only arrive while
   /// the app is open (no push notifications).
   final FirebaseConfig? firebase;
+
+  /// `AUTH_METHOD=phone` switches to SMS codes. Needs an SMS provider set
+  /// up in Supabase (Authentication → Sign In / Providers → Phone).
+  final SignInMethod signInMethod;
 
   bool get isProduction => environment == 'prod';
 
