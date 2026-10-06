@@ -2421,6 +2421,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Review flagged community reports'**
   String get safetyModerationSubtitle;
+
+  /// Delete account entry and dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteAccountTitle;
+
+  /// Delete account explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and everything AfriSafety stores about you: your profile, devices, Circle memberships, locations, alerts, check-ins and reports. You\'ll leave every Circle (the next member becomes owner) and its members will be told. This phone is wiped too. It can\'t be undone.'**
+  String get deleteAccountBody;
+
+  /// Word the user types to confirm deletion.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get deleteAccountConfirmWord;
+
+  /// Confirm field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {word} to confirm'**
+  String deleteAccountTypeToConfirm(String word);
+
+  /// Delete button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete forever'**
+  String get deleteAccountAction;
 }
 
 class _AppLocalizationsDelegate

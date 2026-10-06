@@ -1922,5 +1922,30 @@
   "safetyModerationSubtitle": "Review flagged community reports",
   "@safetyModerationSubtitle": {
     "description": "Moderation entry subtitle."
+  },
+  "deleteAccountTitle": "Delete my account",
+  "@deleteAccountTitle": {
+    "description": "Delete account entry and dialog title."
+  },
+  "deleteAccountBody": "This permanently deletes your account and everything AfriSafety stores about you: your profile, devices, Circle memberships, locations, alerts, check-ins and reports. You'll leave every Circle (the next member becomes owner) and its members will be told. This phone is wiped too. It can't be undone.",
+  "@deleteAccountBody": {
+    "description": "Delete account explanation."
+  },
+  "deleteAccountConfirmWord": "DELETE",
+  "@deleteAccountConfirmWord": {
+    "description": "Word the user types to confirm deletion."
+  },
+  "deleteAccountTypeToConfirm": "Type {word} to confirm",
+  "@deleteAccountTypeToConfirm": {
+    "description": "Confirm field label.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountAction": "Delete forever",
+  "@deleteAccountAction": {
+    "description": "Delete button."
   }
 }

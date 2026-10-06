@@ -1441,4 +1441,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get safetyModerationSubtitle => 'Review flagged community reports';
+
+  @override
+  String get deleteAccountTitle => 'Delete my account';
+
+  @override
+  String get deleteAccountBody =>
+      'This permanently deletes your account and everything AfriSafety stores about you: your profile, devices, Circle memberships, locations, alerts, check-ins and reports. You\'ll leave every Circle (the next member becomes owner) and its members will be told. This phone is wiped too. It can\'t be undone.';
+
+  @override
+  String get deleteAccountConfirmWord => 'DELETE';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Type $word to confirm';
+  }
+
+  @override
+  String get deleteAccountAction => 'Delete forever';
 }

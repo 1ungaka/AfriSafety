@@ -169,6 +169,21 @@ class SafetyTab extends ConsumerWidget {
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 ListTile(
+                  leading: const Icon(
+                    Icons.delete_forever_outlined,
+                    color: AppColors.sosText,
+                  ),
+                  title: Text(
+                    l10n.deleteAccountTitle,
+                    style: const TextStyle(color: AppColors.sosText),
+                  ),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => const _DeleteAccountDialog(),
+                  ),
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                ListTile(
                   leading: const Icon(Icons.logout, color: AppColors.sosText),
                   title: Text(
                     l10n.safetySignOut,
@@ -202,6 +217,91 @@ class SafetyTab extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Deleting is permanent, so the user types a word to confirm.
+class _DeleteAccountDialog extends ConsumerStatefulWidget {
+  const _DeleteAccountDialog();
+
+  @override
+  ConsumerState<_DeleteAccountDialog> createState() =>
+      _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends ConsumerState<_DeleteAccountDialog> {
+  final _confirm = TextEditingController();
+  bool _busy = false;
+  bool _failed = false;
+
+  @override
+  void dispose() {
+    _confirm.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final word = l10n.deleteAccountConfirmWord;
+    final ready = _confirm.text.trim().toUpperCase() == word.toUpperCase();
+    return AlertDialog(
+      title: Text(l10n.deleteAccountTitle),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.deleteAccountBody),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _confirm,
+              decoration: InputDecoration(
+                labelText: l10n.deleteAccountTypeToConfirm(word),
+                border: const OutlineInputBorder(),
+              ),
+              onChanged: (_) => setState(() {}),
+            ),
+            if (_failed) ...[
+              const SizedBox(height: 8),
+              Text(
+                l10n.errorGeneric,
+                style: const TextStyle(color: AppColors.sosText),
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.pop(context),
+          child: Text(l10n.actionCancel),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(foregroundColor: AppColors.sosText),
+          onPressed: !ready || _busy
+              ? null
+              : () async {
+                  setState(() {
+                    _busy = true;
+                    _failed = false;
+                  });
+                  try {
+                    await ref.read(sessionProvider.notifier).deleteAccount();
+                    if (context.mounted) Navigator.pop(context);
+                  } on Object {
+                    if (mounted) {
+                      setState(() {
+                        _busy = false;
+                        _failed = true;
+                      });
+                    }
+                  }
+                },
+          child: Text(l10n.deleteAccountAction),
+        ),
+      ],
     );
   }
 }

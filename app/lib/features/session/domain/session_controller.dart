@@ -114,6 +114,20 @@ class SessionController extends AsyncNotifier<SessionState> {
     await future;
   }
 
+  /// Permanently deletes the account on the server (leaving every Circle
+  /// first, so shared Circles survive), then wipes this phone.
+  Future<void> deleteAccount() async {
+    await ref.read(supabaseProvider).rpc<void>('delete_account');
+    try {
+      await ref.read(deviceRepositoryProvider).wipeLocal();
+      await ref.read(appLockProvider.notifier).clear();
+      await ref.read(localVaultProvider).wipe();
+    } on Object catch (e) {
+      _log.warning('Local wipe after account deletion failed', e);
+    }
+    await ref.read(supabaseProvider).auth.signOut(scope: SignOutScope.local);
+  }
+
   /// Called on resume: if this phone was signed out from another device,
   /// wipe it and return to the sign-in screen.
   Future<void> checkRevoked() async {
