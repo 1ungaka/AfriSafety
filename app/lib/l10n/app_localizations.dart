@@ -1983,6 +1983,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The lock doesn\'t hide that you\'re sharing your location: Android\'s notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.'**
   String get lockSettingsNote;
+
+  /// Foreground notification body with viewer count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nobody can see it yet.} =1{1 person can see it.} other{{count} people can see it.}} Open the app to pause.'**
+  String notificationSharingBodyCount(int count);
+
+  /// Weekly sharing review.
+  ///
+  /// In en, this message translates to:
+  /// **'{people, plural, =1{1 person} other{{people} people}} in {circles, plural, =1{1 Circle} other{{circles} Circles}} can see your location. Still OK?'**
+  String reviewBody(int people, int circles);
+
+  /// Review confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks right'**
+  String get reviewOk;
+
+  /// Review pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause sharing'**
+  String get reviewPause;
+
+  /// Mute member action.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute updates for 24 h'**
+  String get muteMember;
+
+  /// Unmute member action.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute updates'**
+  String get unmuteMember;
+
+  /// Muted note.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates muted. SOS alerts still come through.'**
+  String get mutedUntil;
+
+  /// Safety guide title.
+  ///
+  /// In en, this message translates to:
+  /// **'Think someone is tracking you?'**
+  String get guideTitle;
+
+  /// Safety tab entry subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps to check, and people who can help'**
+  String get safetyGuideSubtitle;
+
+  /// Guide intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps like this can be misused to watch someone. You are in control of AfriSafety on your phone: nobody can turn sharing on for you, and pausing or leaving always works.'**
+  String get guideIntro;
+
+  /// Guide step.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your Circles'**
+  String get guideCirclesTitle;
+
+  /// Guide step body.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Circle tab. Make sure you know everyone listed, and switch anyone you\'re unsure about to SOS alerts only, or leave the Circle. Members are told when you leave.'**
+  String get guideCirclesBody;
+
+  /// Guide step.
+  ///
+  /// In en, this message translates to:
+  /// **'Check which phones are signed in'**
+  String get guideDevicesTitle;
+
+  /// Guide step body.
+  ///
+  /// In en, this message translates to:
+  /// **'If a phone you don\'t recognise is signed in to your account, sign it out.'**
+  String get guideDevicesBody;
+
+  /// Guide step.
+  ///
+  /// In en, this message translates to:
+  /// **'Check other apps'**
+  String get guideAppsTitle;
+
+  /// Guide step body.
+  ///
+  /// In en, this message translates to:
+  /// **'In Android Settings → Location → App location permissions, look for apps you didn\'t install or don\'t recognise. Someone with access to your phone may have installed one.'**
+  String get guideAppsBody;
+
+  /// Guide step.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause when you need to'**
+  String get guidePauseTitle;
+
+  /// Guide step body.
+  ///
+  /// In en, this message translates to:
+  /// **'Pausing is one tap on the Map tab. People in your Circles will see that you paused. If that could put you at risk, think about timing, and keep SOS available.'**
+  String get guidePauseBody;
+
+  /// Guide step.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock the app'**
+  String get guideLockTitle;
+
+  /// Guide step body.
+  ///
+  /// In en, this message translates to:
+  /// **'A PIN keeps people who pick up your phone out of AfriSafety. SOS still works.'**
+  String get guideLockBody;
+
+  /// Guide helplines heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to someone'**
+  String get guideHelpTitle;
+
+  /// Helpline name.
+  ///
+  /// In en, this message translates to:
+  /// **'GBV Command Centre'**
+  String get guideGbvTitle;
+
+  /// Helpline details.
+  ///
+  /// In en, this message translates to:
+  /// **'0800 428 428, free, 24 hours. Or dial *120*7867# from any phone.'**
+  String get guideGbvBody;
+
+  /// Helpline name.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifeline South Africa'**
+  String get guideLifelineTitle;
+
+  /// Helpline details.
+  ///
+  /// In en, this message translates to:
+  /// **'0861 322 322, 24 hours: counselling and support.'**
+  String get guideLifelineBody;
 }
 
 class _AppLocalizationsDelegate

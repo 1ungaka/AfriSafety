@@ -1594,5 +1594,118 @@
   "lockSettingsNote": "The lock doesn't hide that you're sharing your location: Android's notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.",
   "@lockSettingsNote": {
     "description": "Settings note."
+  },
+  "notificationSharingBodyCount": "{count, plural, =0{Nobody can see it yet.} =1{1 person can see it.} other{{count} people can see it.}} Open the app to pause.",
+  "@notificationSharingBodyCount": {
+    "description": "Foreground notification body with viewer count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewBody": "{people, plural, =1{1 person} other{{people} people}} in {circles, plural, =1{1 Circle} other{{circles} Circles}} can see your location. Still OK?",
+  "@reviewBody": {
+    "description": "Weekly sharing review.",
+    "placeholders": {
+      "people": {
+        "type": "int"
+      },
+      "circles": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewOk": "Looks right",
+  "@reviewOk": {
+    "description": "Review confirm."
+  },
+  "reviewPause": "Pause sharing",
+  "@reviewPause": {
+    "description": "Review pause."
+  },
+  "muteMember": "Mute updates for 24 h",
+  "@muteMember": {
+    "description": "Mute member action."
+  },
+  "unmuteMember": "Unmute updates",
+  "@unmuteMember": {
+    "description": "Unmute member action."
+  },
+  "mutedUntil": "Updates muted. SOS alerts still come through.",
+  "@mutedUntil": {
+    "description": "Muted note."
+  },
+  "guideTitle": "Think someone is tracking you?",
+  "@guideTitle": {
+    "description": "Safety guide title."
+  },
+  "safetyGuideSubtitle": "Steps to check, and people who can help",
+  "@safetyGuideSubtitle": {
+    "description": "Safety tab entry subtitle."
+  },
+  "guideIntro": "Apps like this can be misused to watch someone. You are in control of AfriSafety on your phone: nobody can turn sharing on for you, and pausing or leaving always works.",
+  "@guideIntro": {
+    "description": "Guide intro."
+  },
+  "guideCirclesTitle": "Check your Circles",
+  "@guideCirclesTitle": {
+    "description": "Guide step."
+  },
+  "guideCirclesBody": "Open the Circle tab. Make sure you know everyone listed, and switch anyone you're unsure about to SOS alerts only, or leave the Circle. Members are told when you leave.",
+  "@guideCirclesBody": {
+    "description": "Guide step body."
+  },
+  "guideDevicesTitle": "Check which phones are signed in",
+  "@guideDevicesTitle": {
+    "description": "Guide step."
+  },
+  "guideDevicesBody": "If a phone you don't recognise is signed in to your account, sign it out.",
+  "@guideDevicesBody": {
+    "description": "Guide step body."
+  },
+  "guideAppsTitle": "Check other apps",
+  "@guideAppsTitle": {
+    "description": "Guide step."
+  },
+  "guideAppsBody": "In Android Settings → Location → App location permissions, look for apps you didn't install or don't recognise. Someone with access to your phone may have installed one.",
+  "@guideAppsBody": {
+    "description": "Guide step body."
+  },
+  "guidePauseTitle": "Pause when you need to",
+  "@guidePauseTitle": {
+    "description": "Guide step."
+  },
+  "guidePauseBody": "Pausing is one tap on the Map tab. People in your Circles will see that you paused. If that could put you at risk, think about timing, and keep SOS available.",
+  "@guidePauseBody": {
+    "description": "Guide step body."
+  },
+  "guideLockTitle": "Lock the app",
+  "@guideLockTitle": {
+    "description": "Guide step."
+  },
+  "guideLockBody": "A PIN keeps people who pick up your phone out of AfriSafety. SOS still works.",
+  "@guideLockBody": {
+    "description": "Guide step body."
+  },
+  "guideHelpTitle": "Talk to someone",
+  "@guideHelpTitle": {
+    "description": "Guide helplines heading."
+  },
+  "guideGbvTitle": "GBV Command Centre",
+  "@guideGbvTitle": {
+    "description": "Helpline name."
+  },
+  "guideGbvBody": "0800 428 428, free, 24 hours. Or dial *120*7867# from any phone.",
+  "@guideGbvBody": {
+    "description": "Helpline details."
+  },
+  "guideLifelineTitle": "Lifeline South Africa",
+  "@guideLifelineTitle": {
+    "description": "Helpline name."
+  },
+  "guideLifelineBody": "0861 322 322, 24 hours: counselling and support.",
+  "@guideLifelineBody": {
+    "description": "Helpline details."
   }
 }

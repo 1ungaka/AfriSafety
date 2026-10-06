@@ -31,6 +31,16 @@ class SafetyTab extends ConsumerWidget {
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             child: const EmergencyDialBar(),
           ),
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.health_and_safety_outlined),
+              title: Text(l10n.guideTitle),
+              subtitle: Text(l10n.safetyGuideSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(AppRoutes.safetyGuide),
+            ),
+          ),
           const SizedBox(height: 28),
           Text(l10n.safetyToolsHeading, style: text.titleLarge),
           const SizedBox(height: 8),

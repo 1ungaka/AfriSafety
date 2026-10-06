@@ -17,6 +17,7 @@ import '../../features/panic/presentation/incoming_alert_screen.dart';
 import '../../features/panic/presentation/sos_screen.dart';
 import '../../features/places/presentation/add_place_screen.dart';
 import '../../features/places/presentation/places_screen.dart';
+import '../../features/safety_guide/presentation/safety_guide_screen.dart';
 import '../../features/session/domain/session_controller.dart';
 import '../../features/session/presentation/loading_screen.dart';
 import '../../features/shell/presentation/home_shell.dart';
@@ -101,6 +102,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           userId: state.pathParameters['userId']!,
           name: state.uri.queryParameters['name'] ?? '',
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.safetyGuide,
+        builder: (context, state) => const SafetyGuideScreen(),
       ),
       GoRoute(
         path: AppRoutes.appLock,

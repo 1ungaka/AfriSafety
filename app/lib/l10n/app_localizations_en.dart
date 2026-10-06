@@ -1172,4 +1172,110 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get lockSettingsNote =>
       'The lock doesn\'t hide that you\'re sharing your location: Android\'s notification stays visible. After 5 wrong PINs, AfriSafety makes you wait longer each time.';
+
+  @override
+  String notificationSharingBodyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people can see it.',
+      one: '1 person can see it.',
+      zero: 'Nobody can see it yet.',
+    );
+    return '$_temp0 Open the app to pause.';
+  }
+
+  @override
+  String reviewBody(int people, int circles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      people,
+      locale: localeName,
+      other: '$people people',
+      one: '1 person',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      circles,
+      locale: localeName,
+      other: '$circles Circles',
+      one: '1 Circle',
+    );
+    return '$_temp0 in $_temp1 can see your location. Still OK?';
+  }
+
+  @override
+  String get reviewOk => 'Looks right';
+
+  @override
+  String get reviewPause => 'Pause sharing';
+
+  @override
+  String get muteMember => 'Mute updates for 24 h';
+
+  @override
+  String get unmuteMember => 'Unmute updates';
+
+  @override
+  String get mutedUntil => 'Updates muted. SOS alerts still come through.';
+
+  @override
+  String get guideTitle => 'Think someone is tracking you?';
+
+  @override
+  String get safetyGuideSubtitle => 'Steps to check, and people who can help';
+
+  @override
+  String get guideIntro =>
+      'Apps like this can be misused to watch someone. You are in control of AfriSafety on your phone: nobody can turn sharing on for you, and pausing or leaving always works.';
+
+  @override
+  String get guideCirclesTitle => 'Check your Circles';
+
+  @override
+  String get guideCirclesBody =>
+      'Open the Circle tab. Make sure you know everyone listed, and switch anyone you\'re unsure about to SOS alerts only, or leave the Circle. Members are told when you leave.';
+
+  @override
+  String get guideDevicesTitle => 'Check which phones are signed in';
+
+  @override
+  String get guideDevicesBody =>
+      'If a phone you don\'t recognise is signed in to your account, sign it out.';
+
+  @override
+  String get guideAppsTitle => 'Check other apps';
+
+  @override
+  String get guideAppsBody =>
+      'In Android Settings → Location → App location permissions, look for apps you didn\'t install or don\'t recognise. Someone with access to your phone may have installed one.';
+
+  @override
+  String get guidePauseTitle => 'Pause when you need to';
+
+  @override
+  String get guidePauseBody =>
+      'Pausing is one tap on the Map tab. People in your Circles will see that you paused. If that could put you at risk, think about timing, and keep SOS available.';
+
+  @override
+  String get guideLockTitle => 'Lock the app';
+
+  @override
+  String get guideLockBody =>
+      'A PIN keeps people who pick up your phone out of AfriSafety. SOS still works.';
+
+  @override
+  String get guideHelpTitle => 'Talk to someone';
+
+  @override
+  String get guideGbvTitle => 'GBV Command Centre';
+
+  @override
+  String get guideGbvBody =>
+      '0800 428 428, free, 24 hours. Or dial *120*7867# from any phone.';
+
+  @override
+  String get guideLifelineTitle => 'Lifeline South Africa';
+
+  @override
+  String get guideLifelineBody =>
+      '0861 322 322, 24 hours: counselling and support.';
 }

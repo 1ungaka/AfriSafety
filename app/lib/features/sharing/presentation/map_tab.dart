@@ -14,6 +14,7 @@ import '../../circles/presentation/circle_switcher.dart';
 import '../../shell/presentation/empty_circle_card.dart';
 import '../domain/member_locations_controller.dart';
 import '../domain/sharing_controller.dart';
+import '../domain/sharing_review.dart';
 
 /// Centre of South Africa, for when no one has a location yet.
 const _southAfrica = LatLng(-29.0, 24.0);
@@ -68,6 +69,7 @@ class _MapTabState extends ConsumerState<MapTab> {
               padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
               child: _StatusPill(),
             ),
+            const _ReviewCard(),
             Expanded(
               child: _listOnly
                   ? const _MemberList(padding: EdgeInsets.all(20))
@@ -75,6 +77,58 @@ class _MapTabState extends ConsumerState<MapTab> {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Weekly "is this still OK?" for who can see you.
+class _ReviewCard extends ConsumerWidget {
+  const _ReviewCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final circles = ref.watch(circlesControllerProvider).value;
+    final last = ref.watch(sharingReviewProvider).value;
+    final people = circles?.liveViewerCount ?? 0;
+    final sharingIn = circles?.sharingIn.length ?? 0;
+    if (last == null ||
+        people == 0 ||
+        !SharingReviewController.isDue(last, DateTime.now().toUtc())) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.reviewBody(people, sharingIn)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      await ref
+                          .read(circlesControllerProvider.notifier)
+                          .setPaused(paused: true);
+                      await ref.read(sharingReviewProvider.notifier).confirm();
+                    },
+                    child: Text(l10n.reviewPause),
+                  ),
+                  TextButton(
+                    onPressed: () =>
+                        ref.read(sharingReviewProvider.notifier).confirm(),
+                    child: Text(l10n.reviewOk),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

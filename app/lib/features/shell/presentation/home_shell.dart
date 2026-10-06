@@ -71,9 +71,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       ref
           .read(sharingControllerProvider.notifier)
           .configure(
-            SharingNotificationText(
-              title: l10n.notificationSharingTitle,
-              body: l10n.notificationSharingBody,
+            _sharingText(
+              l10n,
+              ref.read(circlesControllerProvider).value?.liveViewerCount ?? 0,
             ),
           ),
     );
@@ -92,6 +92,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         );
   }
 
+  static SharingNotificationText _sharingText(
+    AppLocalizations l10n,
+    int viewers,
+  ) => SharingNotificationText(
+    title: l10n.notificationSharingTitle,
+    body: l10n.notificationSharingBodyCount(viewers),
+  );
+
   void _openAlert(String id) {
     if (_shownAlerts.add(id)) context.push(AppRoutes.alertDetail(id));
   }
@@ -105,6 +113,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.watch(historyRecorderProvider);
     // Restores a running check-in or journey after a restart.
     ref.watch(journeyControllerProvider);
+
+    // The notification says how many people can see you; keep it true.
+    ref.listen(
+      circlesControllerProvider.select((c) => c.value?.liveViewerCount),
+      (_, viewers) {
+        if (viewers == null) return;
+        unawaited(
+          ref
+              .read(sharingControllerProvider.notifier)
+              .configure(_sharingText(l10n, viewers)),
+        );
+      },
+    );
 
     // Place and journey updates from others appear as a short message.
     ref.listen(circleEventsFeedProvider, (previous, next) {

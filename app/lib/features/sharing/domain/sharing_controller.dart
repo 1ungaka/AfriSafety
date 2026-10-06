@@ -101,9 +101,16 @@ class SharingController extends Notifier<SharingState> {
   /// Supplies the notification text (needs a BuildContext for l10n) and
   /// starts sharing if the user shares in any Circle.
   Future<void> configure(SharingNotificationText text) async {
+    final changed = _text?.title != text.title || _text?.body != text.body;
+    final first = _text == null;
     _text = text;
     await _refreshPermission();
     await _reconcileRunning();
+    // Keep the notification honest (e.g. the number of people who can see
+    // you). A journey shows its own text, so leave that alone.
+    if (changed && !first && _sub != null && _journeyText == null) {
+      await _restart(state.mode);
+    }
   }
 
   Future<void> _refreshPermission() async {

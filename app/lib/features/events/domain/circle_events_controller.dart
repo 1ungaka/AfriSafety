@@ -7,6 +7,7 @@ import '../../../core/crypto/event_codec.dart';
 import '../../../core/logging/safe_logger.dart';
 import '../../../core/supabase/supabase_providers.dart';
 import '../../circles/domain/circles_controller.dart';
+import '../../circles/domain/mutes_controller.dart';
 import '../../keys/domain/key_sync_service.dart';
 import '../../session/domain/session_controller.dart';
 import '../data/circle_events_repository.dart';
@@ -90,9 +91,13 @@ final circleEventsFeedProvider =
 /// decrypt, newest first. Events from people who share "SOS only" with us
 /// can't be opened and are simply left out.
 class CircleEventsFeed extends AsyncNotifier<List<FeedItem>> {
+  Map<String, DateTime> _mutes = const {};
+
   @override
   Future<List<FeedItem>> build() async {
     final circles = ref.watch(circlesControllerProvider).value;
+    final mutes = ref.watch(mutesProvider).value ?? const {};
+    _mutes = mutes;
     if (ref.watch(identityProvider) == null || circles == null) return const [];
     final sub = ref
         .read(circleEventsRepositoryProvider)
@@ -121,7 +126,9 @@ class CircleEventsFeed extends AsyncNotifier<List<FeedItem>> {
     if (rows.isNotEmpty) await keys.loadReceivedKeys();
     final items = <FeedItem>[];
     final seen = <String>{};
+    final now = DateTime.now().toUtc();
     for (final r in rows) {
+      if (MutesController.isMuted(_mutes, r.senderId, now)) continue;
       final view = circles.circles
           .where((c) => c.circle.id == r.circleId)
           .firstOrNull;

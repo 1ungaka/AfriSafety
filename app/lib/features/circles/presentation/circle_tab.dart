@@ -12,6 +12,7 @@ import '../../keys/domain/key_trust.dart';
 import '../../shell/presentation/empty_circle_card.dart';
 import '../domain/circles_controller.dart';
 import '../domain/models.dart';
+import '../domain/mutes_controller.dart';
 import 'circle_switcher.dart';
 import 'invite_sheet.dart';
 
@@ -170,6 +171,11 @@ class _MemberRow extends ConsumerWidget {
       if (member.role == MemberRole.owner) l10n.circleOwnerTag,
     ].join(' · ');
     final trust = ref.watch(keyTrustProvider).value?[member.userId];
+    final muted = MutesController.isMuted(
+      ref.watch(mutesProvider).value ?? const {},
+      member.userId,
+      DateTime.now().toUtc(),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -204,28 +210,53 @@ class _MemberRow extends ConsumerWidget {
             },
           ),
         ),
-        if (trust != null)
+        Padding(
+          padding: const EdgeInsets.only(left: 8, bottom: 4),
+          child: Wrap(
+            spacing: 4,
+            children: [
+              if (trust != null)
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: trust.status == TrustStatus.changed
+                        ? AppColors.sosText
+                        : AppColors.teal,
+                  ),
+                  icon: Icon(switch (trust.status) {
+                    TrustStatus.verified => Icons.verified_user,
+                    TrustStatus.unverified => Icons.shield_outlined,
+                    TrustStatus.changed => Icons.gpp_maybe_outlined,
+                  }, size: 18),
+                  label: Text(switch (trust.status) {
+                    TrustStatus.verified => l10n.trustVerified,
+                    TrustStatus.unverified => l10n.trustUnverified,
+                    TrustStatus.changed => l10n.trustChanged,
+                  }),
+                  onPressed: () => context.push(
+                    AppRoutes.safetyNumber(member.userId, member.displayName),
+                  ),
+                ),
+              TextButton.icon(
+                icon: Icon(
+                  muted
+                      ? Icons.notifications_off
+                      : Icons.notifications_paused_outlined,
+                  size: 18,
+                ),
+                label: Text(muted ? l10n.unmuteMember : l10n.muteMember),
+                onPressed: () => muted
+                    ? ref.read(mutesProvider.notifier).unmute(member.userId)
+                    : ref.read(mutesProvider.notifier).mute(member.userId),
+              ),
+            ],
+          ),
+        ),
+        if (muted)
           Padding(
-            padding: const EdgeInsets.only(left: 8, bottom: 4),
-            child: TextButton.icon(
-              style: TextButton.styleFrom(
-                foregroundColor: trust.status == TrustStatus.changed
-                    ? AppColors.sosText
-                    : AppColors.teal,
-              ),
-              icon: Icon(switch (trust.status) {
-                TrustStatus.verified => Icons.verified_user,
-                TrustStatus.unverified => Icons.shield_outlined,
-                TrustStatus.changed => Icons.gpp_maybe_outlined,
-              }, size: 18),
-              label: Text(switch (trust.status) {
-                TrustStatus.verified => l10n.trustVerified,
-                TrustStatus.unverified => l10n.trustUnverified,
-                TrustStatus.changed => l10n.trustChanged,
-              }),
-              onPressed: () => context.push(
-                AppRoutes.safetyNumber(member.userId, member.displayName),
-              ),
+            padding: const EdgeInsets.fromLTRB(24, 0, 16, 8),
+            child: Text(
+              l10n.mutedUntil,
+              style: const TextStyle(color: AppColors.textMuted),
             ),
           ),
       ],
