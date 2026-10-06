@@ -45,6 +45,8 @@ encrypted, and deleted when you sign out:
 - your **SMS emergency contacts** (names and numbers you type in, with
   their permission)
 - your **location history**, if you turn it on (it is off by default)
+- your **app-lock PIN** (only a scrambled Argon2id hash of it), which members
+  you've verified, and who you've muted
 
 We do **not** collect your phone's contact list, photos, messages,
 browsing or anything else on your phone.

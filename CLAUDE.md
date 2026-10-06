@@ -5,12 +5,18 @@ safety and location-sharing app for South Africa (package `za.co.afrisafety.app`
 
 ## Current state
 
-**Phases 0–2 are complete (Phase 1 verified on two devices 2026-10-05; Phase 2 built 2026-10-06, awaiting device testing). Phase 3 (security hardening) is next.** Read these
+**Phases 0–3 are complete (Phase 1 verified on devices; Phase 2 partly tested on the emulator; Phase 3 built 2026-10-07). Phase 4 (community layer) is next.** Read these
 before doing anything:
 - `docs/architecture.md`: components, data flow, encryption design
 - `SECURITY.md`: threat model (STRIDE), anti-stalkerware rules, POPIA
 - `docs/plan.md`: phased task list and decisions (D1–D7)
 - `docs/setup-cloud.md`, `docs/setup-windows.md`: how the owner runs it (Windows)
+
+## Commits
+
+Commits are authored as **Lunga Ngaka <lungaka777@gmail.com>** with no
+co-author or session trailers (owner's request, 2026-10-07; history was
+rewritten to match).
 
 ## Working agreement
 
@@ -34,7 +40,9 @@ before doing anything:
 - **Maps:** flutter_map + OSM-based tiles (respect provider tile usage policy)
 - **Location:** geolocator + Android foreground service, behind `LocationSource`
 - **Crypto:** libsodium via the `sodium` package (v4 builds libsodium from source
-  through build hooks; `sodium_libs` is deprecated, don't add it). Keys in
+  through build hooks; `sodium_libs` is deprecated, don't add it). The app loads
+  the sumo build (`SodiumSumoInit`) for Argon2id; it falls back to the normal
+  build and hides app lock if sumo is unavailable. Keys in
   `flutter_secure_storage`. All primitives live in `app/lib/core/crypto/`
 - **Offline:** in-memory retry of the latest fix per Circle (no drift/codegen). The
   Flutter engine is process-wide (`MainActivity.provideFlutterEngine`), so it
@@ -138,4 +146,9 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-06 | Missed check-ins via escrowed E2EE alerts released by a pg_cron watchdog; no server-readable escrow | Decided (Phase 2) |
 | 2026-10-06 | No server SMS gateway; `sms:` link with pre-filled contacts | Decided (Phase 2; gateway needs owner approval) |
 | 2026-10-06 | Circle events (place/journey) use the location key; escrowed alerts use the alert key | Decided (Phase 2) |
+| 2026-10-07 | Commits authored as the owner, no AI trailers; history rewritten | Decided (owner) |
+| 2026-10-07 | App lock = 6-digit PIN with Argon2id (libsodium sumo); fingerprint unlock deferred until build-tested | Decided (Phase 3) |
+| 2026-10-07 | Security codes: BLAKE2b over each person's device keys, 60 digits; TOFU with change warnings | Decided (Phase 3) |
+| 2026-10-07 | Device revocation is final (DB trigger); revoked phones wipe themselves | Decided (Phase 3) |
+| 2026-10-07 | Certificate pinning deferred (lock-out risk) | Decided (Phase 3) |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |

@@ -54,7 +54,7 @@ Legend: **M** = mitigation (phase it lands in), **R** = residual risk.
 | Threat | Adv. | Mitigation | Residual |
 |---|---|---|---|
 | Attacker logs in as victim (SIM swap for phone OTP, phished email OTP) | A2 | Supabase Auth OTP with rate limits (P1). New device login creates a `security_events` entry and a push to other devices (P1). New devices get **no Circle keys until an existing member device seals them**, so they see nothing historical (P1). App lock (P3) | SIM swap is a real risk in SA. Email OTP plus a recovery code (later) reduces it |
-| Server injects its own public key as a "member device" to receive Circle keys | A4 | TOFU fingerprints with key-change warnings (P1). In-person QR fingerprint verification (P3). Envelopes signed by sender device (P1) | Users who never verify are exposed to an active malicious server. Documented |
+| Server injects its own public key as a "member device" to receive Circle keys | A4 | Envelopes signed by sender device (P1). **Security codes** compared in person, trust-on-first-use with key-change warnings (**P3**) | Users who never compare codes are exposed to an active malicious server. A warning shows when keys change |
 | Malicious member spoofs their location | A5 | Out of scope to prevent cryptographically (device controls GPS). Detect mock-location provider on Android and flag "location may be simulated" (P3) | Rooted devices can bypass |
 | Forged panic alert | A4, A5 | Alerts are AEAD-encrypted with the sender's alert key, and the AAD binds context, Circle, sender and key version, so the server cannot forge or relabel them (P1). Members can still send real-but-false alerts, handled by rate limits and moderation (P3) | — |
 
@@ -79,7 +79,7 @@ Legend: **M** = mitigation (phase it lands in), **R** = residual risk.
 | DB breach reveals locations | A4 | E2EE: locations, places, alerts and journeys are ciphertext (P1 basic, P3 rotation). Server never holds Circle keys | **Metadata is visible:** membership graph, timestamps, update frequency, IP addresses, phone numbers/emails |
 | Non-member reads a Circle's data via the API | A2 | RLS deny-by-default on every table. `is_circle_member()` helper. **pgTAP tests prove non-members get zero rows** (P1, expanded P3). Invite codes stored as hashes | RLS bugs. Mitigated by tests in CI |
 | Departed member keeps reading | A1, A5 | RLS removes access immediately on leave. Per-sender key rotation on leave, device revocation or downgrade to "SOS only" (**P1**, D7). Local key wipe on leave (P1) | A departed member who copied data while a member keeps that data |
-| Lost or stolen phone exposes Circle | A3 | App lock with PIN or biometrics plus timeout (P3). Keys in Keystore-backed storage (P1). `android:allowBackup="false"` and excluded from cloud backup (P1). Sign-out revokes the device and wipes its keys, and members rotate away from it (**P1**). Revoking a lost phone *from another device* (P3). Location not shown in notifications on the lock screen (P1) | Unlocked phone in an attacker's hands |
+| Lost or stolen phone exposes Circle | A3 | App lock: Argon2id-hashed PIN, timeout, growing waits after 5 wrong tries (**P3**; biometrics later). Sign out a lost phone from the Devices screen; revocation is final in the database and the phone wipes itself (**P3**). Keys in Keystore-backed storage (P1). `android:allowBackup="false"` and excluded from cloud backup (P1). Sign-out revokes the device and wipes its keys, and members rotate away from it (**P1**).  Location not shown in notifications on the lock screen (P1) | Unlocked phone in an attacker's hands |
 | Location leaks via logs or crash reports | A7 | `SafeLogger` wrapper that redacts coordinate types. Lint ban on raw `print`/`debugPrint` in `lib/`. No third-party analytics or crash SDK in MVP (P1) | — |
 | FCM learns content | A7 | Data-only push carrying an opaque alert ID. Content fetched and decrypted on device (P1) | Google sees push timing and frequency |
 | SMS gateway learns location | A7 | **No gateway (P2).** SMS contacts live only in the on-device vault and are pre-filled into the `sms:` link; the user presses send. A server gateway needs explicit approval first | Carriers see SMS contents the user chooses to send |
@@ -167,7 +167,7 @@ and 6 make this discoverable, not impossible.
 - SMS fallback reveals location to mobile carriers (the user sends it themselves).
 - Phones without Google Play Services do not receive push alerts.
 - A Circle member can always screenshot or remember your location while they are a member.
-- Location spoofing by a member can be flagged but not prevented.
+- Location spoofing by a member can be flagged ("Location may be simulated", P3) but not prevented; rooted phones can hide the flag.
 - **Phase 2:** sharing survives swipe-away, but OEM battery savers can still kill
   the process. The app explains how to set Battery → Unrestricted.
 - **Phase 2:** missed check-in alerts are released by the server and reach
@@ -179,8 +179,19 @@ and 6 make this discoverable, not impossible.
 - **Phase 1:** push notifications are generic ("Someone in your Circle needs
   help"), and a "delivered" receipt is recorded once the recipient's app has fetched
   the alert, not when the push arrives.
-- **Phase 1:** envelope signatures are verified against device keys served by the
-  server (trust on first use). QR fingerprint verification is Phase 3.
+- Envelope signatures are verified against device keys served by the server.
+  Security codes (P3) let people check those keys in person; until they do,
+  trust is on first use, with a warning whenever keys change.
+- **Phase 3:** a phone signed out remotely keeps a valid access token for up to
+  an hour (its refresh token is revoked). It can't write (revoked devices are
+  refused) or receive new keys, but could re-read data it already had access to.
+- **Phase 3:** a 6-digit PIN is weak against someone who extracts its hash from
+  the Keystore; the attempt limit protects it on the phone. No fingerprint unlock
+  yet.
+- **Phase 3:** no certificate pinning (deliberate: a wrong pin set locks everyone
+  out). Android already ignores user-installed CAs for this app.
+- **Phase 3:** shake-to-SOS only works while AfriSafety is open or sharing
+  (Android stops sensors for background apps), and only when switched on.
 
 ## 8. Phase 1: implemented controls and evidence
 
@@ -215,3 +226,16 @@ and 6 make this discoverable, not impossible.
 | A check-in only counts as started once every Circle's escrow is stored; offline check-in keeps the timer visible; missed check-ins resolve with "I'm safe" | `JourneyController` | `journey_controller_test.dart` |
 | History off by default; turning it off deletes it | `HistoryController` | `history_test.dart` |
 | SMS contacts normalised to E.164 and pre-filled; no SEND_SMS | `normalisePhone`, `smsUri` | `emergency_contact_test.dart`, `sos_sms_test.dart`, `security_rules_test.dart` |
+
+## 10. Phase 3: implemented controls and evidence
+
+| Control | Where | Proven by |
+|---|---|---|
+| A revoked device can never be un-revoked; only the owner can revoke; keys can't be edited | `20261007000100_device_revocation.sql` | `040_phase3.test.sql` |
+| A remotely signed-out phone wipes itself instead of re-registering | `DeviceRepository.ensureRegistered`, `SessionController.checkRevoked` | code review (needs a live server) |
+| Security codes match on both phones, ignore device order, change when any key is added or replaced | `SafetyNumbers` | `safety_number_test.dart` |
+| Trust on first use; verified status survives restarts; key changes warn and clear verification | `KeyTrustController` | `key_trust_test.dart` |
+| PIN hashed with salted Argon2id; lock on cold start and after the timeout; 5 free tries then 30 s doubling to 15 min, persisted; turning off needs the PIN; SOS bypasses the lock | `AppLockController`, `Argon2PinHasher` | `app_lock_test.dart` |
+| Shake-to-SOS ignores walking, running and drops; needs 4 peaks in 2.5 s; cooldown | `ShakeDetector` | `shake_detector_test.dart` |
+| Mutes expire after 24 h; sharing review due weekly | `MutesController`, `SharingReviewController` | `mutes_and_review_test.dart` |
+| Android app compiles (Kotlin, plugins, libsodium) on every change | CI `android-build` job | `.github/workflows/app.yml` |

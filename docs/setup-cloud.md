@@ -116,6 +116,13 @@ check-in watchdog runs every minute with **pg_cron**.
    step 2: enable it and run only the last file
    (`20261006000300_retention_jobs.sql`) again.
 
+### 1.6 Phase 3: one more migration (1 minute)
+
+Run `supabase/migrations/20261007000100_device_revocation.sql` in the SQL
+Editor (open it in Notepad, copy everything, paste, name the query
+`05 AfriSafety Phase 3 – RUN ONCE`, **Run**). It makes signing out a phone
+from the Devices screen permanent. Or use `supabase db push`.
+
 ## 2. Map tiles (about 5 minutes)
 
 **Just testing on a few phones?** Skip the sign-up and use OpenStreetMap's

@@ -1,6 +1,6 @@
 # AfriSafety: Build Plan
 
-> Status: **Phase 2 complete (2026-10-06), awaiting on-device testing.** Phase 1 verified on devices (2026-10-05). Each phase ends with tests passing, a summary,
+> Status: **Phase 3 complete (2026-10-07).** Phase 1 verified on devices (2026-10-05); Phase 2 partly tested on the emulator (2026-10-06). Each phase ends with tests passing, a summary,
 > a list of manual setup steps, and a pause for your go-ahead.
 
 ## Decisions
@@ -158,19 +158,27 @@ scaffolding every later phase depends on.
 
 **You configure:** enable **Cron** (pg_cron) in Supabase and run the three Phase 2 migrations (see `docs/setup-cloud.md` §1.5). No SMS gateway needed.
 
-## Phase 3: Security hardening
+## Phase 3: Security hardening ✅
 
-- [ ] Circle key rotation on leave, removal or device revocation (race-safe), with tests
-- [ ] Fingerprint verification via QR. Key-change warnings
-- [ ] Anti-stalkerware: pause UX, honest "Paused" status, periodic sharing reminders, safety guidance screen, mute-but-panic-breaks-through
-- [ ] Discreet panic: shake gesture (threshold + confirm window), rapid screen on/off detection while the service runs (no accessibility-service abuse), accidental-trigger protection
-- [ ] App lock: PIN + biometrics, auto-lock timeout, lock-screen notification redaction
-- [ ] Device management: list devices, remote sign-out, revocation
-- [ ] Certificate pinning via `network_security_config.xml` (≥2 pins, expiry), cleartext disabled
-- [ ] Mock-location detection flag
-- [ ] Rate limiting: invites, alerts, OTP (CAPTCHA), Edge Functions
-- [ ] Expand RLS test suite. Run `supabase db lint` and the advisors in CI
-- [ ] Finalise `SECURITY.md` with evidence and limitations
+- [x] Key rotation on leave, removal, device revocation and downgrade: built in Phase 1 with D7 (`planKeySync`, serialised per device, versions never repeat; tests in `key_sync_plan_test.dart` / `key_sync_service_test.dart`)
+- [x] Security codes (safety numbers): 60 digits per member pair from both people's device keys (BLAKE2b), compared in person; trust-on-first-use with key-change warnings and a banner in the Circle tab
+- [x] Device management: Devices screen (this phone, other phones, last active), sign out all other phones (revokes them and ends their sessions), security activity log; a remotely signed-out phone wipes itself on start/resume instead of re-registering; **revocation is final in the database** (`20261007000100_device_revocation.sql`)
+- [x] App lock: 6-digit PIN hashed with Argon2id (libsodium `crypto_pwhash`, sumo build), lock on start and after a chosen background time, growing waits after 5 wrong PINs (persisted), SOS and 10111/112 work while locked, forgotten PIN = sign out (wipe)
+- [x] Anti-stalkerware: notification states how many people can see you, weekly "still OK?" review on the map, "Think someone is tracking you?" guide with SA helplines, mute a member's updates for 24 h (SOS breaks through)
+- [x] Discreet panic: opt-in shake-to-SOS (4 hard shakes in 2.5 s, cooldown, still shows the cancellable countdown)
+- [x] Mock-location flag: "Location may be simulated" on members whose phone reports a mock provider
+- [x] Rate limiting: invites, alerts, events, check-ins in SQL (Phases 1–2); push at most once per alert
+- [x] CI: Android debug APK build added (compiles Kotlin, plugins and libsodium); `supabase db lint` already runs
+- [x] **Tests:** 183 Flutter (+ devices, safety numbers, key trust, app lock, shake detector, mutes/review), 146 pgTAP (+ `040_phase3`), 5 Deno
+
+**Deferred, with reasons** (see `SECURITY.md` §7):
+- **Fingerprint unlock:** needs `FlutterFragmentActivity` and an AppCompat theme; add once it can be build-tested (the new CI build job makes that possible).
+- **Certificate pinning:** a wrong pin set locks every user out until an app update. Needs the real Supabase chain and a rotation plan; until then Android's default (no user-installed CAs for apps targeting API 24+) covers the rogue-CA case.
+- **Rapid screen on/off panic:** needs a native broadcast receiver.
+- **OTP CAPTCHA:** Supabase Auth supports hCaptcha/Turnstile but the app needs a widget for it; Supabase's built-in OTP rate limits apply meanwhile.
+- **Lock-screen notification redaction:** the notification never contains a location or names, so there's nothing to redact.
+
+**You configure:** run `supabase/migrations/20261007000100_device_revocation.sql` in the SQL Editor (query name `05 AfriSafety Phase 3 – RUN ONCE`).
 
 ## Phase 4: Community layer
 

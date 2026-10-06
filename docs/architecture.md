@@ -1,6 +1,6 @@
 # AfriSafety: Architecture Overview
 
-> Status: **Phases 1 and 2 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft. Phase 2 keeps places, SMS contacts and history on the phone only (§4.7).
+> Status: **Phases 1–3 implemented.** Decisions D1–D7 use the recommended options. D7 (per-sender keys) replaced the single Circle key described in the first draft. Phase 2 keeps places, SMS contacts and history on the phone only (§4.7).
 > Package identifier: `za.co.afrisafety.app`
 
 AfriSafety is a privacy-first personal safety and location-sharing app for South
@@ -333,6 +333,25 @@ sequenceDiagram
   5 minutes, computed on the phone. No routing service sees the destination. The
   Circle is alerted 10 minutes after the expected arrival; arrival within 150 m
   ends the journey automatically.
+
+### 4.9 Security codes, devices and app lock (Phase 3)
+
+- **Security codes.** For each person, BLAKE2b(label ‖ user id ‖ sorted device
+  public keys) gives a fingerprint; a pair's code is both fingerprints rendered
+  as 30 digits each (lower user id first), so both phones show the same 60
+  digits. Fingerprints are remembered in the vault on first sight (TOFU). A
+  change (new device, replaced key, or a key the server slipped in) shows a
+  warning and clears "verified".
+- **Devices.** The Devices screen lists the account's phones and the security
+  log. "Sign out all other phones" sets `revoked_at` on them and calls
+  `auth.signOut(scope: others)`. A database trigger makes revocation final, so a
+  phone can't un-revoke itself; members' key sync then rotates away from it. On
+  start or resume a revoked phone wipes its keys, vault and lock, and returns to
+  sign-in rather than registering a new device behind the user's back.
+- **App lock.** PIN hash: `crypto_pwhash_str` (Argon2id, interactive limits) in
+  Keystore-backed storage. The lock screen is drawn above the router (so it
+  covers every route), keeps SOS and 10111/112 available, and never hides the
+  sharing notification.
 
 ---
 
