@@ -1459,4 +1459,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountAction => 'Delete forever';
+
+  @override
+  String get lockUseFingerprint => 'Use fingerprint';
+
+  @override
+  String get lockBiometricReason => 'Unlock AfriSafety';
+
+  @override
+  String get lockBiometricToggle => 'Unlock with fingerprint';
 }

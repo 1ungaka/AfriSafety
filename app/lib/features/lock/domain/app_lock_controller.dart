@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/crypto/crypto_providers.dart';
 import '../../../core/crypto/secret_store.dart';
+import 'biometrics.dart';
 import 'pin_hasher.dart';
 
 /// The PIN hasher, or null if libsodium's password hashing isn't available
@@ -22,6 +23,7 @@ class AppLockState {
     this.failures = 0,
     this.lockedOutUntil,
     this.sosOpen = false,
+    this.biometric = false,
   });
 
   final bool loaded;
@@ -36,6 +38,10 @@ class AppLockState {
   /// The SOS screen was opened from the lock screen: SOS always works.
   final bool sosOpen;
 
+  /// Fingerprint unlock is on (the PIN still works, and is still needed to
+  /// change lock settings).
+  final bool biometric;
+
   /// The lock screen covers the app.
   bool get showLock => enabled && locked && !sosOpen;
 
@@ -48,6 +54,7 @@ class AppLockState {
     DateTime? lockedOutUntil,
     bool clearLockout = false,
     bool? sosOpen,
+    bool? biometric,
   }) => AppLockState(
     loaded: loaded ?? this.loaded,
     enabled: enabled ?? this.enabled,
@@ -56,6 +63,7 @@ class AppLockState {
     failures: failures ?? this.failures,
     lockedOutUntil: clearLockout ? null : lockedOutUntil ?? this.lockedOutUntil,
     sosOpen: sosOpen ?? this.sosOpen,
+    biometric: biometric ?? this.biometric,
   );
 }
 
@@ -86,6 +94,7 @@ class AppLockController extends Notifier<AppLockState> {
   static const _kTimeout = 'app_lock.timeout_s';
   static const _kFailures = 'app_lock.failures';
   static const _kLockout = 'app_lock.lockout_until';
+  static const _kBiometric = 'app_lock.biometric';
 
   DateTime? _backgroundedAt;
 
@@ -105,6 +114,7 @@ class AppLockController extends Notifier<AppLockState> {
     final timeout = int.tryParse(await store.read(_kTimeout) ?? '') ?? 60;
     final failures = int.tryParse(await store.read(_kFailures) ?? '') ?? 0;
     final lockout = DateTime.tryParse(await store.read(_kLockout) ?? '');
+    final biometric = await store.read(_kBiometric) == 'on';
     if (!ref.mounted) return;
     final enabled = hash != null && hasHasher;
     state = AppLockState(
@@ -115,6 +125,7 @@ class AppLockController extends Notifier<AppLockState> {
       timeout: Duration(seconds: timeout),
       failures: failures,
       lockedOutUntil: lockout,
+      biometric: enabled && biometric,
     );
   }
 
@@ -150,7 +161,8 @@ class AppLockController extends Notifier<AppLockState> {
   Future<bool> disable(String pin) async {
     if (await unlock(pin) != UnlockResult.ok) return false;
     await _store.delete(_kHash);
-    state = state.copyWith(enabled: false, locked: false);
+    await _store.delete(_kBiometric);
+    state = state.copyWith(enabled: false, locked: false, biometric: false);
     return true;
   }
 
@@ -191,13 +203,35 @@ class AppLockController extends Notifier<AppLockState> {
     return Duration(seconds: math.min(seconds, 15 * 60));
   }
 
+  /// Turns fingerprint unlock on or off (only with the lock enabled).
+  Future<void> setBiometric(bool on) async {
+    if (on && !state.enabled) return;
+    if (on) {
+      await _store.write(_kBiometric, 'on');
+    } else {
+      await _store.delete(_kBiometric);
+    }
+    state = state.copyWith(biometric: on);
+  }
+
+  /// Unlocks with the phone's biometric prompt. Wrong-PIN waits don't apply:
+  /// a fingerprint isn't something a thief can keep guessing.
+  Future<bool> unlockWithBiometrics(String reason) async {
+    if (!state.biometric) return false;
+    final ok = await ref.read(biometricAuthProvider).authenticate(reason);
+    if (!ok) return false;
+    await _resetFailures();
+    state = state.copyWith(locked: false, failures: 0, clearLockout: true);
+    return true;
+  }
+
   void openSos() => state = state.copyWith(sosOpen: true);
 
   void closeSos() => state = state.copyWith(sosOpen: false);
 
   /// Called on sign-out: the lock belongs to the account.
   Future<void> clear() async {
-    for (final k in [_kHash, _kTimeout, _kFailures, _kLockout]) {
+    for (final k in [_kHash, _kTimeout, _kFailures, _kLockout, _kBiometric]) {
       await _store.delete(k);
     }
     state = const AppLockState(loaded: true);

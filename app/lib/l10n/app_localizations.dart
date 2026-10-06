@@ -2451,6 +2451,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete forever'**
   String get deleteAccountAction;
+
+  /// Fingerprint unlock button.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint'**
+  String get lockUseFingerprint;
+
+  /// Shown in the system biometric prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock AfriSafety'**
+  String get lockBiometricReason;
+
+  /// Fingerprint setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with fingerprint'**
+  String get lockBiometricToggle;
 }
 
 class _AppLocalizationsDelegate

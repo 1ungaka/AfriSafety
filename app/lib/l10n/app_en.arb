@@ -1947,5 +1947,17 @@
   "deleteAccountAction": "Delete forever",
   "@deleteAccountAction": {
     "description": "Delete button."
+  },
+  "lockUseFingerprint": "Use fingerprint",
+  "@lockUseFingerprint": {
+    "description": "Fingerprint unlock button."
+  },
+  "lockBiometricReason": "Unlock AfriSafety",
+  "@lockBiometricReason": {
+    "description": "Shown in the system biometric prompt."
+  },
+  "lockBiometricToggle": "Unlock with fingerprint",
+  "@lockBiometricToggle": {
+    "description": "Fingerprint setting."
   }
 }

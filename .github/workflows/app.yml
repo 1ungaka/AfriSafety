@@ -50,5 +50,7 @@ jobs:
       - name: Install the Android NDK libsodium is built with
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358" > /dev/null
       - run: flutter pub get
-      - name: Build debug APK
-        run: flutter build apk --debug
+      # Release mode: R8 shrinking and the release signing path (falls back
+      # to the debug key when android/key.properties is absent, as here).
+      - name: Build release app bundle
+        run: flutter build appbundle --release

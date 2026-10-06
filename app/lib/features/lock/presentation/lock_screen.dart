@@ -28,9 +28,22 @@ class _LockScreenState extends ConsumerState<LockScreen> {
   bool _wrong = false;
   Timer? _tick;
 
+  Future<void> _fingerprint() async {
+    final l10n = AppLocalizations.of(context);
+    await ref
+        .read(appLockProvider.notifier)
+        .unlockWithBiometrics(l10n.lockBiometricReason);
+  }
+
   @override
   void initState() {
     super.initState();
+    // Offer the fingerprint straight away if it's switched on.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && ref.read(appLockProvider).biometric) {
+        unawaited(_fingerprint());
+      }
+    });
     _tick = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && ref.read(appLockProvider).lockedOutUntil != null) {
         setState(() {});
@@ -122,6 +135,15 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                 }
               },
             ),
+            if (lock.biometric)
+              TextButton.icon(
+                onPressed: _fingerprint,
+                icon: const Icon(Icons.fingerprint, color: AppColors.ground),
+                label: Text(
+                  l10n.lockUseFingerprint,
+                  style: const TextStyle(color: AppColors.ground),
+                ),
+              ),
             const SizedBox(height: 8),
             if (!_confirmForgot)
               TextButton(

@@ -1,5 +1,6 @@
 import 'package:afrisafety/core/crypto/crypto_providers.dart';
 import 'package:afrisafety/features/lock/domain/app_lock_controller.dart';
+import 'package:afrisafety/features/lock/domain/biometrics.dart';
 import 'package:afrisafety/features/lock/domain/pin_hasher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,11 +17,28 @@ class PlainHasher implements PinHasher {
   bool verify(String storedHash, String pin) => storedHash == 'h:$pin';
 }
 
+class FakeBiometrics implements BiometricAuth {
+  bool succeed = true;
+  int prompts = 0;
+
+  @override
+  Future<bool> available() async => true;
+
+  @override
+  Future<bool> authenticate(String reason) async {
+    prompts++;
+    return succeed;
+  }
+}
+
 void main() {
+  late FakeBiometrics biometrics;
+
   late InMemorySecretStore secrets;
   late DateTime now;
 
   setUp(() {
+    biometrics = FakeBiometrics();
     secrets = InMemorySecretStore();
     now = DateTime.utc(2026, 10, 7, 12);
   });
@@ -31,6 +49,7 @@ void main() {
         secretStoreProvider.overrideWithValue(secrets),
         pinHasherProvider.overrideWithValue(hasher ?? PlainHasher()),
         lockClockProvider.overrideWithValue(() => now),
+        biometricAuthProvider.overrideWithValue(biometrics),
       ],
     );
     addTearDown(c.dispose);
@@ -142,6 +161,46 @@ void main() {
     );
     addTearDown(c.dispose);
     expect(c.read(appLockProvider.notifier).available, isFalse);
+  });
+
+  test(
+    'fingerprint unlock: only with the lock on, and it clears waits',
+    () async {
+      var c = await container();
+      final lock = c.read(appLockProvider.notifier);
+      await lock.setBiometric(true);
+      expect(c.read(appLockProvider).biometric, isFalse, reason: 'needs a PIN');
+
+      await lock.enable('123456');
+      await lock.setBiometric(true);
+      c = await container();
+      final l2 = c.read(appLockProvider.notifier);
+      expect(c.read(appLockProvider).biometric, isTrue, reason: 'remembered');
+      for (var i = 0; i < 5; i++) {
+        await l2.unlock('000000');
+      }
+      expect(c.read(appLockProvider).lockedOutUntil, isNotNull);
+
+      biometrics.succeed = false;
+      expect(await l2.unlockWithBiometrics('Unlock'), isFalse);
+      expect(c.read(appLockProvider).showLock, isTrue);
+
+      biometrics.succeed = true;
+      expect(await l2.unlockWithBiometrics('Unlock'), isTrue);
+      expect(c.read(appLockProvider).showLock, isFalse);
+      expect(c.read(appLockProvider).lockedOutUntil, isNull);
+    },
+  );
+
+  test('turning the lock off also turns fingerprint unlock off', () async {
+    final c = await container();
+    final lock = c.read(appLockProvider.notifier);
+    await lock.enable('123456');
+    await lock.setBiometric(true);
+    await lock.disable('123456');
+    expect(c.read(appLockProvider).biometric, isFalse);
+    expect(await lock.unlockWithBiometrics('Unlock'), isFalse);
+    expect(biometrics.prompts, 0);
   });
 
   test('Argon2id hashes are salted and verify', () async {

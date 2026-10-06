@@ -4,12 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Bundle
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 
-class MainActivity : FlutterActivity() {
+// A FragmentActivity so local_auth can show Android's fingerprint prompt.
+class MainActivity : FlutterFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createAlertChannel()
@@ -25,8 +26,9 @@ class MainActivity : FlutterActivity() {
     // never silent (security rule 6). Reopening the app reattaches the same
     // engine, so nothing restarts.
     //
-    // Because the engine comes from here, FlutterActivity neither destroys it
-    // with the activity nor registers plugins a second time.
+    // Because the engine comes from here, FlutterFragmentActivity (and its
+    // FlutterFragment) neither destroy it with the activity nor register
+    // plugins a second time.
     override fun provideFlutterEngine(context: Context): FlutterEngine {
         val cache = FlutterEngineCache.getInstance()
         return cache.get(ENGINE_ID) ?: FlutterEngine(context.applicationContext).also {

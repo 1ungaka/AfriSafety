@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/app_lock_controller.dart';
+import '../domain/biometrics.dart';
 import 'pin_pad.dart';
 
 class AppLockSettingsScreen extends ConsumerWidget {
@@ -52,6 +53,19 @@ class AppLockSettingsScreen extends ConsumerWidget {
               ),
             ),
             if (lock.enabled) ...[
+              FutureBuilder<bool>(
+                future: ref.read(biometricAuthProvider).available(),
+                builder: (context, snap) => snap.data ?? false
+                    ? Card(
+                        child: SwitchListTile(
+                          secondary: const Icon(Icons.fingerprint),
+                          value: lock.biometric,
+                          title: Text(l10n.lockBiometricToggle),
+                          onChanged: controller.setBiometric,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
               const SizedBox(height: 20),
               Text(l10n.lockTimeoutTitle, style: text.titleMedium),
               const SizedBox(height: 8),
