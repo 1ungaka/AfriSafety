@@ -163,7 +163,6 @@ docker run hello-world
 cd C:\dev
 git clone https://github.com/1ungaka/AfriSafety.git
 cd AfriSafety
-git checkout claude/safety-app-prompt-ga7xf8
 ```
 Keep the project at `C:\dev\AfriSafety`. Deeper paths can break the build.
 

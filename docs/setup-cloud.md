@@ -9,7 +9,7 @@ unless stated. First pull the latest code:
 
 ```powershell
 cd C:\dev\AfriSafety
-git pull origin claude/safety-app-prompt-ga7xf8
+git pull origin main
 ```
 
 ---
