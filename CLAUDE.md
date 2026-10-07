@@ -16,7 +16,8 @@ before doing anything:
 
 Commits are authored as **Lunga Ngaka <lungaka777@gmail.com>** with no
 co-author or session trailers (owner's request, 2026-10-07; history was
-rewritten to match).
+rewritten to match). The public default branch is **`main`**; keep it in step
+with the working branch.
 
 ## Working agreement
 
