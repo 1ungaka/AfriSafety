@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/map_attribution.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../sharing/domain/sharing_controller.dart';
 import '../domain/place.dart';
@@ -48,10 +49,7 @@ class PickLocationMap extends ConsumerWidget {
               userAgentPackageName: 'za.co.afrisafety.app',
               maxNativeZoom: 19,
             ),
-            RichAttributionWidget(
-              alignment: AttributionAlignment.bottomLeft,
-              attributions: [TextSourceAttribution(l10n.mapAttribution)],
-            ),
+            MapAttribution(tileUrlTemplate: config.tileUrlTemplate),
           ],
         ),
         IgnorePointer(

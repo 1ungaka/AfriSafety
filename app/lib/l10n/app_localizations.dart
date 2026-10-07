@@ -676,6 +676,12 @@ abstract class AppLocalizations {
   /// **'© OpenStreetMap contributors'**
   String get mapAttribution;
 
+  /// Map tile attribution, shown when the tiles come from MapTiler (required by their terms).
+  ///
+  /// In en, this message translates to:
+  /// **'© MapTiler'**
+  String get mapAttributionMapTiler;
+
   /// Circle tab title.
   ///
   /// In en, this message translates to:

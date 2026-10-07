@@ -425,6 +425,10 @@
   "@mapAttribution": {
     "description": "Map data attribution (required by ODbL)."
   },
+  "mapAttributionMapTiler": "© MapTiler",
+  "@mapAttributionMapTiler": {
+    "description": "Map tile attribution, shown when the tiles come from MapTiler (required by their terms)."
+  },
   "circleWhoCanSeeMe": "Who can see me",
   "@circleWhoCanSeeMe": {
     "description": "Circle tab title."

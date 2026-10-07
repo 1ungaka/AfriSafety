@@ -7,6 +7,7 @@ import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/util/relative_time.dart';
 import '../../../core/widgets/afrisafety_logo.dart';
+import '../../../core/widgets/map_attribution.dart';
 import '../../../core/widgets/member_avatar.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../circles/domain/circles_controller.dart';
@@ -278,10 +279,7 @@ class _MapWithSheet extends ConsumerWidget {
                     ),
                 ],
               ),
-              RichAttributionWidget(
-                alignment: AttributionAlignment.bottomLeft,
-                attributions: [TextSourceAttribution(l10n.mapAttribution)],
-              ),
+              MapAttribution(tileUrlTemplate: config.tileUrlTemplate),
             ],
           ),
         ),

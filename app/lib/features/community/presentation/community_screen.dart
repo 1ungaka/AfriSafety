@@ -7,6 +7,7 @@ import '../../../core/config/config_providers.dart';
 import '../../../core/geo/grid.dart';
 import '../../../core/logging/safe_logger.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/map_attribution.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/community_repository.dart';
 import '../domain/community_controller.dart';
@@ -324,10 +325,7 @@ class _CellMap extends ConsumerWidget {
               ),
             ],
           ),
-          RichAttributionWidget(
-            alignment: AttributionAlignment.bottomLeft,
-            attributions: [TextSourceAttribution(l10n.mapAttribution)],
-          ),
+          MapAttribution(tileUrlTemplate: config.tileUrlTemplate),
         ],
       ),
     );

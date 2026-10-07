@@ -364,6 +364,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mapAttribution => '© OpenStreetMap contributors';
 
   @override
+  String get mapAttributionMapTiler => '© MapTiler';
+
+  @override
   String get circleWhoCanSeeMe => 'Who can see me';
 
   @override

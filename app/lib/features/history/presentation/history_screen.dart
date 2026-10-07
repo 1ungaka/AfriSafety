@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/map_attribution.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/history.dart';
 import '../domain/history_controller.dart';
@@ -172,10 +173,7 @@ class _HistoryMap extends ConsumerWidget {
                 CircleMarker(point: line.last, radius: 7, color: AppColors.sos),
               ],
             ),
-            RichAttributionWidget(
-              alignment: AttributionAlignment.bottomLeft,
-              attributions: [TextSourceAttribution(l10n.mapAttribution)],
-            ),
+            MapAttribution(tileUrlTemplate: config.tileUrlTemplate),
           ],
         ),
       ),
