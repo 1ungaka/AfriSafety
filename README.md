@@ -92,7 +92,7 @@ on its hash.
 | ~200 Flutter tests (`app/test`) | Crypto and AAD tampering, key-sync protocol over a fake server that mirrors RLS, geofence hysteresis, check-in flow, app lock, shake detection, security codes, consent gates, accessibility |
 | ~180 pgTAP assertions (`supabase/tests/database`) | Acting as members and an outsider: outsiders get zero rows, nobody writes as someone else, pause and leave can't be blocked, rate limits, watchdog, k-anonymity, moderation, account deletion |
 | Deno tests (`supabase/functions/tests`) | Push payloads carry no personal data; FCM signing |
-| CI (GitHub Actions) | Formatting, analysis, all tests, `supabase db lint`, and a release Android app bundle build on every push |
+| CI (GitHub Actions) | Formatting, analysis, all tests, `supabase db lint`, and a release Android app bundle build on every push. Tagged versions become signed APKs on GitHub Releases, after a check that they aren't signed with the debug key |
 
 ## Tech stack
 
@@ -114,6 +114,7 @@ design/     brand (icon, colours, type) and screen designs
 - **Windows, step by step:** [docs/setup-windows.md](docs/setup-windows.md)
 - **Connect to a cloud Supabase project:** [docs/setup-cloud.md](docs/setup-cloud.md)
 - **Build for Google Play:** [docs/release.md](docs/release.md)
+- **Install the test version on Android:** [docs/install.md](docs/install.md)
 
 Short version (macOS/Linux, local Supabase in Docker):
 

@@ -11,6 +11,8 @@ What stands between "works on the emulator" and "people can rely on it".
 - ✅ Fingerprint unlock for the app lock
 - ✅ Release signing set up (needs your key, see `docs/release.md`)
 - ✅ CI builds a release app bundle on every change
+- ✅ Signed test APKs published to GitHub Releases when you push a tag
+  (`docs/release.md` §6), with an install guide for testers (`docs/install.md`)
 
 ## Yours to do
 
@@ -21,6 +23,8 @@ What stands between "works on the emulator" and "people can rely on it".
 - ☐ **SMS provider for phone sign-in** (Twilio, MessageBird or Vonage) set up
   in Supabase → Authentication → Providers → Phone. Costs per SMS. Turn on
   Supabase's CAPTCHA and SMS rate limits too.
+- ☐ **Test APK:** add the GitHub secrets and variables, then tag `v0.1.0`
+  (`docs/release.md` §6a). Send testers `docs/install.md`.
 - ☐ **Google Play developer account** (once-off $25).
 - ☐ Optional: **Firebase push**, so alerts reach closed apps
   (`docs/setup-cloud.md` §4). Strongly recommended before real use.

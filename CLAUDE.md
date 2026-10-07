@@ -157,4 +157,5 @@ Toolchain: Flutter 3.47.6 / Dart 3.13. Supabase local Postgres is 17.
 | 2026-10-09 | Account deletion leaves Circles first (ownership passes on), then deletes auth.users | Decided (launch) |
 | 2026-10-09 | MainActivity is a FlutterFragmentActivity (local_auth); fingerprint unlock is biometrics-only | Decided (launch) |
 | 2026-10-09 | Phone sign-in behind AUTH_METHOD=phone, +27 only | Decided (launch) |
+| 2026-10-07 | Test APKs: tag `v*` → CI signs with the upload key (GitHub secrets), refuses debug-signed or OSM-tile builds, publishes a GitHub pre-release. One universal APK | Decided |
 | 2026-10-04 | Invite RPCs return null/empty for wrong codes (never raise), so rate-limit hits aren't rolled back | Decided (security fix) |
