@@ -1,0 +1,187 @@
+name: Release APK
+
+# Builds a signed APK for testers to install directly (no Play Store).
+#   * Push a tag like v0.1.0  -> builds and publishes a GitHub pre-release.
+#   * Run it by hand (Actions tab) -> builds only, as a downloadable artifact,
+#     to check the secrets work before tagging.
+# Setup: docs/release.md section 6.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-apk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write # create the GitHub Release
+    defaults:
+      run:
+        working-directory: app
+    env:
+      # Public app config (it ends up inside the APK anyway), so repository
+      # variables rather than secrets. Server secrets never go here.
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      TILE_URL_TEMPLATE: ${{ vars.TILE_URL_TEMPLATE }}
+      AUTH_METHOD: ${{ vars.AUTH_METHOD || 'email' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the release settings
+        run: |
+          missing=0
+          for name in SUPABASE_URL SUPABASE_PUBLISHABLE_KEY TILE_URL_TEMPLATE; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository variable $name is not set (Settings > Secrets and variables > Actions > Variables)"
+              missing=1
+            fi
+          done
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository secret $name is not set (Settings > Secrets and variables > Actions > Secrets)"
+              missing=1
+            fi
+          done
+          # OSM's own tile servers forbid app traffic beyond light testing
+          # (decision 2026-10-05), and anyone can download a release.
+          case "$TILE_URL_TEMPLATE" in
+            *tile.openstreetmap.org*)
+              echo "::error::TILE_URL_TEMPLATE points at tile.openstreetmap.org; releases need a tile provider such as MapTiler"
+              missing=1 ;;
+          esac
+          exit $missing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Check the tag matches pubspec.yaml
+        if: github.event_name == 'push'
+        run: |
+          version=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pubspec.yaml version $version"
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: stable
+          cache: true
+      - name: Install the Android NDK libsodium is built with
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358" > /dev/null
+      - run: flutter pub get
+      # Never publish a build whose tests fail.
+      - run: flutter test
+
+      - name: Write the signing key and production config
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          umask 077
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode --ignore-garbage > "$RUNNER_TEMP/upload.jks"
+          # .properties treats backslashes as escapes, so double them.
+          {
+            echo "storeFile=$RUNNER_TEMP/upload.jks"
+            echo "storePassword=${ANDROID_KEYSTORE_PASSWORD//\\/\\\\}"
+            echo "keyPassword=${ANDROID_KEY_PASSWORD//\\/\\\\}"
+            echo "keyAlias=upload"
+          } > android/key.properties
+          {
+            echo "APP_ENV=prod"
+            echo "SUPABASE_URL=$SUPABASE_URL"
+            echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY"
+            echo "TILE_URL_TEMPLATE=$TILE_URL_TEMPLATE"
+            echo "AUTH_METHOD=$AUTH_METHOD"
+          } > .env.prod
+
+      # One universal APK (every CPU type): a single file is easiest for
+      # testers. Per-CPU splits get different version codes, and mixing
+      # them up blocks updates.
+      - name: Build the APK
+        run: flutter build apk --release --dart-define-from-file=.env.prod
+
+      - name: Remove the signing key from the runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.jks" android/key.properties .env.prod
+
+      # build.gradle.kts falls back to the debug key when key.properties is
+      # missing. That is fine for CI checks but never for something people
+      # install, so refuse anything not signed with the upload key.
+      - name: Verify the signature
+        id: verify
+        run: |
+          apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          certs=$("$apksigner" verify --print-certs build/app/outputs/flutter-apk/app-release.apk)
+          echo "$certs"
+          if echo "$certs" | grep -q "CN=Android Debug"; then
+            echo "::error::The APK is signed with the debug key"
+            exit 1
+          fi
+          sha=$(echo "$certs" | sed -n 's/.*certificate SHA-256 digest: //p' | head -1)
+          echo "cert_sha256=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Name the files
+        id: files
+        run: |
+          version=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/AfriSafety-$version.apk"
+          (cd dist && sha256sum ./*.apk > SHA256SUMS.txt)
+          cat dist/SHA256SUMS.txt
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Keep the APK as a build artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AfriSafety-${{ steps.files.outputs.version }}
+          path: app/dist/
+          retention-days: 7
+
+      # gh ships on the runner, so no third-party release action is needed.
+      - name: Publish the GitHub pre-release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CERT_SHA256: ${{ steps.verify.outputs.cert_sha256 }}
+        run: |
+          cat > notes.md <<EOF
+          Test build of AfriSafety for Android 8 and newer.
+
+          **How to install:** see [docs/install.md](https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_REF_NAME/docs/install.md).
+          Download \`AfriSafety-${{ steps.files.outputs.version }}.apk\` below on your phone and open it.
+
+          > AfriSafety does not replace emergency services. In danger, call **10111** or **112**.
+
+          Signing certificate SHA-256 (every genuine AfriSafety build has this):
+          \`$CERT_SHA256\`
+
+          File checksums are in \`SHA256SUMS.txt\`.
+          EOF
+          # A release made on the website first (which pushes the tag) just
+          # gets the files attached.
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+            exit 0
+          fi
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --prerelease \
+            --title "AfriSafety $GITHUB_REF_NAME (test build)" \
+            --notes-file notes.md
